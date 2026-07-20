@@ -1,0 +1,64 @@
+generated: '2026-07-19'
+method: searched
+source: openapi/genlogs-openapi.yml
+docs: https://docs.genlogs.io/getting-started
+model: >-
+  Two-factor request auth: every request carries the static x-api-key header AND a
+  short-lived Access-Token header. The Access-Token is minted by POST /auth/token using
+  email + password credentials issued by the GenLogs customer-success team, and expires
+  (TokenSchema.expires). A refresh token is returned by /auth/token/refresh but the docs
+  note it is not usable at this time - create a new token after expiry. Per-endpoint access
+  is further gated by named permissions granted to the key/customer (403 on missing permission).
+token_flow:
+  create: POST https://api.genlogs.io/auth/token
+  refresh: POST https://api.genlogs.io/auth/token/refresh
+  headers_required: [x-api-key, Access-Token]
+permissions:
+  note: Named per-endpoint permissions; a missing permission returns 403 Forbidden.
+  examples:
+  - verifier-carrier
+  - realtime-api
+  - external-api-carrier-recommendation
+  - external-api-carrier-profile
+  - external-api-carrier-contacts
+  - external-api-carrier-iss-score
+  - external-api-shipper-lanes
+  - external-api-shipper-facilities
+  - external-api-shipper-network-map
+  - external-api-compliance-rules
+  - external-api-update-compliance-rules
+  - external-api-get-onboarded-carrier-contact
+  - external-api-create-onboarded-carrier-contact
+  - external-api-update-onboarded-carrier-contact
+  - external-api-delete-onboarded-carrier-contact
+  - external-api-mismatch-observations
+  - external-api-get-all-company-alerts
+  - external-api-get-webhook-list
+  - external-api-delete-alert-webhook-endpoint
+  - create-alert-endpoint
+  - edit-alert-endpoint
+  - create-alert-webhook-endpoint
+  - edit-alert-webhook-endpoint
+  - test-alert-webhook-endpoint
+  - run-summary-alert
+  - admin
+summary:
+  types:
+  - apiKey
+  api_key_in:
+  - header
+schemes:
+- name: ApiKeyAuth
+  type: apiKey
+  in: header
+  parameter: x-api-key
+  description: API key provided by GenLogs. Required on every request.
+  sources:
+  - openapi/genlogs-openapi.yml
+- name: AccessToken
+  type: apiKey
+  in: header
+  parameter: Access-Token
+  description: Short-lived access token obtained from POST /auth/token (or refreshed via /auth/token/refresh).
+  sources:
+  - openapi/genlogs-openapi.yml
