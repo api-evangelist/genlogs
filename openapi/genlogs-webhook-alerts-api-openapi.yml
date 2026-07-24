@@ -1,0 +1,230 @@
+openapi: 3.1.0
+info:
+  title: GenLogs Alerts Webhook Alerts API
+  version: 1.0.0
+  description: 'GenLogs Truck Intelligence API. Ground-truth motor-carrier and shipper data from a nationwide roadside sensor network: carrier recommendations by lane, carrier and FMCSA profiles, carrier vetting, shipper lanes and facilities, onboarded-carrier contact management, mismatch observations, and alert webhooks. Base URL https://api.genlogs.io. Authentication uses an x-api-key header plus a short-lived Access-Token obtained from /auth/token; endpoint access is gated by named permissions.'
+  contact:
+    name: GenLogs
+    url: https://docs.genlogs.io
+    email: contact@genlogs.io
+  x-provenance:
+    method: searched
+    source: https://docs.genlogs.io (per-endpoint embedded OpenAPI fragments + documented endpoints)
+    assembled: '2026-07-19'
+    operationIds: some operationIds normalized by API Evangelist where the provider fragments omitted them
+servers:
+- url: https://api.genlogs.io
+  description: GenLogs Truck Intelligence API
+security:
+- ApiKeyAuth: []
+  AccessToken: []
+tags:
+- name: Webhook Alerts
+paths:
+  /alerts/webhook:
+    post:
+      tags:
+      - Webhook Alerts
+      summary: Create Webhook
+      description: Create webhook settings
+      operationId: create_webhook_alerts_webhook_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookSettingsCreateSchema'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      tags:
+      - Webhook Alerts
+      summary: List Webhooks
+      description: List all webhooks for the authenticated customer
+      operationId: list_webhooks_alerts_webhook_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  type: object
+                type: array
+                title: Response List Webhooks Alerts Webhook Get
+  /alerts/webhook/{webhook_id}:
+    patch:
+      tags:
+      - Webhook Alerts
+      summary: Update Webhook
+      description: Update webhook settings
+      operationId: update_webhook_alerts_webhook__webhook_id__patch
+      parameters:
+      - name: webhook_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Webhook Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookSettingsUpdateSchema'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /alerts/webhook/test:
+    post:
+      tags:
+      - Webhook Alerts
+      summary: Validate Webhook Endpoint
+      description: Test a webhook endpoint with a sample alert payload
+      operationId: validate_webhook_endpoint_alerts_webhook_test_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookTestSchema'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    ValidationError:
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      properties:
+        loc:
+          type: array
+          items:
+            oneOf:
+            - type: string
+            - type: integer
+        msg:
+          type: string
+        type:
+          type: string
+    WebhookSettingsUpdateSchema:
+      properties:
+        webhook_url:
+          anyOf:
+          - type: string
+            maxLength: 2083
+            minLength: 1
+            format: uri
+          - type: 'null'
+          title: Webhook Url
+        secret:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Secret
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Enabled
+      additionalProperties: false
+      type: object
+      title: WebhookSettingsUpdateSchema
+      description: Schema for updating webhook settings
+    HTTPValidationError:
+      type: object
+      properties:
+        detail:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+    WebhookTestSchema:
+      properties:
+        webhook_url:
+          type: string
+          maxLength: 2083
+          minLength: 1
+          format: uri
+          title: Webhook Url
+        secret:
+          type: string
+          title: Secret
+      additionalProperties: false
+      type: object
+      required:
+      - webhook_url
+      - secret
+      title: WebhookTestSchema
+      description: Schema for testing webhook endpoints
+    WebhookSettingsCreateSchema:
+      properties:
+        webhook_url:
+          anyOf:
+          - type: string
+            maxLength: 2083
+            minLength: 1
+            format: uri
+          - type: 'null'
+          title: Webhook Url
+        secret:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Secret
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+      additionalProperties: false
+      type: object
+      title: WebhookSettingsCreateSchema
+      description: Schema for creating webhook settings
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: API key provided by GenLogs. Required on every request.
+    AccessToken:
+      type: apiKey
+      in: header
+      name: Access-Token
+      description: Short-lived access token obtained from POST /auth/token (or refreshed via /auth/token/refresh).

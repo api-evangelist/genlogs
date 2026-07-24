@@ -1,0 +1,438 @@
+openapi: 3.1.0
+info:
+  title: GenLogs Alerts Facilities API
+  version: 1.0.0
+  description: 'GenLogs Truck Intelligence API. Ground-truth motor-carrier and shipper data from a nationwide roadside sensor network: carrier recommendations by lane, carrier and FMCSA profiles, carrier vetting, shipper lanes and facilities, onboarded-carrier contact management, mismatch observations, and alert webhooks. Base URL https://api.genlogs.io. Authentication uses an x-api-key header plus a short-lived Access-Token obtained from /auth/token; endpoint access is gated by named permissions.'
+  contact:
+    name: GenLogs
+    url: https://docs.genlogs.io
+    email: contact@genlogs.io
+  x-provenance:
+    method: searched
+    source: https://docs.genlogs.io (per-endpoint embedded OpenAPI fragments + documented endpoints)
+    assembled: '2026-07-19'
+    operationIds: some operationIds normalized by API Evangelist where the provider fragments omitted them
+servers:
+- url: https://api.genlogs.io
+  description: GenLogs Truck Intelligence API
+security:
+- ApiKeyAuth: []
+  AccessToken: []
+tags:
+- name: Facilities
+paths:
+  /facilities:
+    get:
+      summary: Search facilities by name, address, zip code, city/state, website domain, or coordinates
+      description: 'Unified facility search. Provide at least one of: non-empty **`name`**, non-empty **`address`**, **`zip_code`**, non-empty **`website_domain`**, or both **`city`** and **`state`** (then use **`radius`** around the geocoded point). You may also pass **`location`** as `latitude,longitude` for radius search instead of city/state.
+
+        Optionally include lane data per facility with **`include_lanes=true`**. Lanes can be filtered by **`min_distance`** (miles from facility) and **`direction`** (compass direction). Filters are applied before the **`top_n`** limit.
+
+
+        ## Pagination
+
+
+        When results exceed 100 facilities, the response is paginated using opaque cursor-based pagination. The `Link` response header contains a next-page URL with a `cursor` parameter. Follow that URL to retrieve subsequent pages. The `X-Total-Count` header shows the total matching facilities across all pages. Pagination is not supported with `smart_search=true`.
+
+        See component schema **FacilitiesQueryCriteria** for the full parameter model and validation shape.
+
+        Historical path `/find_facilities` exposes the same search behavior and is documented here as **`/facilities`** for a single contract.
+
+        '
+      parameters:
+      - name: accept
+        in: header
+        required: true
+        schema:
+          type: string
+        description: application/json
+      - name: Access-Token
+        in: header
+        required: true
+        schema:
+          type: string
+        description: Access Token for authentication
+      - name: x-api-key
+        in: header
+        required: true
+        schema:
+          type: string
+        description: X api key for authentication
+      - description: 'Facility or collection name (optional if `address`, both `city` and `state`, or `website_domain` are provided).
+
+          See **FacilitiesQueryCriteria** for validation rules.
+
+          '
+        in: query
+        name: name
+        required: false
+        schema:
+          type: string
+          maxLength: 500
+      - description: 'Substring match on formatted address (optional if `name`, both `city` and `state`, or `website_domain` are provided).
+
+          '
+        in: query
+        name: address
+        required: false
+        schema:
+          type: string
+          maxLength: 500
+      - description: City; use with `state` for geocoded radius search unless `name`, `address`, or `website_domain` alone is sufficient.
+        in: query
+        name: city
+        required: false
+        schema:
+          type: string
+          maxLength: 150
+      - description: State; use with `city` unless `name`, `address`, or `website_domain` supplies the search mode.
+        in: query
+        name: state
+        required: false
+        schema:
+          type: string
+          maxLength: 150
+      - description: 'Substring match against the shipper''s `contact_url`. Must include the TLD
+
+          (e.g. `acme.com`). Optional path tails (`acme.com/about`) are accepted by
+
+          the validator but the path is stripped before matching — only the host
+
+          is searched.
+
+
+          **Mutually exclusive with `name` and `address`.** If `name` or `address`
+
+          is also supplied, `website_domain` is silently ignored (see
+
+          **FacilitiesQueryCriteria** → *Filter precedence*). Also ignored when
+
+          `smart_search=true` is used together with `name`.
+
+          '
+        in: query
+        name: website_domain
+        required: false
+        schema:
+          type: string
+          maxLength: 253
+          minLength: 5
+          pattern: ^[A-Za-z0-9][A-Za-z0-9-]*\.[A-Za-z]{2,}([/.].*)?$
+      - description: Comma-separated `latitude,longitude`; radius applies around this point when provided instead of city/state.
+        in: query
+        name: location
+        required: false
+        schema:
+          type: string
+      - description: Search radius in miles around the geocoded city/state point or `location`
+        in: query
+        name: radius
+        required: false
+        schema:
+          type: number
+          maximum: 150
+      - description: Lot size category filter
+        in: query
+        name: lot_size_category
+        required: false
+        schema:
+          type: string
+          maxLength: 50
+      - description: Maximum number of facilities to return
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      - description: Optional place category filter (pipe-separated values accepted by the service)
+        in: query
+        name: facility_type
+        required: false
+        schema:
+          type: string
+          maxLength: 500
+      - description: Optional intermodal drayage filter flag
+        in: query
+        name: intermodal_drayage
+        required: false
+        schema:
+          type: string
+      - description: Include inbound and outbound lane data for each facility. Lanes are ranked by weight.
+        in: query
+        name: include_lanes
+        required: false
+        schema:
+          type: boolean
+      - description: Number of top lanes to return per direction (inbound/outbound) per facility.
+        in: query
+        name: top_n
+        required: false
+        schema:
+          type: integer
+          default: 10
+      - description: Minimum distance in miles from the facility to a lane destination. Lanes closer than this distance are excluded. Applied before top_n.
+        in: query
+        name: min_distance
+        required: false
+        schema:
+          type: number
+      - description: Filter lanes by compass direction from the facility. Applied before top_n.
+        in: query
+        name: direction
+        required: false
+        schema:
+          type: string
+          enum:
+          - N
+          - S
+          - E
+          - W
+          - NE
+          - NW
+          - SE
+          - SW
+      - description: US zip code; searches facilities near the zip centroid.
+        in: query
+        name: zip_code
+        required: false
+        schema:
+          type: string
+      - description: 'Opaque pagination cursor from the Link header of a previous response.
+
+          When results exceed 100 facilities, the server returns a Link header
+
+          containing a next-page URL with this cursor embedded. Follow that URL
+
+          to retrieve subsequent pages. Do not construct or parse this value —
+
+          it is server-controlled and opaque.
+
+          '
+        in: query
+        name: cursor
+        required: false
+        schema:
+          type: string
+          maxLength: 500
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                description: Array of facility objects (see FacilitiesQueryCriteria for query rules).
+                items:
+                  $ref: '#/components/schemas/Facility'
+          description: List of facilities
+          headers:
+            X-Total-Count:
+              description: Total number of matching facilities across all pages.
+              schema:
+                type: integer
+            Link:
+              description: 'RFC 8288 Link header with rel="next" pointing to the next page URL.
+
+                Absent on the final page. Example:
+
+                `<https://api.genlogs.io/find_facilities?zip_code=91761&include_lanes=true&cursor=eyJ...>; rel="next"`
+
+                '
+              schema:
+                type: string
+        '400':
+          description: Validation error (missing search criteria, invalid parameters, or invalid cursor)
+      operationId: getShipperFacilities
+      tags:
+      - Facilities
+  /facility/{facility_id}/network-map:
+    get:
+      summary: Retrieve the GeoJSON network map for a facility
+      description: Returns the GeoJSON network map associated with the specified facility.
+      operationId: getFacilityNetworkMap
+      tags:
+      - Facilities
+      parameters:
+      - name: facility_id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Trimble identifier for the facility.
+      responses:
+        '200':
+          description: Facility GeoJSON network map (FeatureCollection)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FacilityNetworkMap'
+        '401':
+          description: Missing or invalid token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthError'
+        '403':
+          description: Token expired or user lacks the required role.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthError'
+        '500':
+          description: Unexpected error while fetching or parsing GeoJSON.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+components:
+  schemas:
+    GeoJSONGeometry:
+      type: object
+      required:
+      - type
+      - coordinates
+      properties:
+        type:
+          type: string
+          enum:
+          - Point
+          - LineString
+          - Polygon
+          - MultiPoint
+          - MultiLineString
+          - MultiPolygon
+        coordinates:
+          type: array
+          items: {}
+          description: GeoJSON coordinate array whose structure depends on geometry type.
+    AuthError:
+      type: object
+      properties:
+        message:
+          type: string
+        subcode:
+          type: integer
+          description: Optional subcode with additional error context.
+    FacilityNetworkFeature:
+      type: object
+      required:
+      - type
+      - geometry
+      - properties
+      properties:
+        type:
+          type: string
+        geometry:
+          $ref: '#/components/schemas/GeoJSONGeometry'
+        properties:
+          type: object
+          additionalProperties: true
+          description: Arbitrary metadata associated with the feature.
+    FacilityNetworkMap:
+      type: object
+      required:
+      - type
+      - features
+      properties:
+        type:
+          type: string
+        features:
+          type: array
+          items:
+            $ref: '#/components/schemas/FacilityNetworkFeature'
+    FacilityLane:
+      type: object
+      properties:
+        city:
+          type: string
+          description: Largest city in the H3 hexagon.
+        state:
+          type: string
+          description: US state of the lane destination.
+        weight:
+          type: number
+          description: Ranking signal from the network GeoJSON (higher = stronger lane).
+        visit_share:
+          type: string
+          description: Bucketed visit share percentage (e.g. "15-20%").
+        hexagon_id:
+          type: string
+          description: H3 hexagon index for the lane destination.
+        distance_miles:
+          type: number
+          nullable: true
+          description: Distance in miles from the facility to the lane destination (present when min_distance or direction is provided).
+        direction:
+          type: string
+          nullable: true
+          description: Compass direction of the lane from the facility (e.g. "NE", "SW"). Present when min_distance or direction filter is provided.
+      required:
+      - city
+      - state
+      - weight
+      - visit_share
+      - hexagon_id
+    Facility:
+      properties:
+        contact_phone:
+          nullable: true
+          type: string
+        contact_url:
+          nullable: true
+          type: string
+        facility_name:
+          type: string
+        formatted_address:
+          type: string
+        id:
+          type: string
+        lat:
+          type: number
+        lon:
+          type: number
+        operating_hours:
+          nullable: true
+          type: string
+        place_category:
+          type: string
+        equipment_pairings:
+          type: array
+          nullable: true
+          description: 'Equipment types paired with this facility based on observed carrier activity. Values are Title Case display strings (e.g. "Dry Van", "Box Truck", "Reefer"). Empty array when no pairing data is available.
+
+            '
+          items:
+            type: string
+        inbound_lanes:
+          type: array
+          description: Top inbound lanes ranked by weight (only present when `include_lanes=true`).
+          items:
+            $ref: '#/components/schemas/FacilityLane'
+        outbound_lanes:
+          type: array
+          description: Top outbound lanes ranked by weight (only present when `include_lanes=true`).
+          items:
+            $ref: '#/components/schemas/FacilityLane'
+      required:
+      - facility_name
+      - formatted_address
+      - id
+      - lat
+      - lon
+      - place_category
+      type: object
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: API key provided by GenLogs. Required on every request.
+    AccessToken:
+      type: apiKey
+      in: header
+      name: Access-Token
+      description: Short-lived access token obtained from POST /auth/token (or refreshed via /auth/token/refresh).

@@ -1,0 +1,163 @@
+openapi: 3.1.0
+info:
+  title: GenLogs Alerts Shipper API
+  version: 1.0.0
+  description: 'GenLogs Truck Intelligence API. Ground-truth motor-carrier and shipper data from a nationwide roadside sensor network: carrier recommendations by lane, carrier and FMCSA profiles, carrier vetting, shipper lanes and facilities, onboarded-carrier contact management, mismatch observations, and alert webhooks. Base URL https://api.genlogs.io. Authentication uses an x-api-key header plus a short-lived Access-Token obtained from /auth/token; endpoint access is gated by named permissions.'
+  contact:
+    name: GenLogs
+    url: https://docs.genlogs.io
+    email: contact@genlogs.io
+  x-provenance:
+    method: searched
+    source: https://docs.genlogs.io (per-endpoint embedded OpenAPI fragments + documented endpoints)
+    assembled: '2026-07-19'
+    operationIds: some operationIds normalized by API Evangelist where the provider fragments omitted them
+servers:
+- url: https://api.genlogs.io
+  description: GenLogs Truck Intelligence API
+security:
+- ApiKeyAuth: []
+  AccessToken: []
+tags:
+- name: Shipper
+paths:
+  /shipper/lanes:
+    get:
+      parameters:
+      - name: accept
+        in: header
+        required: true
+        schema:
+          type: string
+        description: application/json
+      - name: Access-Token
+        in: header
+        required: true
+        schema:
+          type: string
+        description: Access Token for authentication
+      - name: x-api-key
+        in: header
+        required: true
+        schema:
+          type: string
+        description: X api key for authentication
+      - in: query
+        name: testing_new_param
+        required: true
+        schema:
+          type: number
+        description: Testing new param
+      - in: query
+        name: origin_lat
+        required: true
+        schema:
+          type: number
+        description: Latitude of the origin location
+      - in: query
+        name: origin_lon
+        required: true
+        schema:
+          type: number
+        description: Longitude of the origin location
+      - in: query
+        name: destination_lat
+        required: true
+        schema:
+          type: number
+        description: Latitude of the destination location
+      - in: query
+        name: destination_lon
+        required: true
+        schema:
+          type: number
+        description: Longitude of the destination location
+      - in: query
+        name: origin_radius
+        required: true
+        schema:
+          type: number
+        description: Radius to search around the origin
+      - in: query
+        name: destination_radius
+        required: true
+        schema:
+          type: number
+        description: Radius to search around the destination
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShipperLaneResponse'
+          description: List of shipper lanes
+      summary: Get shipper lanes based on coordinates and radius
+      operationId: getShipperLanes
+      tags:
+      - Shipper
+components:
+  schemas:
+    ShipperLaneResponse:
+      properties:
+        shippers_in_destination:
+          items:
+            $ref: '#/components/schemas/Shipper'
+          type: array
+        shippers_in_origin:
+          items:
+            $ref: '#/components/schemas/Shipper'
+          type: array
+      required:
+      - shippers_in_destination
+      - shippers_in_origin
+      type: object
+    Shipper:
+      properties:
+        contact_phone:
+          nullable: true
+          type: string
+        contact_url:
+          nullable: true
+          type: string
+        facility_name:
+          type: string
+        formatted_address:
+          type: string
+        id:
+          type: string
+        lat:
+          type: number
+        lon:
+          type: number
+        operating_hours:
+          nullable: true
+          type: string
+        place_category:
+          type: string
+        equipment_pairings:
+          type: array
+          nullable: true
+          description: 'Equipment types paired with this shipper based on observed carrier activity. Values are Title Case display strings (e.g. "Dry Van", "Box Truck", "Reefer"). Empty array when no pairing data is available.
+
+            '
+          items:
+            type: string
+      required:
+      - facility_name
+      - formatted_address
+      - id
+      - lat
+      - lon
+      - place_category
+      type: object
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: API key provided by GenLogs. Required on every request.
+    AccessToken:
+      type: apiKey
+      in: header
+      name: Access-Token
+      description: Short-lived access token obtained from POST /auth/token (or refreshed via /auth/token/refresh).

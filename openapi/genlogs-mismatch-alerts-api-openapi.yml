@@ -1,0 +1,328 @@
+openapi: 3.1.0
+info:
+  title: GenLogs Alerts Mismatch alerts API
+  version: 1.0.0
+  description: 'GenLogs Truck Intelligence API. Ground-truth motor-carrier and shipper data from a nationwide roadside sensor network: carrier recommendations by lane, carrier and FMCSA profiles, carrier vetting, shipper lanes and facilities, onboarded-carrier contact management, mismatch observations, and alert webhooks. Base URL https://api.genlogs.io. Authentication uses an x-api-key header plus a short-lived Access-Token obtained from /auth/token; endpoint access is gated by named permissions.'
+  contact:
+    name: GenLogs
+    url: https://docs.genlogs.io
+    email: contact@genlogs.io
+  x-provenance:
+    method: searched
+    source: https://docs.genlogs.io (per-endpoint embedded OpenAPI fragments + documented endpoints)
+    assembled: '2026-07-19'
+    operationIds: some operationIds normalized by API Evangelist where the provider fragments omitted them
+servers:
+- url: https://api.genlogs.io
+  description: GenLogs Truck Intelligence API
+security:
+- ApiKeyAuth: []
+  AccessToken: []
+tags:
+- name: Mismatch alerts
+paths:
+  /mismatch-observations:
+    post:
+      summary: Create mismatch observation alerts
+      description: 'Creates one alert row per standalone USDOT or MC value, and one combined row per item in `pairs`. At least one of `usdots`, `mcs`, or `pairs` must be non-empty. `alert_name` is optional; when omitted or blank, stored as null. `logos` is optional and, when present, is normalized to lowercase, stored in `logos`, and used by mismatch detection. Logo matching remains case-insensitive. Unknown JSON properties are rejected.
+
+        '
+      tags:
+      - Mismatch alerts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExternalMismatchObservationsRequest'
+      responses:
+        '201':
+          description: Mismatch alerts created successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - data
+                properties:
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      created:
+                        type: integer
+                        description: Number of alerts inserted.
+        '400':
+          description: Bad request – validation error or empty usdots/mcs/pairs.
+        '401':
+          description: Unauthorized – Invalid or missing Access-Token.
+        '403':
+          description: Forbidden – missing permission.
+        '500':
+          description: Internal Server Error.
+      operationId: createMismatchObservation
+    get:
+      summary: List mismatch observations
+      description: 'Returns mismatch observations for the authenticated customer only, ordered from newest to oldest. Paginated; default page size is 50. Returns 200 with an empty `mismatch_observations` array when none exist.
+
+        '
+      tags:
+      - Mismatch alerts
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+        description: Page number (1-based).
+      - name: page_size
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 500
+          default: 50
+        description: Number of items per page (max 500).
+      responses:
+        '200':
+          description: Paginated list of mismatch observations for the customer.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MismatchObservationsListResponse'
+        '401':
+          description: Unauthorized – Invalid or missing Access-Token.
+        '403':
+          description: Forbidden – missing permission.
+      operationId: listMismatchObservations
+  /mismatch-observations/{observation_id}:
+    patch:
+      summary: Update a mismatch observation
+      description: 'Partial update of USDOT (`usdot`), MC (`mc`), `logos`, display name (`alert_name`), and/or `is_disabled`. Send at least one field. Requires permission `external-api-mismatch-observations` or admin. Only alerts belonging to the JWT `customer_id` can be updated; otherwise 403. `logos` values are normalized to lowercase before persistence and response. Logo matching remains case-insensitive. Returns the full updated observation (same shape as list items).
+
+        '
+      tags:
+      - Mismatch alerts
+      parameters:
+      - name: observation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Mismatch observation (alert) identifier.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MismatchObservationPatchRequest'
+      responses:
+        '200':
+          description: Full updated mismatch observation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MismatchObservationItem'
+        '400':
+          description: 'Bad request – empty body, no updatable fields, invalid USDOT/MC, or validation error.
+
+            '
+        '401':
+          description: Unauthorized – Invalid or missing Access-Token.
+        '403':
+          description: Forbidden – missing permission, or observation belongs to another customer.
+        '404':
+          description: Mismatch observation not found or deleted.
+      operationId: updateMismatchObservation
+    delete:
+      summary: Delete a mismatch observation
+      description: 'Permanently removes the row (timestamp hard delete). This is separate from `is_disabled`, which only pauses processing. After delete, the observation no longer appears in GET list and cannot be PATCHed. Same permission as create/list/update. Returns 404 if the id is unknown, belongs to another customer, or is already deleted. Returns 404 if the id is unknown, belongs to another customer, or is already deleted.
+
+        '
+      tags:
+      - Mismatch alerts
+      parameters:
+      - name: observation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: Observation deleted successfully (no response body).
+        '401':
+          description: Unauthorized – Invalid or missing Access-Token.
+        '403':
+          description: Forbidden – missing permission.
+        '404':
+          description: Not found, wrong customer, or already deleted.
+      operationId: deleteMismatchObservation
+components:
+  schemas:
+    MismatchObservationItem:
+      type: object
+      required:
+      - id
+      - usdot
+      - mc
+      - is_disabled
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Alert row identifier.
+        alert_name:
+          type: string
+          nullable: true
+          description: Optional display name; may be null if not set.
+        usdot:
+          type: string
+          nullable: true
+          description: USDOT value from stored criteria.
+        mc:
+          type: string
+          nullable: true
+          description: MC value from stored criteria.
+        logos:
+          type: array
+          items:
+            type: string
+          description: Trailer logos from `logos`, returned in normalized lowercase format. Empty when not configured.
+          default: []
+        is_disabled:
+          type: boolean
+          description: Whether this mismatch observation alert is disabled.
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+          description: Creation timestamp when available.
+        last_run_at:
+          type: string
+          format: date-time
+          nullable: true
+          description: Last run timestamp in ISO-8601 format; null when not run yet.
+    MismatchObservationPatchRequest:
+      type: object
+      additionalProperties: false
+      description: 'At least one property must be present (after applying ignore rules). Omitted fields are left unchanged. Empty string or whitespace-only `usdot` / `mc` values are ignored (they do not clear the field). JSON `null` for `usdot` / `mc` still clears that side of the criteria when present. USDOT/MC validation matches create rules (numeric after normalization).
+
+        '
+      properties:
+        usdot:
+          type: string
+          nullable: true
+          description: New USDOT value; null clears when paired with MC update rules.
+        mc:
+          type: string
+          nullable: true
+          description: New MC value; null clears when paired with USDOT update rules.
+        logos:
+          type: array
+          nullable: true
+          items:
+            type: string
+          description: 'Trailer logos list. Values are trimmed, deduplicated, and stored/returned in lowercase format. Matching against the logos catalog.
+
+            '
+        alert_name:
+          type: string
+          nullable: true
+          description: Display name; blank or whitespace-only is stored as null.
+        is_disabled:
+          type: boolean
+          description: Whether the observation is disabled.
+    ExternalMismatchObservationsRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        usdots:
+          type: array
+          items:
+            type: string
+          description: USDOT numbers (strings). Each non-empty entry creates one alert.
+          default: []
+        mcs:
+          type: array
+          items:
+            type: string
+          description: MC numbers (strings). Each non-empty entry creates one alert.
+          default: []
+        pairs:
+          type: array
+          items:
+            $ref: '#/components/schemas/MismatchObservationPairRequest'
+          description: 'Paired MC/USDOT identifiers. Each item creates one combined alert row with both MC and USDOT in the stored criteria.
+
+            '
+          default: []
+        logos:
+          type: array
+          nullable: true
+          items:
+            type: string
+          description: 'Optional trailer logos list. Each value must be a non-empty string. Values are trimmed, deduplicated, and stored in lowercase format. Matching against the logos catalog.
+
+            '
+        alert_name:
+          type: string
+          nullable: true
+          description: Optional display name; omitted or whitespace-only is stored as null.
+    MismatchObservationsListResponse:
+      type: object
+      required:
+      - mismatch_observations
+      - page
+      - page_size
+      - total
+      properties:
+        mismatch_observations:
+          type: array
+          items:
+            $ref: '#/components/schemas/MismatchObservationItem'
+        page:
+          type: integer
+          minimum: 1
+          description: Current page number.
+        page_size:
+          type: integer
+          minimum: 1
+          maximum: 500
+          description: Page size used for this response.
+        total:
+          type: integer
+          minimum: 0
+          description: Total number of observations for this customer (all pages).
+    MismatchObservationPairRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - mc
+      - usdot
+      properties:
+        mc:
+          type: string
+          minLength: 1
+          description: MC number for the combined alert row.
+        usdot:
+          type: string
+          minLength: 1
+          description: USDOT number for the combined alert row.
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: API key provided by GenLogs. Required on every request.
+    AccessToken:
+      type: apiKey
+      in: header
+      name: Access-Token
+      description: Short-lived access token obtained from POST /auth/token (or refreshed via /auth/token/refresh).

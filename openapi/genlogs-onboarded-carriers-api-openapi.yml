@@ -1,0 +1,644 @@
+openapi: 3.1.0
+info:
+  title: GenLogs Alerts Onboarded Carriers API
+  version: 1.0.0
+  description: 'GenLogs Truck Intelligence API. Ground-truth motor-carrier and shipper data from a nationwide roadside sensor network: carrier recommendations by lane, carrier and FMCSA profiles, carrier vetting, shipper lanes and facilities, onboarded-carrier contact management, mismatch observations, and alert webhooks. Base URL https://api.genlogs.io. Authentication uses an x-api-key header plus a short-lived Access-Token obtained from /auth/token; endpoint access is gated by named permissions.'
+  contact:
+    name: GenLogs
+    url: https://docs.genlogs.io
+    email: contact@genlogs.io
+  x-provenance:
+    method: searched
+    source: https://docs.genlogs.io (per-endpoint embedded OpenAPI fragments + documented endpoints)
+    assembled: '2026-07-19'
+    operationIds: some operationIds normalized by API Evangelist where the provider fragments omitted them
+servers:
+- url: https://api.genlogs.io
+  description: GenLogs Truck Intelligence API
+security:
+- ApiKeyAuth: []
+  AccessToken: []
+tags:
+- name: Onboarded Carriers
+paths:
+  /onboarded-carrier/contacts:
+    post:
+      summary: Create an onboarded carrier contact
+      description: 'Creates a new onboarded carrier contact for the authenticated customer. Requires a valid JWT token and the appropriate permission. The `usdot` value must contain digits only, be greater than zero, and be at most 9 digits after normalization.
+
+        '
+      tags:
+      - Onboarded Carriers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - usdot
+              properties:
+                usdot:
+                  type: string
+                  description: 'Carrier USDOT number. Must contain digits only, be greater than zero, and be at most 9 digits. Leading zeroes are normalized before persistence.
+
+                    '
+                  minLength: 1
+                  maxLength: 9
+                  pattern: ^[0-9]+$
+                name:
+                  type: string
+                  nullable: true
+                  description: Contact name.
+                phone:
+                  type: string
+                  nullable: true
+                  description: Contact phone number.
+                email:
+                  type: string
+                  nullable: true
+                  description: Contact email address.
+      responses:
+        '200':
+          description: Contact created successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  contact:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      name:
+                        type: string
+                      phone:
+                        type: string
+                      email:
+                        type: string
+        '400':
+          description: Bad Request – Missing or invalid fields.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '401':
+          description: Unauthorized – Invalid or missing Access-Token.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '403':
+          description: Forbidden – The user lacks required permission.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+      operationId: createOnboardedCarrierContact
+    get:
+      summary: Retrieve onboarded carrier contacts
+      description: 'Returns a paginated list of onboarded carrier contacts for the authenticated customer. Only contacts belonging to the customer identified in the JWT are returned. Requires the external-api-get-onboarded-carrier-contact permission.
+
+        '
+      tags:
+      - Onboarded Carriers
+      parameters:
+      - name: page
+        in: query
+        required: false
+        description: Page number of results to return.
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+      - name: page_size
+        in: query
+        required: false
+        description: Number of results per page (max 200).
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 200
+          default: 50
+      - name: usdot_number
+        in: query
+        required: false
+        description: 'USDOT number(s) to filter by. Supports a single value or a comma-separated list.
+
+          '
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Onboarded carrier contacts retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  contacts:
+                    type: array
+                    description: List of onboarded carrier contacts.
+                    items:
+                      type: object
+                      properties:
+                        contact_id:
+                          type: string
+                          format: uuid
+                          description: Unique identifier of the onboarded carrier contact.
+                        dot_number:
+                          type: string
+                          description: USDOT number associated with the carrier.
+                        customer_id:
+                          type: integer
+                          description: Identifier of the customer that owns the contact.
+                        contact_name:
+                          type: string
+                          description: Full name of the contact.
+                        contact_email:
+                          type: string
+                          description: Email address of the contact.
+                        contact_phone:
+                          type: string
+                          description: Phone number of the contact.
+                        contact_source:
+                          type: string
+                          description: Source of the onboarded contact record.
+                  pagination:
+                    type: object
+                    description: Pagination metadata.
+                    properties:
+                      page_size:
+                        type: integer
+                        description: Number of results per page.
+                      current_page:
+                        type: integer
+                        description: Current page number.
+                      total_pages:
+                        type: integer
+                        description: Total number of available pages.
+        '400':
+          description: Bad Request – Invalid query parameters.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '401':
+          description: Unauthorized – Invalid or missing authentication headers.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                      subcode:
+                        type: string
+        '403':
+          description: Forbidden – User does not have required permission.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: string
+      operationId: listOnboardedCarrierContacts
+  /onboarded-carrier/contacts/{contact_id}:
+    patch:
+      summary: Update an onboarded carrier contact
+      description: 'Updates an existing onboarded carrier contact for the authenticated customer. Requires a valid JWT token and the appropriate permission. Only the fields provided in the request body will be updated. USDOT updates are not supported by this endpoint; including `usdot` in the PATCH body returns Bad Request before any persistence operation.
+
+        '
+      tags:
+      - Onboarded Carriers
+      parameters:
+      - name: contact_id
+        in: path
+        required: true
+        description: Unique identifier of the contact to update.
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: 'Fields to update. At least one must be provided. `usdot` is not accepted in PATCH requests.
+
+                '
+              properties:
+                name:
+                  type: string
+                  nullable: true
+                  description: Contact name.
+                email:
+                  type: string
+                  nullable: true
+                  description: Contact email.
+                phone:
+                  type: string
+                  nullable: true
+                  description: Contact phone number.
+              minProperties: 1
+      responses:
+        '200':
+          description: Contact updated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  contact:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      name:
+                        type: string
+                      phone:
+                        type: string
+                      email:
+                        type: string
+        '400':
+          description: Bad Request – Missing or invalid fields.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '401':
+          description: Unauthorized – Invalid or missing Access-Token.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '403':
+          description: Forbidden – The user lacks required permission or does not own the contact.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '404':
+          description: Contact not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+      operationId: updateOnboardedCarrierContact
+    delete:
+      summary: Delete an onboarded carrier contact
+      description: 'Deletes an existing onboarded carrier contact for the authenticated customer. Requires a valid JWT token and the appropriate permission. The contact must belong to the authenticated customer.
+
+        '
+      tags:
+      - Onboarded Carriers
+      parameters:
+      - name: contact_id
+        in: path
+        required: true
+        description: Unique identifier of the contact to delete.
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Contact deleted successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  contact:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      deleted:
+                        type: boolean
+        '400':
+          description: Bad Request – Invalid contact identifier.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '401':
+          description: Unauthorized – Invalid or missing Access-Token.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '403':
+          description: 'Forbidden – The user lacks required permission or does not own the contact.
+
+            '
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '404':
+          description: Contact not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+      operationId: deleteOnboardedCarrierContact
+  /onboarded-carrier/bulk/contacts:
+    post:
+      summary: Bulk create onboarded carrier contacts
+      description: 'Creates multiple onboarded carrier contacts for the authenticated customer in a single request. Each contact entry is validated using the same rules as the single-contact create flow. At least one contact must be valid for the operation to succeed. The operation follows the same authorization, repository, caching, and creation logic as the single-contact create flow. Each `usdot` value must contain digits only, be greater than zero, and be at most 9 digits after normalization.
+
+        '
+      tags:
+      - Onboarded Carriers
+      requestBody:
+        required: true
+        description: 'List of onboarded carrier contact definitions to create. The contacts array must be non-empty.
+
+          '
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - contacts
+              properties:
+                contacts:
+                  type: array
+                  minItems: 1
+                  description: List of contacts to create.
+                  items:
+                    type: object
+                    required:
+                    - usdot
+                    properties:
+                      usdot:
+                        type: string
+                        description: 'Carrier USDOT number. Must contain digits only, be greater than zero, and be at most 9 digits. Leading zeroes are normalized before persistence.
+
+                          '
+                        minLength: 1
+                        maxLength: 9
+                        pattern: ^[0-9]+$
+                      name:
+                        type: string
+                        nullable: true
+                        description: Contact name.
+                      phone:
+                        type: string
+                        nullable: true
+                        description: Contact phone number.
+                      email:
+                        type: string
+                        nullable: true
+                        description: Contact email address.
+      responses:
+        '200':
+          description: Contacts processed successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  created_contacts:
+                    type: array
+                    description: List of successfully created contacts.
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                        usdot:
+                          type: string
+                        name:
+                          type: string
+                  failed_contacts:
+                    type: array
+                    description: Per-item errors for contacts that were not created.
+                    items:
+                      type: object
+                      properties:
+                        index:
+                          type: integer
+                          description: Index of the contact in the original payload.
+                        error:
+                          type: string
+                          description: Human-readable error message for this item.
+        '400':
+          description: Bad Request – Invalid request body or all items failed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '401':
+          description: Unauthorized – Invalid or missing Access-Token.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '403':
+          description: Forbidden – Missing required permission.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+      operationId: createOnboardedCarrierContactsBulk
+    delete:
+      summary: Bulk delete onboarded carrier contacts
+      description: 'Deletes multiple onboarded carrier contacts for the authenticated customer in a single request. All provided contact IDs must exist and belong to the authenticated customer. The operation follows the same authorization, repository, caching, and deletion logic as the single-contact delete flow.
+
+        '
+      tags:
+      - Onboarded Carriers
+      requestBody:
+        required: true
+        description: 'List of onboarded carrier contact identifiers to delete. At least one contact_id must be provided.
+
+          '
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - contact_ids
+              properties:
+                contact_ids:
+                  type: array
+                  minItems: 1
+                  description: List of contact UUIDs to delete.
+                  items:
+                    type: string
+                    format: uuid
+      responses:
+        '200':
+          description: Contacts deleted successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  contacts:
+                    type: array
+                    description: List of deleted contacts.
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                        deleted:
+                          type: boolean
+        '400':
+          description: Bad Request – Invalid request body.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '401':
+          description: Unauthorized – Invalid or missing Access-Token.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '403':
+          description: Forbidden – Missing required permission.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '404':
+          description: One or more contacts not found or not owned by the customer.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+      operationId: deleteOnboardedCarrierContactsBulk
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: API key provided by GenLogs. Required on every request.
+    AccessToken:
+      type: apiKey
+      in: header
+      name: Access-Token
+      description: Short-lived access token obtained from POST /auth/token (or refreshed via /auth/token/refresh).

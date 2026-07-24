@@ -1,0 +1,384 @@
+openapi: 3.1.0
+info:
+  title: GenLogs Alerts Compliance Rules API
+  version: 1.0.0
+  description: 'GenLogs Truck Intelligence API. Ground-truth motor-carrier and shipper data from a nationwide roadside sensor network: carrier recommendations by lane, carrier and FMCSA profiles, carrier vetting, shipper lanes and facilities, onboarded-carrier contact management, mismatch observations, and alert webhooks. Base URL https://api.genlogs.io. Authentication uses an x-api-key header plus a short-lived Access-Token obtained from /auth/token; endpoint access is gated by named permissions.'
+  contact:
+    name: GenLogs
+    url: https://docs.genlogs.io
+    email: contact@genlogs.io
+  x-provenance:
+    method: searched
+    source: https://docs.genlogs.io (per-endpoint embedded OpenAPI fragments + documented endpoints)
+    assembled: '2026-07-19'
+    operationIds: some operationIds normalized by API Evangelist where the provider fragments omitted them
+servers:
+- url: https://api.genlogs.io
+  description: GenLogs Truck Intelligence API
+security:
+- ApiKeyAuth: []
+  AccessToken: []
+tags:
+- name: Compliance Rules
+paths:
+  /compliance-rules:
+    get:
+      summary: Get carrier compliance rules by USDOT (single or batch)
+      description: "Returns carrier compliance rules for one or more USDOT numbers.\n- Single mode: provide `usdot_number`. The response shape is a single\n  object with `rules` and `rule_status` and is fully backward compatible\n  with the existing API.\n- Batch mode: provide `usdot_numbers` as a comma-separated list. The\n  response shape is an object with a `results` array where each item\n  represents one USDOT and includes a `found` flag.\n\nWhen both `usdot_number` and `usdot_numbers` are provided, `usdot_numbers` takes precedence and `usdot_number` is ignored.\nThe maximum number of USDOT values allowed in `usdot_numbers` is limited to 50. Requests that exceed this limit return HTTP 400.\nEach batch result item uses `found=false` when no vetting data exists for that USDOT. In that case the item only contains `usdot_number` and `found`. When `found=true`, `rules` and `rule_status` are populated with the same structure as the single-USDOT response.\nExamples:\n- Single:\n  `/compliance-rules?usdot_number=1234567`\n- Batch:\n  `/compliance-rules?usdot_numbers=1234567,7654321`\n"
+      tags:
+      - Compliance Rules
+      parameters:
+      - name: usdot_number
+        in: query
+        required: false
+        description: 'Single USDOT number to evaluate. Ignored when `usdot_numbers` is also provided.
+
+          '
+        schema:
+          type: string
+      - name: usdot_numbers
+        in: query
+        required: false
+        description: 'Comma-separated list of USDOT numbers for batch evaluation. When provided, this parameter takes precedence over `usdot_number`.
+
+          '
+        schema:
+          type: string
+      responses:
+        '200':
+          description: 'Compliance rules retrieved successfully (single or batch).
+
+            - Single: single carrier response (rules + rule_status). - Batch: list of per-carrier results with `found` flags.
+
+            '
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/CarrierRulesSingleResponse'
+                - $ref: '#/components/schemas/CarrierRulesBatchResponse'
+        '400':
+          description: 'Bad Request – invalid input, missing required query parameters, or exceeding the maximum allowed number of USDOT values.
+
+            '
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '401':
+          description: Unauthorized – Invalid or missing Access-Token.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: object
+        '403':
+          description: Forbidden – Company user does not have vetting access permission.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '404':
+          description: 'Not Found – no vetting data exists for any of the requested USDOT numbers.
+
+            '
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: string
+      operationId: listComplianceRules
+  /customer-compliance-rules/{customer_rule_id}:
+    patch:
+      summary: Update customer compliance rule
+      description: 'Updates the status and/or parameter values of an existing customer compliance rule. At least one of `status` or `param_values` must be provided. The authenticated company must have vetting access permissions.
+
+        '
+      tags:
+      - Compliance Rules
+      parameters:
+      - name: customer_rule_id
+        in: path
+        required: true
+        description: Unique identifier of the customer compliance rule.
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  description: Updated vetting status of the rule.
+                  enum:
+                  - enabled
+                  - disabled
+                param_values:
+                  type: object
+                  description: 'Dynamic parameter values used during carrier evaluation. For the Observed by GenLogs rule, `date_interval` must be a supported interval, `decision_matrix` may only contain `false` and `true` keys, `false` must be `review` or `fail`, and `true` must be `pass`. `fail_message` and `pass_message` must be booleans.
+
+                    '
+                  additionalProperties:
+                    oneOf:
+                    - type: string
+                    - type: number
+                    - type: boolean
+                    - type: object
+              anyOf:
+              - required:
+                - status
+              - required:
+                - param_values
+      responses:
+        '200':
+          description: Customer compliance rule updated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status_code:
+                    type: string
+                  message:
+                    type: string
+        '400':
+          description: Bad Request – Invalid input, missing required fields, or invalid external rule param_values.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '401':
+          description: Unauthorized – Invalid or missing Access-Token.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: object
+        '403':
+          description: Forbidden – Company user does not have vetting access permission.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '404':
+          description: Not Found – Customer compliance rule does not exist.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: string
+      operationId: updateCustomerComplianceRule
+  /customer-compliance-rules:
+    get:
+      summary: Retrieve customer compliance rules
+      description: 'Returns all compliance rules configured for the authenticated customer. Only rules belonging to the customer associated with the Access-Token are returned. Requires the external-api-compliance-rules permission.
+
+        '
+      tags:
+      - Compliance Rules
+      responses:
+        '200':
+          description: Compliance rules retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  rules:
+                    type: array
+                    description: List of compliance rules configured for the customer.
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          description: Unique identifier of the customer compliance rule.
+                        rule_name:
+                          type: string
+                          description: Human-readable name of the compliance rule.
+                        status:
+                          type: string
+                          description: Current status of the rule.
+                          enum:
+                          - enabled
+                          - disabled
+                        param_values:
+                          type: object
+                          description: Dynamic parameter values used during carrier evaluation.
+                          additionalProperties:
+                            oneOf:
+                            - type: string
+                            - type: number
+                            - type: boolean
+                            - type: object
+        '401':
+          description: Unauthorized – Invalid or missing Access-Token.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                      subcode:
+                        type: string
+        '403':
+          description: Forbidden – User does not have the required permission.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: string
+      operationId: listCustomerComplianceRules
+components:
+  schemas:
+    CarrierRuleStatusCounts:
+      type: object
+      required:
+      - pass
+      - fail
+      - review
+      additionalProperties: false
+      properties:
+        pass:
+          type: object
+          required:
+          - total
+          properties:
+            total:
+              type: integer
+        fail:
+          type: object
+          required:
+          - total
+          properties:
+            total:
+              type: integer
+        review:
+          type: object
+          required:
+          - total
+          properties:
+            total:
+              type: integer
+    CarrierRuleItem:
+      type: object
+      required:
+      - rule_result_description
+      - status
+      - category
+      additionalProperties: false
+      properties:
+        rule_result_description:
+          type: string
+        status:
+          type: string
+          description: PASS / FAIL / REVIEW
+        category:
+          type: string
+        rule_order:
+          type: string
+    CarrierRulesSingleResponse:
+      type: object
+      required:
+      - rules
+      - rule_status
+      additionalProperties: false
+      properties:
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/CarrierRuleItem'
+        rule_status:
+          $ref: '#/components/schemas/CarrierRuleStatusCounts'
+    CarrierRulesBatchResponse:
+      type: object
+      required:
+      - results
+      additionalProperties: false
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/CarrierRulesBatchResultItem'
+    CarrierRulesBatchResultItem:
+      type: object
+      required:
+      - usdot_number
+      - found
+      additionalProperties: false
+      properties:
+        usdot_number:
+          type: string
+        found:
+          type: boolean
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/CarrierRuleItem'
+        rule_status:
+          $ref: '#/components/schemas/CarrierRuleStatusCounts'
+      description: 'Per-carrier result in a batch response. When found=false, the item only
+
+        contains usdot_number and found.
+
+        '
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: API key provided by GenLogs. Required on every request.
+    AccessToken:
+      type: apiKey
+      in: header
+      name: Access-Token
+      description: Short-lived access token obtained from POST /auth/token (or refreshed via /auth/token/refresh).

@@ -1,0 +1,553 @@
+openapi: 3.1.0
+info:
+  title: GenLogs Alerts Carrier API
+  version: 1.0.0
+  description: 'GenLogs Truck Intelligence API. Ground-truth motor-carrier and shipper data from a nationwide roadside sensor network: carrier recommendations by lane, carrier and FMCSA profiles, carrier vetting, shipper lanes and facilities, onboarded-carrier contact management, mismatch observations, and alert webhooks. Base URL https://api.genlogs.io. Authentication uses an x-api-key header plus a short-lived Access-Token obtained from /auth/token; endpoint access is gated by named permissions.'
+  contact:
+    name: GenLogs
+    url: https://docs.genlogs.io
+    email: contact@genlogs.io
+  x-provenance:
+    method: searched
+    source: https://docs.genlogs.io (per-endpoint embedded OpenAPI fragments + documented endpoints)
+    assembled: '2026-07-19'
+    operationIds: some operationIds normalized by API Evangelist where the provider fragments omitted them
+servers:
+- url: https://api.genlogs.io
+  description: GenLogs Truck Intelligence API
+security:
+- ApiKeyAuth: []
+  AccessToken: []
+tags:
+- name: Carrier
+paths:
+  /carrier/recommendations:
+    get:
+      parameters:
+      - name: accept
+        in: header
+        required: true
+        schema:
+          type: string
+          default: application/json
+        description: Specifies the format of the response.
+      - name: Access-Token
+        in: header
+        required: true
+        schema:
+          type: string
+        description: Access Token for authentication
+      - name: x-api-key
+        in: header
+        required: true
+        schema:
+          type: string
+        description: API key for authentication
+      - in: query
+        name: origin_city
+        required: true
+        schema:
+          type: string
+          default: Nashville
+        description: Origin city for the recommendation
+      - in: query
+        name: origin_state
+        required: true
+        schema:
+          type: string
+          default: TN
+        description: Origin state for the recommendation
+      - in: query
+        name: destination_city
+        required: true
+        schema:
+          type: string
+          default: Dallas
+        description: Destination city for the recommendation
+      - in: query
+        name: destination_state
+        required: true
+        schema:
+          type: string
+          default: TX
+        description: Destination state for the recommendation
+      - default: 50
+        in: query
+        name: origin_radius
+        schema:
+          type: number
+          default: 50
+        description: Search radius around the origin location in miles
+      - default: 50
+        in: query
+        name: destination_radius
+        schema:
+          type: number
+          default: 50
+        description: Search radius around the destination location in miles
+      - default: 0
+        in: query
+        name: carrier_score_min
+        schema:
+          type: float
+          default: 0
+        description: Minimum carrier score
+      - default: 100
+        in: query
+        name: carrier_score_max
+        schema:
+          type: float
+          default: 1
+        description: Maximum carrier score
+      - default: None
+        in: query
+        name: fleet_size_min
+        schema:
+          type: number
+        description: Minimum fleet size
+      - default: None
+        in: query
+        name: fleet_size_max
+        schema:
+          type: number
+        description: Maximum fleet size
+      - in: query
+        name: carried_cargo
+        schema:
+          type: string
+          default: general goods
+        description: Type of cargo carried
+      - in: query
+        name: equipment_types
+        schema:
+          type: string
+          default: flatbed
+        description: Type of equipment used by carriers
+      - in: query
+        name: preferred_carriers
+        schema:
+          type: boolean
+          default: false
+        description: Filter for preferred carriers
+      - in: query
+        name: real_time
+        schema:
+          type: boolean
+          default: false
+        description: Request real-time data if available
+      - in: query
+        name: auth_months_min
+        schema:
+          type: number
+          default: 1
+        description: Minimum number of months a carrier has an active common or contract authority with FMCSA
+      - in: query
+        name: power_only
+        schema:
+          type: boolean
+          default: false
+      - in: query
+        name: broker_authority
+        schema:
+          type: boolean
+          default: false
+      - in: query
+        name: is_possible_backhaul
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CarrierResponse'
+          description: The JSON response containing recommendations and lane volume
+      summary: Get carrier recommendations based on location
+      operationId: getCarrierRecommendations
+      tags:
+      - Carrier
+  /carrier/contacts:
+    post:
+      summary: Get contacts for carriers
+      description: Returns the contacts related to a carrier (onboarded, dispatch and FMCSA).
+      responses:
+        '200':
+          description: Contacts found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      properties:
+                        has_dispatch:
+                          type: string
+                        onboarded_contacts:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              name:
+                                type: string
+                              phone:
+                                type: string
+                              email:
+                                type: string
+                        dispatch_contact:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              phone:
+                                type: string
+                              email:
+                                type: string
+                        fmcsa_contact:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                            phone:
+                              type: string
+                            email:
+                              type: string
+        '401':
+          description: Unauthorized – missing token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden – invalid token or insufficient permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      operationId: searchCarrierContacts
+      tags:
+      - Carrier
+  /carrier/profile:
+    get:
+      summary: Get carrier profile details
+      description: 'Retrieve a comprehensive carrier profile details including FMCSA details, equipment pairings, and sightings data for specified USDOT numbers.
+
+        '
+      operationId: getCarrierProfileDetail
+      parameters:
+      - in: header
+        name: Access-Token
+        required: true
+        schema:
+          type: string
+        description: Bearer token for authentication
+      - in: query
+        name: usdot_number
+        required: true
+        schema:
+          type: array
+          items:
+            type: string
+        style: form
+        explode: false
+        description: USDOT numbers to filter data for specific carriers
+      - in: query
+        name: start_date
+        required: false
+        schema:
+          type: string
+          format: date
+        description: Start date for sightings in YYYY-MM-DD format
+      - in: query
+        name: end_date
+        required: false
+        schema:
+          type: string
+          format: date
+        description: End date for sightings in YYYY-MM-DD format
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: object
+                  properties:
+                    fmcsa_detail:
+                      $ref: '#/components/schemas/FmcsaDetail'
+                    equipment_pairings:
+                      $ref: '#/components/schemas/EquipmentPairings'
+                    sightings:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Sighting'
+        '400':
+          description: Bad Request - invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized – missing token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden – invalid token or insufficient permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+      - Carrier
+components:
+  schemas:
+    EquipmentPairings:
+      type: object
+      properties:
+        genlogs:
+          type: array
+          items: {}
+        fmcsa:
+          type: array
+          items: {}
+    CarrierResponse:
+      properties:
+        real_time_locs:
+          items:
+            $ref: '#/components/schemas/CarrierRealTimeLocs'
+          type: array
+        recommendations:
+          items:
+            $ref: '#/components/schemas/CarrierRecommendation'
+          type: array
+      required:
+      - real_time_locs
+      - recommendations
+      type: object
+    CarrierRecommendation:
+      properties:
+        add_date:
+          type: string
+        bipd_insurance_on_file:
+          type: number
+        cargo_insurance_on_file:
+          type: number
+        carried_cargo:
+          type: string
+        carrier_driver_oos_rate:
+          type: number
+        carrier_driver_oos_rate_national_avg:
+          type: number
+        carrier_score_scaled:
+          type: number
+        carrier_total_power_units:
+          type: number
+        carrier_vehicle_oos_rate:
+          type: number
+        carrier_vehicle_oos_rate_national_avg:
+          type: number
+        confirmed_email:
+          type: object
+          properties:
+            <email@domain.com>:
+              type: object
+              properties:
+                add_date:
+                  type: string
+        confirmed_phone:
+          type: object
+          properties:
+            <phone_number>:
+              type: object
+              properties:
+                add_date:
+                  type: string
+        dba_name:
+          nullable: true
+          type: string
+        dot_number:
+          type: string
+        email_address:
+          type: string
+        is_inbound:
+          type: boolean
+        is_real_time:
+          type: boolean
+        is_visually_sighted:
+          type: boolean
+        is_possible_backhaul:
+          type: boolean
+        lat:
+          nullable: true
+          type: number
+        legal_name:
+          type: string
+        lon:
+          nullable: true
+          type: number
+        mc_number:
+          type: number
+        phy_city:
+          type: string
+        phy_state:
+          type: string
+        phy_street:
+          type: string
+        phy_zip:
+          type: string
+        telephone:
+          type: string
+        power_only:
+          type: boolean
+        broker_authority_status:
+          type: string
+      required:
+      - add_date
+      - bipd_insurance_on_file
+      - cargo_insurance_on_file
+      - carried_cargo
+      - carrier_driver_oos_rate
+      - carrier_driver_oos_rate_national_avg
+      - carrier_score_scaled
+      - carrier_total_power_units
+      - carrier_vehicle_oos_rate
+      - carrier_vehicle_oos_rate_national_avg
+      - confirmed_email
+      - confirmed_phone
+      - dot_number
+      - email_address
+      - is_inbound
+      - is_real_time
+      - is_visually_sighted
+      - legal_name
+      - mc_number
+      - phy_city
+      - phy_state
+      - phy_street
+      - phy_zip
+      - telephone
+      type: object
+    Sighting:
+      type: object
+      description: A single sighting record for a carrier location/date.
+      properties:
+        sighting_date:
+          type: string
+          format: date
+        state_seen:
+          type: string
+        location_zip:
+          type: string
+        sightings:
+          type: integer
+          description: Count of sightings for this location/date.
+        source:
+          type: string
+          description: Data source of the sighting (e.g. visual, api).
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+          format: int32
+      required:
+      - message
+      - code
+    CarrierRealTimeLocs:
+      properties:
+        current_lat:
+          nullable: true
+          type: number
+        current_lon:
+          nullable: true
+          type: number
+        dot_number:
+          type: string
+        is_inbound:
+          type: boolean
+      required:
+      - dot_number
+      - is_inbound
+      type: object
+    FmcsaDetail:
+      type: object
+      properties:
+        usdot_number:
+          type: string
+        legal_name:
+          type: string
+        dba_name:
+          type: string
+        entity_type:
+          type: string
+        carrier_operation:
+          type: string
+        cargo_carried:
+          type: string
+        hazmat_authorized:
+          type: string
+        carrier_status:
+          type: string
+        out_of_service_date:
+          type: string
+        legal_address:
+          type: string
+        physical_address:
+          type: string
+        mailing_address:
+          type: string
+        telephone:
+          type: string
+        fax:
+          type: string
+        email:
+          type: string
+        mcs_150_form_date:
+          type: string
+          format: date
+        mcs_150_mileage_year:
+          type: string
+        dot_number:
+          type: string
+        docket_number:
+          type: string
+        mc_mx_ff_number:
+          type: string
+        power_units:
+          type: string
+        drivers:
+          type: string
+        mcs_150_mileage:
+          type: string
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: API key provided by GenLogs. Required on every request.
+    AccessToken:
+      type: apiKey
+      in: header
+      name: Access-Token
+      description: Short-lived access token obtained from POST /auth/token (or refreshed via /auth/token/refresh).

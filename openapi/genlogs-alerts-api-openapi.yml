@@ -1,0 +1,482 @@
+openapi: 3.1.0
+info:
+  title: GenLogs Alerts API
+  version: 1.0.0
+  description: 'GenLogs Truck Intelligence API. Ground-truth motor-carrier and shipper data from a nationwide roadside sensor network: carrier recommendations by lane, carrier and FMCSA profiles, carrier vetting, shipper lanes and facilities, onboarded-carrier contact management, mismatch observations, and alert webhooks. Base URL https://api.genlogs.io. Authentication uses an x-api-key header plus a short-lived Access-Token obtained from /auth/token; endpoint access is gated by named permissions.'
+  contact:
+    name: GenLogs
+    url: https://docs.genlogs.io
+    email: contact@genlogs.io
+  x-provenance:
+    method: searched
+    source: https://docs.genlogs.io (per-endpoint embedded OpenAPI fragments + documented endpoints)
+    assembled: '2026-07-19'
+    operationIds: some operationIds normalized by API Evangelist where the provider fragments omitted them
+servers:
+- url: https://api.genlogs.io
+  description: GenLogs Truck Intelligence API
+security:
+- ApiKeyAuth: []
+  AccessToken: []
+tags:
+- name: Alerts
+paths:
+  /alerts/webhook/{webhook_id}:
+    delete:
+      summary: Delete alert webhook
+      description: 'Delete an alert webhook by ID. Requires ownership for the authenticated customer. Returns the deleted webhook data (id, webhook_url, description, created_at). Requires admin or external-api-delete-alert-webhook-endpoint.
+
+        '
+      operationId: deleteAlertWebhook
+      parameters:
+      - in: header
+        name: Access-Token
+        required: true
+        schema:
+          type: string
+        description: JWT access token for authentication
+      - in: header
+        name: X-API-Key
+        required: true
+        schema:
+          type: string
+        description: API key for authentication
+      - in: path
+        name: webhook_id
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: UUID of the webhook to delete
+      responses:
+        '200':
+          description: Webhook deleted successfully; returns deleted webhook data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeletedWebhookResponse'
+        '400':
+          description: Bad Request – invalid webhook ID format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized – missing or invalid token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden – insufficient permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found – webhook does not exist or does not belong to customer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+      - Alerts
+  /alerts/{alert_id}:
+    patch:
+      tags:
+      - Alerts
+      summary: External Patch Alert
+      description: Partially update an existing alert by alert_id. `start_date` and `end_date` accept ISO 8601 date-time strings with `Z`, timezone offsets, or no timezone. Timezone-aware values are normalized to UTC and returned without timezone information.
+      operationId: external_patch_alert_alerts__alert_id__patch
+      parameters:
+      - name: alert_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Alert Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAlertSchema'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlertResponseSchema'
+        '400':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    AlertResponseSchema:
+      properties:
+        alert_name:
+          type: string
+          title: Alert Name
+        location_state:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Location State
+        location_city:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Location City
+        license_plate:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: License Plate
+        license_plate_state:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: License Plate State
+        usdot_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Usdot Number
+        chassis_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Chassis Number
+        exact_match_chassis_number:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Exact Match Chassis Number
+          default: false
+        container_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Container Number
+        equipment_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Equipment Type
+        exact_match_container_number:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Exact Match Container Number
+          default: false
+        mc_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Mc Number
+        vin:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Vin
+        cab_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cab Number
+        trailer_logo:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Trailer Logo
+        trailer_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Trailer Number
+        disabled:
+          type: boolean
+          title: Disabled
+          default: false
+        cc_emails:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Cc Emails
+        alert_type:
+          type: string
+          title: Alert Type
+          default: normal
+        exact_match_trailer_number:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Exact Match Trailer Number
+          default: false
+        start_date:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          description: Returned as a timezone-free UTC date-time string after normalization.
+          title: Start Date
+        end_date:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          description: Returned as a timezone-free UTC date-time string after normalization.
+          title: End Date
+        deep_search:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Deep Search
+        id:
+          type: integer
+          title: Id
+        email:
+          type: string
+          title: Email
+        last_updated_timestamp:
+          type: string
+          format: date-time
+          title: Last Updated Timestamp
+        insert_timestamp:
+          type: string
+          format: date-time
+          title: Insert Timestamp
+        notification_channels:
+          items:
+            type: string
+          type: array
+          title: Notification Channels
+          default: []
+      additionalProperties: false
+      type: object
+      required:
+      - alert_name
+      - id
+      - email
+      - last_updated_timestamp
+      - insert_timestamp
+      title: AlertResponseSchema
+      description: Public API response schema for alerts - extends base with response-specific fields
+    ValidationError:
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      properties:
+        loc:
+          type: array
+          items:
+            oneOf:
+            - type: string
+            - type: integer
+        msg:
+          type: string
+        type:
+          type: string
+    UpdateAlertSchema:
+      properties:
+        alert_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Alert Name
+        location_state:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Location State
+        location_city:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Location City
+        license_plate:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: License Plate
+        license_plate_state:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: License Plate State
+        usdot_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Usdot Number
+        chassis_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Chassis Number
+        exact_match_chassis_number:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Exact Match Chassis Number
+          default: false
+        container_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Container Number
+        equipment_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Equipment Type
+        exact_match_container_number:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Exact Match Container Number
+          default: false
+        mc_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Mc Number
+        vin:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Vin
+        cab_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cab Number
+        trailer_logo:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Trailer Logo
+        trailer_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Trailer Number
+        disabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Disabled
+        cc_emails:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Cc Emails
+        alert_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Alert Type
+        exact_match_trailer_number:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Exact Match Trailer Number
+        start_date:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          description: ISO 8601 date-time. Values with `Z` or timezone offsets are normalized to UTC and stored/returned without timezone information.
+          title: Start Date
+        end_date:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          description: ISO 8601 date-time. Values with `Z` or timezone offsets are normalized to UTC and stored/returned without timezone information.
+          title: End Date
+        deep_search:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Deep Search
+        notification_channels:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Notification Channels
+      additionalProperties: false
+      type: object
+      title: UpdateAlertSchema
+      description: Schema for partial updates of alerts (PATCH operations). All fields are optional - only provided fields will be updated.
+    HTTPValidationError:
+      type: object
+      properties:
+        detail:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+          format: int32
+      required:
+      - message
+      - code
+    DeletedWebhookResponse:
+      type: object
+      description: Deleted webhook data returned on successful DELETE (secret and enabled excluded)
+      properties:
+        id:
+          type: string
+          format: uuid
+        webhook_url:
+          type: string
+          format: uri
+        description:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        deleted:
+          type: boolean
+          description: Always true for delete response
+      required:
+      - id
+      - webhook_url
+      - created_at
+      - deleted
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: API key provided by GenLogs. Required on every request.
+    AccessToken:
+      type: apiKey
+      in: header
+      name: Access-Token
+      description: Short-lived access token obtained from POST /auth/token (or refreshed via /auth/token/refresh).
