@@ -1,0 +1,79 @@
+generated: '2026-07-19'
+method: searched
+source: https://docs.genlogs.io
+authentication:
+  style: api-key + short-lived access token
+  headers:
+  - x-api-key
+  - Access-Token
+  token_endpoint: POST /auth/token
+  refresh_endpoint: POST /auth/token/refresh
+  notes: x-api-key is required on every request; Access-Token is obtained from POST /auth/token using
+    email+password and expires. Refresh token is documented but noted as not usable at this time; create
+    a new token after expiry.
+  ref: authentication/genlogs-authentication.yml
+permissions:
+  model: named per-endpoint permissions granted to the API key/customer
+  examples:
+  - verifier-carrier
+  - realtime-api
+  - external-api-carrier-recommendation
+  - external-api-carrier-profile
+  - external-api-carrier-contacts
+  - external-api-carrier-iss-score
+  - external-api-shipper-lanes
+  - external-api-shipper-facilities
+  - external-api-shipper-network-map
+  - external-api-compliance-rules
+  - external-api-update-compliance-rules
+  - external-api-get-onboarded-carrier-contact
+  - external-api-create-onboarded-carrier-contact
+  - external-api-update-onboarded-carrier-contact
+  - external-api-delete-onboarded-carrier-contact
+  - external-api-mismatch-observations
+  - external-api-get-all-company-alerts
+  - external-api-get-webhook-list
+  - external-api-delete-alert-webhook-endpoint
+  - create-alert-endpoint
+  - edit-alert-endpoint
+  - create-alert-webhook-endpoint
+  - edit-alert-webhook-endpoint
+  - test-alert-webhook-endpoint
+  - run-summary-alert
+  - admin
+  note: 403 Forbidden is returned when the key lacks the required permission.
+pagination:
+  style: cursor
+  signal: Link header (RFC 5988) with rel="next"/rel="prev"
+  total_header: X-Total-Count
+  param: cursor (opaque)
+  page_size: 20
+  applies_to:
+  - GET /facilities (when include_lanes=true)
+  notes: Cursor values are opaque and do not expire; always follow the Link header URL. Not supported
+    with smart_search=true (returns 400).
+  ref: lifecycle/genlogs-lifecycle.yml
+idempotency:
+  supported: false
+  note: No idempotency-key header or contract is documented by GenLogs.
+request_tracing:
+  supported: false
+  note: No request-id/correlation header is documented.
+versioning:
+  scheme: unversioned
+  note: Base URL https://api.genlogs.io carries no version segment.
+  ref: lifecycle/genlogs-lifecycle.yml
+error_envelope:
+  shapes:
+  - '{message, code}'
+  - '{message, subcode}'
+  - '{detail: [...]}'
+  ref: errors/genlogs-problem-types.yml
+rate_limit_signaling:
+  documented: false
+  note: No rate-limit headers documented in public docs.
+webhooks:
+  signing: HMAC-SHA512 per-webhook secret
+  transport: HTTPS-only
+  event: alert.matches_found
+  ref: asyncapi/genlogs-webhooks.yml

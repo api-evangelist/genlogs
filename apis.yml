@@ -1,22 +1,355 @@
 aid: genlogs
 name: GenLogs
-description: GenLogs is a company surfaced as a portfolio company of battery-ventures, ivp and added to
-  the API Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment
-  pipeline.
+description: >-
+  GenLogs is a truck intelligence platform that provides ground-truth data on every motor
+  carrier in America from a nationwide network of proprietary roadside sensors, satellites,
+  and millions of data sources - 4.2 billion commercial-vehicle images with 16 million added
+  daily, covering 97% of active motor carriers. The GenLogs API (https://api.genlogs.io) turns
+  that sensor network into freight intelligence: source and score carriers by lane, verify a
+  carrier was recently sighted along an origin/destination, pull carrier and FMCSA profiles,
+  run carrier-vetting rules, discover shippers by lane and shipper facilities with GeoJSON
+  network maps, manage onboarded-carrier contacts, track mismatch observations, and receive
+  HMAC-SHA512-signed alert webhooks. It serves brokers and shippers, insurance underwriting and
+  claims, law enforcement asset recovery, and carriers. Auth uses an x-api-key plus a short-lived
+  Access-Token, with named per-endpoint permissions.
 url: https://raw.githubusercontent.com/api-evangelist/genlogs/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
 - battery-ventures
 - ivp
-x-tier: stub
+x-tier: enriched
 x-tier-reason: portfolio-lead
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-19'
+image: https://static1.squarespace.com/static/6389ebe42811fa07a7c17692/t/67362a2579a24b6b8c42992c/1731602981116/GenLogs+logo+black.png?format=1500w
 tags:
 - Company
-apis: []
+- Logistics
+- Freight
+- Trucking
+- Supply Chain
+- Carrier Intelligence
+- Fleet
+- Transportation
+- Insurance
+- Fraud Detection
+- Webhooks
+- Geospatial
+apis:
+- aid: genlogs:genlogs-alerts-api
+  name: GenLogs Alerts API
+  description: The Alerts API from GenLogs — 2 operation(s) for alerts.
+  humanURL: https://docs.genlogs.io
+  baseURL: https://api.genlogs.io
+  tags:
+  - Alerts
+  properties:
+  - type: OpenAPI
+    url: openapi/genlogs-alerts-api-openapi.yml
+  - type: Authentication
+    url: authentication/genlogs-authentication.yml
+  - type: Conventions
+    url: conventions/genlogs-conventions.yml
+  - type: Idempotency
+    url: conventions/genlogs-conventions.yml
+  - type: ErrorCatalog
+    url: errors/genlogs-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/genlogs-lifecycle.yml
+  - type: DataModel
+    url: data-model/genlogs-data-model.yml
+  - type: Conformance
+    url: conformance/genlogs-conformance.yml
+  - type: AsyncAPI
+    url: asyncapi/genlogs-alerts-asyncapi.yml
+  - type: Webhooks
+    url: asyncapi/genlogs-webhooks.yml
+  - type: JSONSchema
+    url: json-schema/genlogs-alert-matches-found.schema.json
+- aid: genlogs:genlogs-auth-api
+  name: GenLogs auth API
+  description: Access-token creation and refresh
+  humanURL: https://docs.genlogs.io
+  baseURL: https://api.genlogs.io
+  tags:
+  - auth
+  properties:
+  - type: OpenAPI
+    url: openapi/genlogs-auth-api-openapi.yml
+  - type: Authentication
+    url: authentication/genlogs-authentication.yml
+  - type: Conventions
+    url: conventions/genlogs-conventions.yml
+  - type: Idempotency
+    url: conventions/genlogs-conventions.yml
+  - type: ErrorCatalog
+    url: errors/genlogs-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/genlogs-lifecycle.yml
+  - type: DataModel
+    url: data-model/genlogs-data-model.yml
+  - type: Conformance
+    url: conformance/genlogs-conformance.yml
+  - type: AsyncAPI
+    url: asyncapi/genlogs-alerts-asyncapi.yml
+  - type: Webhooks
+    url: asyncapi/genlogs-webhooks.yml
+  - type: JSONSchema
+    url: json-schema/genlogs-alert-matches-found.schema.json
+- aid: genlogs:genlogs-carrier-api
+  name: GenLogs Carrier API
+  description: The Carrier API from GenLogs — 3 operation(s) for carrier.
+  humanURL: https://docs.genlogs.io
+  baseURL: https://api.genlogs.io
+  tags:
+  - Carrier
+  properties:
+  - type: OpenAPI
+    url: openapi/genlogs-carrier-api-openapi.yml
+  - type: Authentication
+    url: authentication/genlogs-authentication.yml
+  - type: Conventions
+    url: conventions/genlogs-conventions.yml
+  - type: Idempotency
+    url: conventions/genlogs-conventions.yml
+  - type: ErrorCatalog
+    url: errors/genlogs-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/genlogs-lifecycle.yml
+  - type: DataModel
+    url: data-model/genlogs-data-model.yml
+  - type: Conformance
+    url: conformance/genlogs-conformance.yml
+  - type: AsyncAPI
+    url: asyncapi/genlogs-alerts-asyncapi.yml
+  - type: Webhooks
+    url: asyncapi/genlogs-webhooks.yml
+  - type: JSONSchema
+    url: json-schema/genlogs-alert-matches-found.schema.json
+- aid: genlogs:genlogs-carrier-vetting-api
+  name: GenLogs carrier-vetting API
+  description: Carrier verification and vetting rules
+  humanURL: https://docs.genlogs.io
+  baseURL: https://api.genlogs.io
+  tags:
+  - carrier-vetting
+  properties:
+  - type: OpenAPI
+    url: openapi/genlogs-carrier-vetting-api-openapi.yml
+  - type: Authentication
+    url: authentication/genlogs-authentication.yml
+  - type: Conventions
+    url: conventions/genlogs-conventions.yml
+  - type: Idempotency
+    url: conventions/genlogs-conventions.yml
+  - type: ErrorCatalog
+    url: errors/genlogs-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/genlogs-lifecycle.yml
+  - type: DataModel
+    url: data-model/genlogs-data-model.yml
+  - type: Conformance
+    url: conformance/genlogs-conformance.yml
+  - type: AsyncAPI
+    url: asyncapi/genlogs-alerts-asyncapi.yml
+  - type: Webhooks
+    url: asyncapi/genlogs-webhooks.yml
+  - type: JSONSchema
+    url: json-schema/genlogs-alert-matches-found.schema.json
+- aid: genlogs:genlogs-compliance-rules-api
+  name: GenLogs Compliance Rules API
+  description: The Compliance Rules API from GenLogs — 3 operation(s) for compliance rules.
+  humanURL: https://docs.genlogs.io
+  baseURL: https://api.genlogs.io
+  tags:
+  - Compliance Rules
+  properties:
+  - type: OpenAPI
+    url: openapi/genlogs-compliance-rules-api-openapi.yml
+  - type: Authentication
+    url: authentication/genlogs-authentication.yml
+  - type: Conventions
+    url: conventions/genlogs-conventions.yml
+  - type: Idempotency
+    url: conventions/genlogs-conventions.yml
+  - type: ErrorCatalog
+    url: errors/genlogs-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/genlogs-lifecycle.yml
+  - type: DataModel
+    url: data-model/genlogs-data-model.yml
+  - type: Conformance
+    url: conformance/genlogs-conformance.yml
+  - type: AsyncAPI
+    url: asyncapi/genlogs-alerts-asyncapi.yml
+  - type: Webhooks
+    url: asyncapi/genlogs-webhooks.yml
+  - type: JSONSchema
+    url: json-schema/genlogs-alert-matches-found.schema.json
+- aid: genlogs:genlogs-facilities-api
+  name: GenLogs Facilities API
+  description: The Facilities API from GenLogs — 2 operation(s) for facilities.
+  humanURL: https://docs.genlogs.io
+  baseURL: https://api.genlogs.io
+  tags:
+  - Facilities
+  properties:
+  - type: OpenAPI
+    url: openapi/genlogs-facilities-api-openapi.yml
+  - type: Authentication
+    url: authentication/genlogs-authentication.yml
+  - type: Conventions
+    url: conventions/genlogs-conventions.yml
+  - type: Idempotency
+    url: conventions/genlogs-conventions.yml
+  - type: ErrorCatalog
+    url: errors/genlogs-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/genlogs-lifecycle.yml
+  - type: DataModel
+    url: data-model/genlogs-data-model.yml
+  - type: Conformance
+    url: conformance/genlogs-conformance.yml
+  - type: AsyncAPI
+    url: asyncapi/genlogs-alerts-asyncapi.yml
+  - type: Webhooks
+    url: asyncapi/genlogs-webhooks.yml
+  - type: JSONSchema
+    url: json-schema/genlogs-alert-matches-found.schema.json
+- aid: genlogs:genlogs-mismatch-alerts-api
+  name: GenLogs Mismatch alerts API
+  description: The Mismatch alerts API from GenLogs — 2 operation(s) for mismatch alerts.
+  humanURL: https://docs.genlogs.io
+  baseURL: https://api.genlogs.io
+  tags:
+  - Mismatch alerts
+  properties:
+  - type: OpenAPI
+    url: openapi/genlogs-mismatch-alerts-api-openapi.yml
+  - type: Authentication
+    url: authentication/genlogs-authentication.yml
+  - type: Conventions
+    url: conventions/genlogs-conventions.yml
+  - type: Idempotency
+    url: conventions/genlogs-conventions.yml
+  - type: ErrorCatalog
+    url: errors/genlogs-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/genlogs-lifecycle.yml
+  - type: DataModel
+    url: data-model/genlogs-data-model.yml
+  - type: Conformance
+    url: conformance/genlogs-conformance.yml
+  - type: AsyncAPI
+    url: asyncapi/genlogs-alerts-asyncapi.yml
+  - type: Webhooks
+    url: asyncapi/genlogs-webhooks.yml
+  - type: JSONSchema
+    url: json-schema/genlogs-alert-matches-found.schema.json
+- aid: genlogs:genlogs-onboarded-carriers-api
+  name: GenLogs Onboarded Carriers API
+  description: The Onboarded Carriers API from GenLogs — 3 operation(s) for onboarded carriers.
+  humanURL: https://docs.genlogs.io
+  baseURL: https://api.genlogs.io
+  tags:
+  - Onboarded Carriers
+  properties:
+  - type: OpenAPI
+    url: openapi/genlogs-onboarded-carriers-api-openapi.yml
+  - type: Authentication
+    url: authentication/genlogs-authentication.yml
+  - type: Conventions
+    url: conventions/genlogs-conventions.yml
+  - type: Idempotency
+    url: conventions/genlogs-conventions.yml
+  - type: ErrorCatalog
+    url: errors/genlogs-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/genlogs-lifecycle.yml
+  - type: DataModel
+    url: data-model/genlogs-data-model.yml
+  - type: Conformance
+    url: conformance/genlogs-conformance.yml
+  - type: AsyncAPI
+    url: asyncapi/genlogs-alerts-asyncapi.yml
+  - type: Webhooks
+    url: asyncapi/genlogs-webhooks.yml
+  - type: JSONSchema
+    url: json-schema/genlogs-alert-matches-found.schema.json
+- aid: genlogs:genlogs-shipper-api
+  name: GenLogs Shipper API
+  description: The Shipper API from GenLogs — 1 operation(s) for shipper.
+  humanURL: https://docs.genlogs.io
+  baseURL: https://api.genlogs.io
+  tags:
+  - Shipper
+  properties:
+  - type: OpenAPI
+    url: openapi/genlogs-shipper-api-openapi.yml
+  - type: Authentication
+    url: authentication/genlogs-authentication.yml
+  - type: Conventions
+    url: conventions/genlogs-conventions.yml
+  - type: Idempotency
+    url: conventions/genlogs-conventions.yml
+  - type: ErrorCatalog
+    url: errors/genlogs-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/genlogs-lifecycle.yml
+  - type: DataModel
+    url: data-model/genlogs-data-model.yml
+  - type: Conformance
+    url: conformance/genlogs-conformance.yml
+  - type: AsyncAPI
+    url: asyncapi/genlogs-alerts-asyncapi.yml
+  - type: Webhooks
+    url: asyncapi/genlogs-webhooks.yml
+  - type: JSONSchema
+    url: json-schema/genlogs-alert-matches-found.schema.json
+- aid: genlogs:genlogs-webhook-alerts-api
+  name: GenLogs Webhook Alerts API
+  description: The Webhook Alerts API from GenLogs — 3 operation(s) for webhook alerts.
+  humanURL: https://docs.genlogs.io
+  baseURL: https://api.genlogs.io
+  tags:
+  - Webhook Alerts
+  properties:
+  - type: OpenAPI
+    url: openapi/genlogs-webhook-alerts-api-openapi.yml
+  - type: Authentication
+    url: authentication/genlogs-authentication.yml
+  - type: Conventions
+    url: conventions/genlogs-conventions.yml
+  - type: Idempotency
+    url: conventions/genlogs-conventions.yml
+  - type: ErrorCatalog
+    url: errors/genlogs-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/genlogs-lifecycle.yml
+  - type: DataModel
+    url: data-model/genlogs-data-model.yml
+  - type: Conformance
+    url: conformance/genlogs-conformance.yml
+  - type: AsyncAPI
+    url: asyncapi/genlogs-alerts-asyncapi.yml
+  - type: Webhooks
+    url: asyncapi/genlogs-webhooks.yml
+  - type: JSONSchema
+    url: json-schema/genlogs-alert-matches-found.schema.json
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -25,3 +358,40 @@ maintainers:
 common:
 - type: Website
   url: https://www.genlogs.io
+- type: DeveloperPortal
+  url: https://docs.genlogs.io
+- type: Documentation
+  url: https://docs.genlogs.io
+- type: APIReference
+  url: https://docs.genlogs.io/genlogs-api-docs
+- type: GettingStarted
+  url: https://docs.genlogs.io/getting-started
+- type: Support
+  url: https://help.genlogs.io/en/
+- type: Blog
+  url: https://genlogs.substack.com
+- type: GitHubOrganization
+  url: https://github.com/genlogs
+- type: StatusPage
+  url: https://status.genlogs.io
+- type: PrivacyPolicy
+  url: https://www.genlogs.io/privacy-policy
+- type: Login
+  url: https://brokers.genlogs.io
+- type: LLMsTxt
+  url: llms/genlogs-llms.txt
+- type: Packages
+  url: packages/genlogs-packages.yml
+- type: Authentication
+  url: authentication/genlogs-authentication.yml
+- type: AgenticAccess
+  url: agentic-access/genlogs-agentic-access.yml
+- type: DomainSecurity
+  url: security/genlogs-domain-security.yml
+- type: AgentSkill
+  url: skills/_index.yml
+x-enrichment:
+  date: '2026-07-19'
+  status: backfilled
+  pass: local-v1
+  note: backfilled from .gitignore signal + verified work evidence

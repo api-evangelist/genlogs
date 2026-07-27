@@ -1,0 +1,19 @@
+generated: '2026-07-19'
+method: searched
+source: https://docs.genlogs.io/alert-webhook/webhook-specifications
+signing: HMAC-SHA512 (per-webhook secret)
+transport: HTTPS-only
+delivery: consolidated payload per processing cycle (manual /alerts/run, API, or daily cron)
+events:
+- event: alert.matches_found
+  description: One or more detection alerts matched new roadside sightings.
+  payload_schema: json-schema/genlogs-alert-matches-found.schema.json
+  asyncapi: asyncapi/genlogs-alerts-asyncapi.yml
+management_operations:
+- create_webhook_alerts_webhook_post
+- list_webhooks_alerts_webhook_get
+- update_webhook_alerts_webhook__webhook_id__patch
+- deleteAlertWebhook
+- validate_webhook_endpoint_alerts_webhook_test_post
+notes: Webhooks are company-wide (fire for every alert regardless of author); multiple endpoints supported;
+  test an endpoint via POST /alerts/webhook/test before enabling.

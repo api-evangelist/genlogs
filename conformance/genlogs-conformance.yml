@@ -1,0 +1,27 @@
+generated: '2026-07-19'
+method: derived
+source: openapi/genlogs-openapi.yml
+standards:
+- id: oauth2
+  conforms: false
+  evidence: auth is x-api-key + custom Access-Token header, not OAuth2
+- id: openid-connect
+  conforms: false
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: errors use {message,code} / {detail} envelopes, not application/problem+json
+- id: rfc5988-web-linking
+  conforms: true
+  evidence: pagination uses Link header with rel=next/prev
+- id: cursor-pagination
+  conforms: true
+  evidence: opaque cursor + X-Total-Count on GET /facilities
+- id: idempotency
+  conforms: false
+  evidence: no idempotency-key contract documented
+- id: webhooks-hmac-signing
+  conforms: true
+  evidence: HMAC-SHA512 signatures on webhook payloads, HTTPS-only
+- id: openapi-3
+  conforms: true
+  evidence: provider publishes per-endpoint OpenAPI 3.x fragments in docs

@@ -1,0 +1,32 @@
+{
+  "provider": "genlogs",
+  "sources": [
+    "genlogs-alerts-api-openapi.yml",
+    "genlogs-auth-api-openapi.yml",
+    "genlogs-carrier-api-openapi.yml",
+    "genlogs-carrier-vetting-api-openapi.yml",
+    "genlogs-compliance-rules-api-openapi.yml",
+    "genlogs-facilities-api-openapi.yml",
+    "genlogs-mismatch-alerts-api-openapi.yml",
+    "genlogs-onboarded-carriers-api-openapi.yml",
+    "genlogs-shipper-api-openapi.yml",
+    "genlogs-webhook-alerts-api-openapi.yml"
+  ],
+  "outputs": [
+    "genlogs-alerts-api-openapi.yml",
+    "genlogs-auth-api-openapi.yml",
+    "genlogs-carrier-api-openapi.yml",
+    "genlogs-carrier-vetting-api-openapi.yml",
+    "genlogs-compliance-rules-api-openapi.yml",
+    "genlogs-facilities-api-openapi.yml",
+    "genlogs-mismatch-alerts-api-openapi.yml",
+    "genlogs-onboarded-carriers-api-openapi.yml",
+    "genlogs-shipper-api-openapi.yml",
+    "genlogs-webhook-alerts-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

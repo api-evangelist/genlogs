@@ -1,0 +1,17 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for GenLogs API
+  version: 1.0.0
+extends: openapi/genlogs-openapi.yml
+actions:
+- target: $.info
+  update:
+    x-apievangelist-enrichment:
+      assembled_from: per-endpoint OpenAPI fragments in docs.genlogs.io
+      operationIds: normalized where provider omitted them
+      date: '2026-07-19'
+- target: $.info
+  update:
+    x-idempotency-supported: false
+    x-pagination: cursor + Link header
+    x-webhook-signing: HMAC-SHA512

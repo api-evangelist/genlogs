@@ -1,0 +1,369 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "alert_details",
+    "customer_id",
+    "event",
+    "matches",
+    "timestamp",
+    "total_matches",
+    "webhook_id"
+  ],
+  "properties": {
+    "alert_details": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "alert_name",
+          "description",
+          "email",
+          "id",
+          "is_active",
+          "trailer_logo",
+          "trailer_number"
+        ],
+        "properties": {
+          "alert_name": {
+            "type": "string"
+          },
+          "cab_number": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "chassis_number": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "container_number": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "equipment_type": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "id": {
+            "type": "integer"
+          },
+          "is_active": {
+            "type": "boolean"
+          },
+          "license_plate": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "mc_number": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "trailer_logo": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "trailer_number": {
+            "type": "string"
+          },
+          "usdot_number": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "vin": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "customer_id": {
+      "type": "integer"
+    },
+    "event": {
+      "type": "string",
+      "enum": [
+        "alert.matches_found"
+      ]
+    },
+    "matches": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "alert_name",
+          "city",
+          "detected_logos",
+          "lat_long",
+          "time"
+        ],
+        "properties": {
+          "alert_name": {
+            "type": "string"
+          },
+          "cab_number": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "chassis_number": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "container_number": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "city": {
+            "type": "string"
+          },
+          "deep_search": {
+            "type": "string"
+          },
+          "detected_logos": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string"
+            }
+          },
+          "equipment_type": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "front_view_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "anyOf": [
+              {
+                "format": "uri"
+              },
+              {
+                "const": "N/A"
+              }
+            ]
+          },
+          "rear_view_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "anyOf": [
+              {
+                "format": "uri"
+              },
+              {
+                "const": "N/A"
+              }
+            ]
+          },
+          "side_view_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "anyOf": [
+              {
+                "format": "uri"
+              },
+              {
+                "const": "N/A"
+              }
+            ]
+          },
+          "lat_long": {
+            "type": "string",
+            "pattern": "^-?\\d+\\.\\d+,\\s?-?\\d+\\.\\d+$"
+          },
+          "license_plate": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "mc": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "result_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          },
+          "road": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "state": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 2
+          },
+          "time": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$"
+          },
+          "trailer_logo": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "trailer_number": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "usdot": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "vin": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "confidence_score": {
+            "type": "string",
+            "enum": [
+              "High",
+              "Medium",
+              "Low"
+            ]
+          },
+          "usdot_number_ocr_score": {
+            "type": "string",
+            "enum": [
+              "High",
+              "Medium",
+              "Low"
+            ]
+          },
+          "mc_number_ocr_score": {
+            "type": "string",
+            "enum": [
+              "High",
+              "Medium",
+              "Low"
+            ]
+          },
+          "vin_ocr_score": {
+            "type": "string",
+            "enum": [
+              "High",
+              "Medium",
+              "Low"
+            ]
+          },
+          "cab_number_ocr_score": {
+            "type": "string",
+            "enum": [
+              "High",
+              "Medium",
+              "Low"
+            ]
+          },
+          "trailer_number_ocr_score": {
+            "type": "string",
+            "enum": [
+              "High",
+              "Medium",
+              "Low"
+            ]
+          },
+          "trailer_logo_ocr_score": {
+            "type": "string",
+            "enum": [
+              "High",
+              "Medium",
+              "Low",
+              "N/A"
+            ]
+          },
+          "is_imputed": {
+            "type": "boolean"
+          },
+          "is_dot_imputed": {
+            "type": "boolean"
+          },
+          "is_cab_imputed": {
+            "type": "boolean"
+          },
+          "is_mc_number_imputed": {
+            "type": "boolean"
+          },
+          "is_trailer_logo_imputed": {
+            "type": "boolean"
+          },
+          "is_vin_imputed": {
+            "type": "boolean"
+          },
+          "is_hazmat": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "total_matches": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "webhook_id": {
+      "type": "string",
+      "format": "uuid"
+    }
+  },
+  "additionalProperties": false,
+  "title": "GenLogs alert.matches_found webhook payload"
+}

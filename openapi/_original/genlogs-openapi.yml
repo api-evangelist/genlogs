@@ -1,0 +1,3280 @@
+openapi: 3.1.0
+info:
+  title: GenLogs API
+  version: 1.0.0
+  description: 'GenLogs Truck Intelligence API. Ground-truth motor-carrier and shipper data from a nationwide
+    roadside sensor network: carrier recommendations by lane, carrier and FMCSA profiles, carrier vetting,
+    shipper lanes and facilities, onboarded-carrier contact management, mismatch observations, and alert
+    webhooks. Base URL https://api.genlogs.io. Authentication uses an x-api-key header plus a short-lived
+    Access-Token obtained from /auth/token; endpoint access is gated by named permissions.'
+  contact:
+    name: GenLogs
+    url: https://docs.genlogs.io
+    email: contact@genlogs.io
+  x-provenance:
+    method: searched
+    source: https://docs.genlogs.io (per-endpoint embedded OpenAPI fragments + documented endpoints)
+    assembled: '2026-07-19'
+    operationIds: some operationIds normalized by API Evangelist where the provider fragments omitted
+      them
+servers:
+- url: https://api.genlogs.io
+  description: GenLogs Truck Intelligence API
+security:
+- ApiKeyAuth: []
+  AccessToken: []
+tags:
+- name: auth
+  description: Access-token creation and refresh
+- name: carrier
+  description: Carrier recommendations, profiles and contacts
+- name: carrier-vetting
+  description: Carrier verification and vetting rules
+- name: shipper
+  description: Shipper lanes and facilities
+- name: alerts
+  description: Detection alerts, mismatch observations and webhooks
+paths:
+  /auth/token:
+    post:
+      tags:
+      - auth
+      summary: Create access and refresh tokens
+      description: Create and return new access and refresh tokens for a user based on their email and
+        password.
+      operationId: createAccessToken
+      parameters:
+      - name: email
+        in: query
+        required: true
+        schema:
+          type: string
+          format: email
+        description: Email of the user requesting tokens.
+      - name: password
+        in: query
+        required: true
+        schema:
+          type: string
+          format: password
+        description: Password of the user requesting tokens.
+      responses:
+        '200':
+          description: Access and refresh tokens created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthSchema'
+        '401':
+          description: Token creation failed because credentials are invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+        '422':
+          description: Request validation error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /carrier/recommendations:
+    get:
+      parameters:
+      - name: accept
+        in: header
+        required: true
+        schema:
+          type: string
+          default: application/json
+        description: Specifies the format of the response.
+      - name: Access-Token
+        in: header
+        required: true
+        schema:
+          type: string
+        description: Access Token for authentication
+      - name: x-api-key
+        in: header
+        required: true
+        schema:
+          type: string
+        description: API key for authentication
+      - in: query
+        name: origin_city
+        required: true
+        schema:
+          type: string
+          default: Nashville
+        description: Origin city for the recommendation
+      - in: query
+        name: origin_state
+        required: true
+        schema:
+          type: string
+          default: TN
+        description: Origin state for the recommendation
+      - in: query
+        name: destination_city
+        required: true
+        schema:
+          type: string
+          default: Dallas
+        description: Destination city for the recommendation
+      - in: query
+        name: destination_state
+        required: true
+        schema:
+          type: string
+          default: TX
+        description: Destination state for the recommendation
+      - default: 50
+        in: query
+        name: origin_radius
+        schema:
+          type: number
+          default: 50
+        description: Search radius around the origin location in miles
+      - default: 50
+        in: query
+        name: destination_radius
+        schema:
+          type: number
+          default: 50
+        description: Search radius around the destination location in miles
+      - default: 0
+        in: query
+        name: carrier_score_min
+        schema:
+          type: float
+          default: 0
+        description: Minimum carrier score
+      - default: 100
+        in: query
+        name: carrier_score_max
+        schema:
+          type: float
+          default: 1
+        description: Maximum carrier score
+      - default: None
+        in: query
+        name: fleet_size_min
+        schema:
+          type: number
+        description: Minimum fleet size
+      - default: None
+        in: query
+        name: fleet_size_max
+        schema:
+          type: number
+        description: Maximum fleet size
+      - in: query
+        name: carried_cargo
+        schema:
+          type: string
+          default: general goods
+        description: Type of cargo carried
+      - in: query
+        name: equipment_types
+        schema:
+          type: string
+          default: flatbed
+        description: Type of equipment used by carriers
+      - in: query
+        name: preferred_carriers
+        schema:
+          type: boolean
+          default: false
+        description: Filter for preferred carriers
+      - in: query
+        name: real_time
+        schema:
+          type: boolean
+          default: false
+        description: Request real-time data if available
+      - in: query
+        name: auth_months_min
+        schema:
+          type: number
+          default: 1
+        description: Minimum number of months a carrier has an active common or contract authority with
+          FMCSA
+      - in: query
+        name: power_only
+        schema:
+          type: boolean
+          default: false
+      - in: query
+        name: broker_authority
+        schema:
+          type: boolean
+          default: false
+      - in: query
+        name: is_possible_backhaul
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CarrierResponse'
+          description: The JSON response containing recommendations and lane volume
+      summary: Get carrier recommendations based on location
+      operationId: getCarrierRecommendations
+  /carrier/contacts:
+    post:
+      summary: Get contacts for carriers
+      description: Returns the contacts related to a carrier (onboarded, dispatch and FMCSA).
+      responses:
+        '200':
+          description: Contacts found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      properties:
+                        has_dispatch:
+                          type: string
+                        onboarded_contacts:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              name:
+                                type: string
+                              phone:
+                                type: string
+                              email:
+                                type: string
+                        dispatch_contact:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              phone:
+                                type: string
+                              email:
+                                type: string
+                        fmcsa_contact:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                            phone:
+                              type: string
+                            email:
+                              type: string
+        '401':
+          description: Unauthorized – missing token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden – invalid token or insufficient permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      operationId: searchCarrierContacts
+  /onboarded-carrier/contacts:
+    post:
+      summary: Create an onboarded carrier contact
+      description: 'Creates a new onboarded carrier contact for the authenticated customer. Requires a
+        valid JWT token and the appropriate permission. The `usdot` value must contain digits only, be
+        greater than zero, and be at most 9 digits after normalization.
+
+        '
+      tags:
+      - Onboarded Carriers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - usdot
+              properties:
+                usdot:
+                  type: string
+                  description: 'Carrier USDOT number. Must contain digits only, be greater than zero,
+                    and be at most 9 digits. Leading zeroes are normalized before persistence.
+
+                    '
+                  minLength: 1
+                  maxLength: 9
+                  pattern: ^[0-9]+$
+                name:
+                  type: string
+                  nullable: true
+                  description: Contact name.
+                phone:
+                  type: string
+                  nullable: true
+                  description: Contact phone number.
+                email:
+                  type: string
+                  nullable: true
+                  description: Contact email address.
+      responses:
+        '200':
+          description: Contact created successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  contact:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      name:
+                        type: string
+                      phone:
+                        type: string
+                      email:
+                        type: string
+        '400':
+          description: Bad Request – Missing or invalid fields.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '401':
+          description: Unauthorized – Invalid or missing Access-Token.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '403':
+          description: Forbidden – The user lacks required permission.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+      operationId: createOnboardedCarrierContact
+    get:
+      summary: Retrieve onboarded carrier contacts
+      description: 'Returns a paginated list of onboarded carrier contacts for the authenticated customer.
+        Only contacts belonging to the customer identified in the JWT are returned. Requires the external-api-get-onboarded-carrier-contact
+        permission.
+
+        '
+      tags:
+      - Onboarded Carriers
+      parameters:
+      - name: page
+        in: query
+        required: false
+        description: Page number of results to return.
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+      - name: page_size
+        in: query
+        required: false
+        description: Number of results per page (max 200).
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 200
+          default: 50
+      - name: usdot_number
+        in: query
+        required: false
+        description: 'USDOT number(s) to filter by. Supports a single value or a comma-separated list.
+
+          '
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Onboarded carrier contacts retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  contacts:
+                    type: array
+                    description: List of onboarded carrier contacts.
+                    items:
+                      type: object
+                      properties:
+                        contact_id:
+                          type: string
+                          format: uuid
+                          description: Unique identifier of the onboarded carrier contact.
+                        dot_number:
+                          type: string
+                          description: USDOT number associated with the carrier.
+                        customer_id:
+                          type: integer
+                          description: Identifier of the customer that owns the contact.
+                        contact_name:
+                          type: string
+                          description: Full name of the contact.
+                        contact_email:
+                          type: string
+                          description: Email address of the contact.
+                        contact_phone:
+                          type: string
+                          description: Phone number of the contact.
+                        contact_source:
+                          type: string
+                          description: Source of the onboarded contact record.
+                  pagination:
+                    type: object
+                    description: Pagination metadata.
+                    properties:
+                      page_size:
+                        type: integer
+                        description: Number of results per page.
+                      current_page:
+                        type: integer
+                        description: Current page number.
+                      total_pages:
+                        type: integer
+                        description: Total number of available pages.
+        '400':
+          description: Bad Request – Invalid query parameters.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '401':
+          description: Unauthorized – Invalid or missing authentication headers.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                      subcode:
+                        type: string
+        '403':
+          description: Forbidden – User does not have required permission.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: string
+      operationId: listOnboardedCarrierContacts
+  /onboarded-carrier/contacts/{contact_id}:
+    patch:
+      summary: Update an onboarded carrier contact
+      description: 'Updates an existing onboarded carrier contact for the authenticated customer. Requires
+        a valid JWT token and the appropriate permission. Only the fields provided in the request body
+        will be updated. USDOT updates are not supported by this endpoint; including `usdot` in the PATCH
+        body returns Bad Request before any persistence operation.
+
+        '
+      tags:
+      - Onboarded Carriers
+      parameters:
+      - name: contact_id
+        in: path
+        required: true
+        description: Unique identifier of the contact to update.
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: 'Fields to update. At least one must be provided. `usdot` is not accepted in
+                PATCH requests.
+
+                '
+              properties:
+                name:
+                  type: string
+                  nullable: true
+                  description: Contact name.
+                email:
+                  type: string
+                  nullable: true
+                  description: Contact email.
+                phone:
+                  type: string
+                  nullable: true
+                  description: Contact phone number.
+              minProperties: 1
+      responses:
+        '200':
+          description: Contact updated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  contact:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      name:
+                        type: string
+                      phone:
+                        type: string
+                      email:
+                        type: string
+        '400':
+          description: Bad Request – Missing or invalid fields.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '401':
+          description: Unauthorized – Invalid or missing Access-Token.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '403':
+          description: Forbidden – The user lacks required permission or does not own the contact.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '404':
+          description: Contact not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+      operationId: updateOnboardedCarrierContact
+    delete:
+      summary: Delete an onboarded carrier contact
+      description: 'Deletes an existing onboarded carrier contact for the authenticated customer. Requires
+        a valid JWT token and the appropriate permission. The contact must belong to the authenticated
+        customer.
+
+        '
+      tags:
+      - Onboarded Carriers
+      parameters:
+      - name: contact_id
+        in: path
+        required: true
+        description: Unique identifier of the contact to delete.
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Contact deleted successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  contact:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      deleted:
+                        type: boolean
+        '400':
+          description: Bad Request – Invalid contact identifier.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '401':
+          description: Unauthorized – Invalid or missing Access-Token.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '403':
+          description: 'Forbidden – The user lacks required permission or does not own the contact.
+
+            '
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '404':
+          description: Contact not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+      operationId: deleteOnboardedCarrierContact
+  /onboarded-carrier/bulk/contacts:
+    post:
+      summary: Bulk create onboarded carrier contacts
+      description: 'Creates multiple onboarded carrier contacts for the authenticated customer in a single
+        request. Each contact entry is validated using the same rules as the single-contact create flow.
+        At least one contact must be valid for the operation to succeed. The operation follows the same
+        authorization, repository, caching, and creation logic as the single-contact create flow. Each
+        `usdot` value must contain digits only, be greater than zero, and be at most 9 digits after normalization.
+
+        '
+      tags:
+      - Onboarded Carriers
+      requestBody:
+        required: true
+        description: 'List of onboarded carrier contact definitions to create. The contacts array must
+          be non-empty.
+
+          '
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - contacts
+              properties:
+                contacts:
+                  type: array
+                  minItems: 1
+                  description: List of contacts to create.
+                  items:
+                    type: object
+                    required:
+                    - usdot
+                    properties:
+                      usdot:
+                        type: string
+                        description: 'Carrier USDOT number. Must contain digits only, be greater than
+                          zero, and be at most 9 digits. Leading zeroes are normalized before persistence.
+
+                          '
+                        minLength: 1
+                        maxLength: 9
+                        pattern: ^[0-9]+$
+                      name:
+                        type: string
+                        nullable: true
+                        description: Contact name.
+                      phone:
+                        type: string
+                        nullable: true
+                        description: Contact phone number.
+                      email:
+                        type: string
+                        nullable: true
+                        description: Contact email address.
+      responses:
+        '200':
+          description: Contacts processed successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  created_contacts:
+                    type: array
+                    description: List of successfully created contacts.
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                        usdot:
+                          type: string
+                        name:
+                          type: string
+                  failed_contacts:
+                    type: array
+                    description: Per-item errors for contacts that were not created.
+                    items:
+                      type: object
+                      properties:
+                        index:
+                          type: integer
+                          description: Index of the contact in the original payload.
+                        error:
+                          type: string
+                          description: Human-readable error message for this item.
+        '400':
+          description: Bad Request – Invalid request body or all items failed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '401':
+          description: Unauthorized – Invalid or missing Access-Token.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '403':
+          description: Forbidden – Missing required permission.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+      operationId: createOnboardedCarrierContactsBulk
+    delete:
+      summary: Bulk delete onboarded carrier contacts
+      description: 'Deletes multiple onboarded carrier contacts for the authenticated customer in a single
+        request. All provided contact IDs must exist and belong to the authenticated customer. The operation
+        follows the same authorization, repository, caching, and deletion logic as the single-contact
+        delete flow.
+
+        '
+      tags:
+      - Onboarded Carriers
+      requestBody:
+        required: true
+        description: 'List of onboarded carrier contact identifiers to delete. At least one contact_id
+          must be provided.
+
+          '
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - contact_ids
+              properties:
+                contact_ids:
+                  type: array
+                  minItems: 1
+                  description: List of contact UUIDs to delete.
+                  items:
+                    type: string
+                    format: uuid
+      responses:
+        '200':
+          description: Contacts deleted successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  contacts:
+                    type: array
+                    description: List of deleted contacts.
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                        deleted:
+                          type: boolean
+        '400':
+          description: Bad Request – Invalid request body.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '401':
+          description: Unauthorized – Invalid or missing Access-Token.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '403':
+          description: Forbidden – Missing required permission.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '404':
+          description: One or more contacts not found or not owned by the customer.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+      operationId: deleteOnboardedCarrierContactsBulk
+  /compliance-rules:
+    get:
+      summary: Get carrier compliance rules by USDOT (single or batch)
+      description: "Returns carrier compliance rules for one or more USDOT numbers.\n- Single mode: provide\
+        \ `usdot_number`. The response shape is a single\n  object with `rules` and `rule_status` and\
+        \ is fully backward compatible\n  with the existing API.\n- Batch mode: provide `usdot_numbers`\
+        \ as a comma-separated list. The\n  response shape is an object with a `results` array where each\
+        \ item\n  represents one USDOT and includes a `found` flag.\n\nWhen both `usdot_number` and `usdot_numbers`\
+        \ are provided, `usdot_numbers` takes precedence and `usdot_number` is ignored.\nThe maximum number\
+        \ of USDOT values allowed in `usdot_numbers` is limited to 50. Requests that exceed this limit\
+        \ return HTTP 400.\nEach batch result item uses `found=false` when no vetting data exists for\
+        \ that USDOT. In that case the item only contains `usdot_number` and `found`. When `found=true`,\
+        \ `rules` and `rule_status` are populated with the same structure as the single-USDOT response.\n\
+        Examples:\n- Single:\n  `/compliance-rules?usdot_number=1234567`\n- Batch:\n  `/compliance-rules?usdot_numbers=1234567,7654321`\n"
+      tags:
+      - Compliance Rules
+      parameters:
+      - name: usdot_number
+        in: query
+        required: false
+        description: 'Single USDOT number to evaluate. Ignored when `usdot_numbers` is also provided.
+
+          '
+        schema:
+          type: string
+      - name: usdot_numbers
+        in: query
+        required: false
+        description: 'Comma-separated list of USDOT numbers for batch evaluation. When provided, this
+          parameter takes precedence over `usdot_number`.
+
+          '
+        schema:
+          type: string
+      responses:
+        '200':
+          description: 'Compliance rules retrieved successfully (single or batch).
+
+            - Single: single carrier response (rules + rule_status). - Batch: list of per-carrier results
+            with `found` flags.
+
+            '
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/CarrierRulesSingleResponse'
+                - $ref: '#/components/schemas/CarrierRulesBatchResponse'
+        '400':
+          description: 'Bad Request – invalid input, missing required query parameters, or exceeding the
+            maximum allowed number of USDOT values.
+
+            '
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '401':
+          description: Unauthorized – Invalid or missing Access-Token.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: object
+        '403':
+          description: Forbidden – Company user does not have vetting access permission.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '404':
+          description: 'Not Found – no vetting data exists for any of the requested USDOT numbers.
+
+            '
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: string
+      operationId: listComplianceRules
+  /customer-compliance-rules/{customer_rule_id}:
+    patch:
+      summary: Update customer compliance rule
+      description: 'Updates the status and/or parameter values of an existing customer compliance rule.
+        At least one of `status` or `param_values` must be provided. The authenticated company must have
+        vetting access permissions.
+
+        '
+      tags:
+      - Compliance Rules
+      parameters:
+      - name: customer_rule_id
+        in: path
+        required: true
+        description: Unique identifier of the customer compliance rule.
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  description: Updated vetting status of the rule.
+                  enum:
+                  - enabled
+                  - disabled
+                param_values:
+                  type: object
+                  description: 'Dynamic parameter values used during carrier evaluation. For the Observed
+                    by GenLogs rule, `date_interval` must be a supported interval, `decision_matrix` may
+                    only contain `false` and `true` keys, `false` must be `review` or `fail`, and `true`
+                    must be `pass`. `fail_message` and `pass_message` must be booleans.
+
+                    '
+                  additionalProperties:
+                    oneOf:
+                    - type: string
+                    - type: number
+                    - type: boolean
+                    - type: object
+              anyOf:
+              - required:
+                - status
+              - required:
+                - param_values
+      responses:
+        '200':
+          description: Customer compliance rule updated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status_code:
+                    type: string
+                  message:
+                    type: string
+        '400':
+          description: Bad Request – Invalid input, missing required fields, or invalid external rule
+            param_values.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '401':
+          description: Unauthorized – Invalid or missing Access-Token.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: object
+        '403':
+          description: Forbidden – Company user does not have vetting access permission.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '404':
+          description: Not Found – Customer compliance rule does not exist.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: string
+      operationId: updateCustomerComplianceRule
+  /customer-compliance-rules:
+    get:
+      summary: Retrieve customer compliance rules
+      description: 'Returns all compliance rules configured for the authenticated customer. Only rules
+        belonging to the customer associated with the Access-Token are returned. Requires the external-api-compliance-rules
+        permission.
+
+        '
+      tags:
+      - Compliance Rules
+      responses:
+        '200':
+          description: Compliance rules retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  rules:
+                    type: array
+                    description: List of compliance rules configured for the customer.
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          description: Unique identifier of the customer compliance rule.
+                        rule_name:
+                          type: string
+                          description: Human-readable name of the compliance rule.
+                        status:
+                          type: string
+                          description: Current status of the rule.
+                          enum:
+                          - enabled
+                          - disabled
+                        param_values:
+                          type: object
+                          description: Dynamic parameter values used during carrier evaluation.
+                          additionalProperties:
+                            oneOf:
+                            - type: string
+                            - type: number
+                            - type: boolean
+                            - type: object
+        '401':
+          description: Unauthorized – Invalid or missing Access-Token.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                      subcode:
+                        type: string
+        '403':
+          description: Forbidden – User does not have the required permission.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: string
+      operationId: listCustomerComplianceRules
+  /shipper/lanes:
+    get:
+      parameters:
+      - name: accept
+        in: header
+        required: true
+        schema:
+          type: string
+        description: application/json
+      - name: Access-Token
+        in: header
+        required: true
+        schema:
+          type: string
+        description: Access Token for authentication
+      - name: x-api-key
+        in: header
+        required: true
+        schema:
+          type: string
+        description: X api key for authentication
+      - in: query
+        name: testing_new_param
+        required: true
+        schema:
+          type: number
+        description: Testing new param
+      - in: query
+        name: origin_lat
+        required: true
+        schema:
+          type: number
+        description: Latitude of the origin location
+      - in: query
+        name: origin_lon
+        required: true
+        schema:
+          type: number
+        description: Longitude of the origin location
+      - in: query
+        name: destination_lat
+        required: true
+        schema:
+          type: number
+        description: Latitude of the destination location
+      - in: query
+        name: destination_lon
+        required: true
+        schema:
+          type: number
+        description: Longitude of the destination location
+      - in: query
+        name: origin_radius
+        required: true
+        schema:
+          type: number
+        description: Radius to search around the origin
+      - in: query
+        name: destination_radius
+        required: true
+        schema:
+          type: number
+        description: Radius to search around the destination
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShipperLaneResponse'
+          description: List of shipper lanes
+      summary: Get shipper lanes based on coordinates and radius
+      operationId: getShipperLanes
+  /facilities:
+    get:
+      summary: Search facilities by name, address, zip code, city/state, website domain, or coordinates
+      description: 'Unified facility search. Provide at least one of: non-empty **`name`**, non-empty
+        **`address`**, **`zip_code`**, non-empty **`website_domain`**, or both **`city`** and **`state`**
+        (then use **`radius`** around the geocoded point). You may also pass **`location`** as `latitude,longitude`
+        for radius search instead of city/state.
+
+        Optionally include lane data per facility with **`include_lanes=true`**. Lanes can be filtered
+        by **`min_distance`** (miles from facility) and **`direction`** (compass direction). Filters are
+        applied before the **`top_n`** limit.
+
+
+        ## Pagination
+
+
+        When results exceed 100 facilities, the response is paginated using opaque cursor-based pagination.
+        The `Link` response header contains a next-page URL with a `cursor` parameter. Follow that URL
+        to retrieve subsequent pages. The `X-Total-Count` header shows the total matching facilities across
+        all pages. Pagination is not supported with `smart_search=true`.
+
+        See component schema **FacilitiesQueryCriteria** for the full parameter model and validation shape.
+
+        Historical path `/find_facilities` exposes the same search behavior and is documented here as
+        **`/facilities`** for a single contract.
+
+        '
+      parameters:
+      - name: accept
+        in: header
+        required: true
+        schema:
+          type: string
+        description: application/json
+      - name: Access-Token
+        in: header
+        required: true
+        schema:
+          type: string
+        description: Access Token for authentication
+      - name: x-api-key
+        in: header
+        required: true
+        schema:
+          type: string
+        description: X api key for authentication
+      - description: 'Facility or collection name (optional if `address`, both `city` and `state`, or
+          `website_domain` are provided).
+
+          See **FacilitiesQueryCriteria** for validation rules.
+
+          '
+        in: query
+        name: name
+        required: false
+        schema:
+          type: string
+          maxLength: 500
+      - description: 'Substring match on formatted address (optional if `name`, both `city` and `state`,
+          or `website_domain` are provided).
+
+          '
+        in: query
+        name: address
+        required: false
+        schema:
+          type: string
+          maxLength: 500
+      - description: City; use with `state` for geocoded radius search unless `name`, `address`, or `website_domain`
+          alone is sufficient.
+        in: query
+        name: city
+        required: false
+        schema:
+          type: string
+          maxLength: 150
+      - description: State; use with `city` unless `name`, `address`, or `website_domain` supplies the
+          search mode.
+        in: query
+        name: state
+        required: false
+        schema:
+          type: string
+          maxLength: 150
+      - description: 'Substring match against the shipper''s `contact_url`. Must include the TLD
+
+          (e.g. `acme.com`). Optional path tails (`acme.com/about`) are accepted by
+
+          the validator but the path is stripped before matching — only the host
+
+          is searched.
+
+
+          **Mutually exclusive with `name` and `address`.** If `name` or `address`
+
+          is also supplied, `website_domain` is silently ignored (see
+
+          **FacilitiesQueryCriteria** → *Filter precedence*). Also ignored when
+
+          `smart_search=true` is used together with `name`.
+
+          '
+        in: query
+        name: website_domain
+        required: false
+        schema:
+          type: string
+          maxLength: 253
+          minLength: 5
+          pattern: ^[A-Za-z0-9][A-Za-z0-9-]*\.[A-Za-z]{2,}([/.].*)?$
+      - description: Comma-separated `latitude,longitude`; radius applies around this point when provided
+          instead of city/state.
+        in: query
+        name: location
+        required: false
+        schema:
+          type: string
+      - description: Search radius in miles around the geocoded city/state point or `location`
+        in: query
+        name: radius
+        required: false
+        schema:
+          type: number
+          maximum: 150
+      - description: Lot size category filter
+        in: query
+        name: lot_size_category
+        required: false
+        schema:
+          type: string
+          maxLength: 50
+      - description: Maximum number of facilities to return
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+      - description: Optional place category filter (pipe-separated values accepted by the service)
+        in: query
+        name: facility_type
+        required: false
+        schema:
+          type: string
+          maxLength: 500
+      - description: Optional intermodal drayage filter flag
+        in: query
+        name: intermodal_drayage
+        required: false
+        schema:
+          type: string
+      - description: Include inbound and outbound lane data for each facility. Lanes are ranked by weight.
+        in: query
+        name: include_lanes
+        required: false
+        schema:
+          type: boolean
+      - description: Number of top lanes to return per direction (inbound/outbound) per facility.
+        in: query
+        name: top_n
+        required: false
+        schema:
+          type: integer
+          default: 10
+      - description: Minimum distance in miles from the facility to a lane destination. Lanes closer than
+          this distance are excluded. Applied before top_n.
+        in: query
+        name: min_distance
+        required: false
+        schema:
+          type: number
+      - description: Filter lanes by compass direction from the facility. Applied before top_n.
+        in: query
+        name: direction
+        required: false
+        schema:
+          type: string
+          enum:
+          - N
+          - S
+          - E
+          - W
+          - NE
+          - NW
+          - SE
+          - SW
+      - description: US zip code; searches facilities near the zip centroid.
+        in: query
+        name: zip_code
+        required: false
+        schema:
+          type: string
+      - description: 'Opaque pagination cursor from the Link header of a previous response.
+
+          When results exceed 100 facilities, the server returns a Link header
+
+          containing a next-page URL with this cursor embedded. Follow that URL
+
+          to retrieve subsequent pages. Do not construct or parse this value —
+
+          it is server-controlled and opaque.
+
+          '
+        in: query
+        name: cursor
+        required: false
+        schema:
+          type: string
+          maxLength: 500
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                description: Array of facility objects (see FacilitiesQueryCriteria for query rules).
+                items:
+                  $ref: '#/components/schemas/Facility'
+          description: List of facilities
+          headers:
+            X-Total-Count:
+              description: Total number of matching facilities across all pages.
+              schema:
+                type: integer
+            Link:
+              description: 'RFC 8288 Link header with rel="next" pointing to the next page URL.
+
+                Absent on the final page. Example:
+
+                `<https://api.genlogs.io/find_facilities?zip_code=91761&include_lanes=true&cursor=eyJ...>;
+                rel="next"`
+
+                '
+              schema:
+                type: string
+        '400':
+          description: Validation error (missing search criteria, invalid parameters, or invalid cursor)
+      operationId: getShipperFacilities
+  /facility/{facility_id}/network-map:
+    get:
+      summary: Retrieve the GeoJSON network map for a facility
+      description: Returns the GeoJSON network map associated with the specified facility.
+      operationId: getFacilityNetworkMap
+      tags:
+      - Facilities
+      parameters:
+      - name: facility_id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Trimble identifier for the facility.
+      responses:
+        '200':
+          description: Facility GeoJSON network map (FeatureCollection)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FacilityNetworkMap'
+        '401':
+          description: Missing or invalid token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthError'
+        '403':
+          description: Token expired or user lacks the required role.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthError'
+        '500':
+          description: Unexpected error while fetching or parsing GeoJSON.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+  /mismatch-observations:
+    post:
+      summary: Create mismatch observation alerts
+      description: 'Creates one alert row per standalone USDOT or MC value, and one combined row per item
+        in `pairs`. At least one of `usdots`, `mcs`, or `pairs` must be non-empty. `alert_name` is optional;
+        when omitted or blank, stored as null. `logos` is optional and, when present, is normalized to
+        lowercase, stored in `logos`, and used by mismatch detection. Logo matching remains case-insensitive.
+        Unknown JSON properties are rejected.
+
+        '
+      tags:
+      - Mismatch alerts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExternalMismatchObservationsRequest'
+      responses:
+        '201':
+          description: Mismatch alerts created successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - message
+                - data
+                properties:
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      created:
+                        type: integer
+                        description: Number of alerts inserted.
+        '400':
+          description: Bad request – validation error or empty usdots/mcs/pairs.
+        '401':
+          description: Unauthorized – Invalid or missing Access-Token.
+        '403':
+          description: Forbidden – missing permission.
+        '500':
+          description: Internal Server Error.
+      operationId: createMismatchObservation
+    get:
+      summary: List mismatch observations
+      description: 'Returns mismatch observations for the authenticated customer only, ordered from newest
+        to oldest. Paginated; default page size is 50. Returns 200 with an empty `mismatch_observations`
+        array when none exist.
+
+        '
+      tags:
+      - Mismatch alerts
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+        description: Page number (1-based).
+      - name: page_size
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 500
+          default: 50
+        description: Number of items per page (max 500).
+      responses:
+        '200':
+          description: Paginated list of mismatch observations for the customer.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MismatchObservationsListResponse'
+        '401':
+          description: Unauthorized – Invalid or missing Access-Token.
+        '403':
+          description: Forbidden – missing permission.
+      operationId: listMismatchObservations
+  /mismatch-observations/{observation_id}:
+    patch:
+      summary: Update a mismatch observation
+      description: 'Partial update of USDOT (`usdot`), MC (`mc`), `logos`, display name (`alert_name`),
+        and/or `is_disabled`. Send at least one field. Requires permission `external-api-mismatch-observations`
+        or admin. Only alerts belonging to the JWT `customer_id` can be updated; otherwise 403. `logos`
+        values are normalized to lowercase before persistence and response. Logo matching remains case-insensitive.
+        Returns the full updated observation (same shape as list items).
+
+        '
+      tags:
+      - Mismatch alerts
+      parameters:
+      - name: observation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Mismatch observation (alert) identifier.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MismatchObservationPatchRequest'
+      responses:
+        '200':
+          description: Full updated mismatch observation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MismatchObservationItem'
+        '400':
+          description: 'Bad request – empty body, no updatable fields, invalid USDOT/MC, or validation
+            error.
+
+            '
+        '401':
+          description: Unauthorized – Invalid or missing Access-Token.
+        '403':
+          description: Forbidden – missing permission, or observation belongs to another customer.
+        '404':
+          description: Mismatch observation not found or deleted.
+      operationId: updateMismatchObservation
+    delete:
+      summary: Delete a mismatch observation
+      description: 'Permanently removes the row (timestamp hard delete). This is separate from `is_disabled`,
+        which only pauses processing. After delete, the observation no longer appears in GET list and
+        cannot be PATCHed. Same permission as create/list/update. Returns 404 if the id is unknown, belongs
+        to another customer, or is already deleted. Returns 404 if the id is unknown, belongs to another
+        customer, or is already deleted.
+
+        '
+      tags:
+      - Mismatch alerts
+      parameters:
+      - name: observation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: Observation deleted successfully (no response body).
+        '401':
+          description: Unauthorized – Invalid or missing Access-Token.
+        '403':
+          description: Forbidden – missing permission.
+        '404':
+          description: Not found, wrong customer, or already deleted.
+      operationId: deleteMismatchObservation
+  /alerts/{alert_id}:
+    patch:
+      tags:
+      - alerts
+      summary: External Patch Alert
+      description: Partially update an existing alert by alert_id. `start_date` and `end_date` accept
+        ISO 8601 date-time strings with `Z`, timezone offsets, or no timezone. Timezone-aware values are
+        normalized to UTC and returned without timezone information.
+      operationId: external_patch_alert_alerts__alert_id__patch
+      parameters:
+      - name: alert_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Alert Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAlertSchema'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlertResponseSchema'
+        '400':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /alerts/webhook:
+    post:
+      tags:
+      - Webhook Alerts
+      summary: Create Webhook
+      description: Create webhook settings
+      operationId: create_webhook_alerts_webhook_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookSettingsCreateSchema'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      tags:
+      - Webhook Alerts
+      summary: List Webhooks
+      description: List all webhooks for the authenticated customer
+      operationId: list_webhooks_alerts_webhook_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  type: object
+                type: array
+                title: Response List Webhooks Alerts Webhook Get
+  /alerts/webhook/{webhook_id}:
+    patch:
+      tags:
+      - Webhook Alerts
+      summary: Update Webhook
+      description: Update webhook settings
+      operationId: update_webhook_alerts_webhook__webhook_id__patch
+      parameters:
+      - name: webhook_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Webhook Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookSettingsUpdateSchema'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      summary: Delete alert webhook
+      description: 'Delete an alert webhook by ID. Requires ownership for the authenticated customer.
+        Returns the deleted webhook data (id, webhook_url, description, created_at). Requires admin or
+        external-api-delete-alert-webhook-endpoint.
+
+        '
+      operationId: deleteAlertWebhook
+      parameters:
+      - in: header
+        name: Access-Token
+        required: true
+        schema:
+          type: string
+        description: JWT access token for authentication
+      - in: header
+        name: X-API-Key
+        required: true
+        schema:
+          type: string
+        description: API key for authentication
+      - in: path
+        name: webhook_id
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: UUID of the webhook to delete
+      responses:
+        '200':
+          description: Webhook deleted successfully; returns deleted webhook data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeletedWebhookResponse'
+        '400':
+          description: Bad Request – invalid webhook ID format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized – missing or invalid token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden – insufficient permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not Found – webhook does not exist or does not belong to customer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /alerts/webhook/test:
+    post:
+      tags:
+      - Webhook Alerts
+      summary: Validate Webhook Endpoint
+      description: Test a webhook endpoint with a sample alert payload
+      operationId: validate_webhook_endpoint_alerts_webhook_test_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookTestSchema'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /carrier/profile:
+    get:
+      summary: Get carrier profile details
+      description: 'Retrieve a comprehensive carrier profile details including FMCSA details, equipment
+        pairings, and sightings data for specified USDOT numbers.
+
+        '
+      operationId: getCarrierProfileDetail
+      parameters:
+      - in: header
+        name: Access-Token
+        required: true
+        schema:
+          type: string
+        description: Bearer token for authentication
+      - in: query
+        name: usdot_number
+        required: true
+        schema:
+          type: array
+          items:
+            type: string
+        style: form
+        explode: false
+        description: USDOT numbers to filter data for specific carriers
+      - in: query
+        name: start_date
+        required: false
+        schema:
+          type: string
+          format: date
+        description: Start date for sightings in YYYY-MM-DD format
+      - in: query
+        name: end_date
+        required: false
+        schema:
+          type: string
+          format: date
+        description: End date for sightings in YYYY-MM-DD format
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: object
+                  properties:
+                    fmcsa_detail:
+                      $ref: '#/components/schemas/FmcsaDetail'
+                    equipment_pairings:
+                      $ref: '#/components/schemas/EquipmentPairings'
+                    sightings:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Sighting'
+        '400':
+          description: Bad Request - invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized – missing token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden – invalid token or insufficient permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /auth/token/refresh:
+    post:
+      tags:
+      - auth
+      summary: Get the AccessToken And Refresh Token
+      operationId: refresh_token_get
+      parameters:
+      - name: accept
+        in: header
+        required: true
+        schema:
+          type: string
+          default: application/json
+        description: Specifies the format of the response.
+      - name: x-api-key
+        in: header
+        required: true
+        schema:
+          type: string
+        description: API key for authentication
+      - name: refresh_token
+        in: query
+        required: true
+        schema:
+          type: string
+          description: The previously created valid refresh token
+          title: Refresh token
+        description: The previously created valid refresh token
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /visual_sightings/verify:
+    get:
+      tags:
+      - carrier-vetting
+      summary: Verify carrier sighting near lane
+      description: Verify if a carrier has been observed within 150 miles of an origin, destination, or
+        along the lane within the last 90 days. Requires the verifier-carrier permission.
+      operationId: verifyCarrierSighting
+      parameters:
+      - name: Access-Token
+        in: header
+        required: true
+        schema:
+          type: string
+      - name: x-api-key
+        in: header
+        required: true
+        schema:
+          type: string
+      - name: usdot
+        in: query
+        required: true
+        schema:
+          type: string
+        description: USDOT of the detected carrier.
+      - name: origin_city
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: origin_state
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: destination_city
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: destination_state
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A JSON object with verified true/false
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  verified:
+                    type: boolean
+        '400':
+          description: Required parameters missing or invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+        '401':
+          description: Authentication credentials missing or incorrect
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+        '403':
+          description: Access to the requested resource is forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPError'
+components:
+  schemas:
+    AuthSchema:
+      type: object
+      required:
+      - access_token_data
+      - refresh_token_data
+      - user_id
+      properties:
+        access_token_data:
+          $ref: '#/components/schemas/TokenSchema'
+        refresh_token_data:
+          $ref: '#/components/schemas/TokenSchema'
+        user_id:
+          type: integer
+        company_id:
+          type: integer
+          nullable: true
+        customer_name:
+          type: string
+          nullable: true
+    TokenSchema:
+      type: object
+      required:
+      - token
+      - expires
+      properties:
+        token:
+          type: string
+        expires:
+          type: string
+          format: date-time
+    HTTPError:
+      type: object
+      properties:
+        detail:
+          type: string
+    HTTPValidationError:
+      type: object
+      properties:
+        detail:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+    ValidationError:
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      properties:
+        loc:
+          type: array
+          items:
+            oneOf:
+            - type: string
+            - type: integer
+        msg:
+          type: string
+        type:
+          type: string
+    AuthenticationResponse:
+      properties:
+        access_token_data:
+          items:
+            $ref: '#/components/schemas/AccessTokenSchema'
+          type: object
+          title: access_token_data
+        refresh_token_data:
+          items:
+            $ref: '#/components/schemas/RefreshTokenSchema'
+          type: object
+          title: refresh_token_data
+        user_id:
+          type: string
+          title: user_id
+        company_id:
+          type: integer
+          title: company_id
+      type: object
+      required:
+      - access_token_data
+      - refresh_token_data
+      - user_id
+      - company_id
+      title: AuthenticationResponse
+    AccessTokenSchema:
+      properties:
+        token:
+          type: string
+          title: Token
+        expires:
+          type: string
+          title: expires
+      type: object
+      required:
+      - token
+      - expires
+      title: AccessTokenSchema
+    RefreshTokenSchema:
+      properties:
+        token:
+          type: string
+          title: Token
+        expires:
+          type: string
+          title: expires
+      type: object
+      required:
+      - token
+      - expires
+      title: AccessTokenSchema
+    CarrierResponse:
+      properties:
+        real_time_locs:
+          items:
+            $ref: '#/components/schemas/CarrierRealTimeLocs'
+          type: array
+        recommendations:
+          items:
+            $ref: '#/components/schemas/CarrierRecommendation'
+          type: array
+      required:
+      - real_time_locs
+      - recommendations
+      type: object
+    CarrierRealTimeLocs:
+      properties:
+        current_lat:
+          nullable: true
+          type: number
+        current_lon:
+          nullable: true
+          type: number
+        dot_number:
+          type: string
+        is_inbound:
+          type: boolean
+      required:
+      - dot_number
+      - is_inbound
+      type: object
+    CarrierRecommendation:
+      properties:
+        add_date:
+          type: string
+        bipd_insurance_on_file:
+          type: number
+        cargo_insurance_on_file:
+          type: number
+        carried_cargo:
+          type: string
+        carrier_driver_oos_rate:
+          type: number
+        carrier_driver_oos_rate_national_avg:
+          type: number
+        carrier_score_scaled:
+          type: number
+        carrier_total_power_units:
+          type: number
+        carrier_vehicle_oos_rate:
+          type: number
+        carrier_vehicle_oos_rate_national_avg:
+          type: number
+        confirmed_email:
+          type: object
+          properties:
+            <email@domain.com>:
+              type: object
+              properties:
+                add_date:
+                  type: string
+        confirmed_phone:
+          type: object
+          properties:
+            <phone_number>:
+              type: object
+              properties:
+                add_date:
+                  type: string
+        dba_name:
+          nullable: true
+          type: string
+        dot_number:
+          type: string
+        email_address:
+          type: string
+        is_inbound:
+          type: boolean
+        is_real_time:
+          type: boolean
+        is_visually_sighted:
+          type: boolean
+        is_possible_backhaul:
+          type: boolean
+        lat:
+          nullable: true
+          type: number
+        legal_name:
+          type: string
+        lon:
+          nullable: true
+          type: number
+        mc_number:
+          type: number
+        phy_city:
+          type: string
+        phy_state:
+          type: string
+        phy_street:
+          type: string
+        phy_zip:
+          type: string
+        telephone:
+          type: string
+        power_only:
+          type: boolean
+        broker_authority_status:
+          type: string
+      required:
+      - add_date
+      - bipd_insurance_on_file
+      - cargo_insurance_on_file
+      - carried_cargo
+      - carrier_driver_oos_rate
+      - carrier_driver_oos_rate_national_avg
+      - carrier_score_scaled
+      - carrier_total_power_units
+      - carrier_vehicle_oos_rate
+      - carrier_vehicle_oos_rate_national_avg
+      - confirmed_email
+      - confirmed_phone
+      - dot_number
+      - email_address
+      - is_inbound
+      - is_real_time
+      - is_visually_sighted
+      - legal_name
+      - mc_number
+      - phy_city
+      - phy_state
+      - phy_street
+      - phy_zip
+      - telephone
+      type: object
+    FmcsaDetail:
+      type: object
+      properties:
+        usdot_number:
+          type: string
+        legal_name:
+          type: string
+        dba_name:
+          type: string
+        entity_type:
+          type: string
+        carrier_operation:
+          type: string
+        cargo_carried:
+          type: string
+        hazmat_authorized:
+          type: string
+        carrier_status:
+          type: string
+        out_of_service_date:
+          type: string
+        legal_address:
+          type: string
+        physical_address:
+          type: string
+        mailing_address:
+          type: string
+        telephone:
+          type: string
+        fax:
+          type: string
+        email:
+          type: string
+        mcs_150_form_date:
+          type: string
+          format: date
+        mcs_150_mileage_year:
+          type: string
+        dot_number:
+          type: string
+        docket_number:
+          type: string
+        mc_mx_ff_number:
+          type: string
+        power_units:
+          type: string
+        drivers:
+          type: string
+        mcs_150_mileage:
+          type: string
+    EquipmentPairings:
+      type: object
+      properties:
+        genlogs:
+          type: array
+          items: {}
+        fmcsa:
+          type: array
+          items: {}
+    Sighting:
+      type: object
+      description: A single sighting record for a carrier location/date.
+      properties:
+        sighting_date:
+          type: string
+          format: date
+        state_seen:
+          type: string
+        location_zip:
+          type: string
+        sightings:
+          type: integer
+          description: Count of sightings for this location/date.
+        source:
+          type: string
+          description: Data source of the sighting (e.g. visual, api).
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+          format: int32
+      required:
+      - message
+      - code
+    CarrierRulesSingleResponse:
+      type: object
+      required:
+      - rules
+      - rule_status
+      additionalProperties: false
+      properties:
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/CarrierRuleItem'
+        rule_status:
+          $ref: '#/components/schemas/CarrierRuleStatusCounts'
+    CarrierRuleItem:
+      type: object
+      required:
+      - rule_result_description
+      - status
+      - category
+      additionalProperties: false
+      properties:
+        rule_result_description:
+          type: string
+        status:
+          type: string
+          description: PASS / FAIL / REVIEW
+        category:
+          type: string
+        rule_order:
+          type: string
+    CarrierRuleStatusCounts:
+      type: object
+      required:
+      - pass
+      - fail
+      - review
+      additionalProperties: false
+      properties:
+        pass:
+          type: object
+          required:
+          - total
+          properties:
+            total:
+              type: integer
+        fail:
+          type: object
+          required:
+          - total
+          properties:
+            total:
+              type: integer
+        review:
+          type: object
+          required:
+          - total
+          properties:
+            total:
+              type: integer
+    CarrierRulesBatchResponse:
+      type: object
+      required:
+      - results
+      additionalProperties: false
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/CarrierRulesBatchResultItem'
+    CarrierRulesBatchResultItem:
+      type: object
+      required:
+      - usdot_number
+      - found
+      additionalProperties: false
+      properties:
+        usdot_number:
+          type: string
+        found:
+          type: boolean
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/CarrierRuleItem'
+        rule_status:
+          $ref: '#/components/schemas/CarrierRuleStatusCounts'
+      description: 'Per-carrier result in a batch response. When found=false, the item only
+
+        contains usdot_number and found.
+
+        '
+    ShipperLaneResponse:
+      properties:
+        shippers_in_destination:
+          items:
+            $ref: '#/components/schemas/Shipper'
+          type: array
+        shippers_in_origin:
+          items:
+            $ref: '#/components/schemas/Shipper'
+          type: array
+      required:
+      - shippers_in_destination
+      - shippers_in_origin
+      type: object
+    Shipper:
+      properties:
+        contact_phone:
+          nullable: true
+          type: string
+        contact_url:
+          nullable: true
+          type: string
+        facility_name:
+          type: string
+        formatted_address:
+          type: string
+        id:
+          type: string
+        lat:
+          type: number
+        lon:
+          type: number
+        operating_hours:
+          nullable: true
+          type: string
+        place_category:
+          type: string
+        equipment_pairings:
+          type: array
+          nullable: true
+          description: 'Equipment types paired with this shipper based on observed carrier activity. Values
+            are Title Case display strings (e.g. "Dry Van", "Box Truck", "Reefer"). Empty array when no
+            pairing data is available.
+
+            '
+          items:
+            type: string
+      required:
+      - facility_name
+      - formatted_address
+      - id
+      - lat
+      - lon
+      - place_category
+      type: object
+    Facility:
+      properties:
+        contact_phone:
+          nullable: true
+          type: string
+        contact_url:
+          nullable: true
+          type: string
+        facility_name:
+          type: string
+        formatted_address:
+          type: string
+        id:
+          type: string
+        lat:
+          type: number
+        lon:
+          type: number
+        operating_hours:
+          nullable: true
+          type: string
+        place_category:
+          type: string
+        equipment_pairings:
+          type: array
+          nullable: true
+          description: 'Equipment types paired with this facility based on observed carrier activity.
+            Values are Title Case display strings (e.g. "Dry Van", "Box Truck", "Reefer"). Empty array
+            when no pairing data is available.
+
+            '
+          items:
+            type: string
+        inbound_lanes:
+          type: array
+          description: Top inbound lanes ranked by weight (only present when `include_lanes=true`).
+          items:
+            $ref: '#/components/schemas/FacilityLane'
+        outbound_lanes:
+          type: array
+          description: Top outbound lanes ranked by weight (only present when `include_lanes=true`).
+          items:
+            $ref: '#/components/schemas/FacilityLane'
+      required:
+      - facility_name
+      - formatted_address
+      - id
+      - lat
+      - lon
+      - place_category
+      type: object
+    FacilityLane:
+      type: object
+      properties:
+        city:
+          type: string
+          description: Largest city in the H3 hexagon.
+        state:
+          type: string
+          description: US state of the lane destination.
+        weight:
+          type: number
+          description: Ranking signal from the network GeoJSON (higher = stronger lane).
+        visit_share:
+          type: string
+          description: Bucketed visit share percentage (e.g. "15-20%").
+        hexagon_id:
+          type: string
+          description: H3 hexagon index for the lane destination.
+        distance_miles:
+          type: number
+          nullable: true
+          description: Distance in miles from the facility to the lane destination (present when min_distance
+            or direction is provided).
+        direction:
+          type: string
+          nullable: true
+          description: Compass direction of the lane from the facility (e.g. "NE", "SW"). Present when
+            min_distance or direction filter is provided.
+      required:
+      - city
+      - state
+      - weight
+      - visit_share
+      - hexagon_id
+    FacilityNetworkMap:
+      type: object
+      required:
+      - type
+      - features
+      properties:
+        type:
+          type: string
+        features:
+          type: array
+          items:
+            $ref: '#/components/schemas/FacilityNetworkFeature'
+    FacilityNetworkFeature:
+      type: object
+      required:
+      - type
+      - geometry
+      - properties
+      properties:
+        type:
+          type: string
+        geometry:
+          $ref: '#/components/schemas/GeoJSONGeometry'
+        properties:
+          type: object
+          additionalProperties: true
+          description: Arbitrary metadata associated with the feature.
+    GeoJSONGeometry:
+      type: object
+      required:
+      - type
+      - coordinates
+      properties:
+        type:
+          type: string
+          enum:
+          - Point
+          - LineString
+          - Polygon
+          - MultiPoint
+          - MultiLineString
+          - MultiPolygon
+        coordinates:
+          type: array
+          items: {}
+          description: GeoJSON coordinate array whose structure depends on geometry type.
+    AuthError:
+      type: object
+      properties:
+        message:
+          type: string
+        subcode:
+          type: integer
+          description: Optional subcode with additional error context.
+    ExternalMismatchObservationsRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        usdots:
+          type: array
+          items:
+            type: string
+          description: USDOT numbers (strings). Each non-empty entry creates one alert.
+          default: []
+        mcs:
+          type: array
+          items:
+            type: string
+          description: MC numbers (strings). Each non-empty entry creates one alert.
+          default: []
+        pairs:
+          type: array
+          items:
+            $ref: '#/components/schemas/MismatchObservationPairRequest'
+          description: 'Paired MC/USDOT identifiers. Each item creates one combined alert row with both
+            MC and USDOT in the stored criteria.
+
+            '
+          default: []
+        logos:
+          type: array
+          nullable: true
+          items:
+            type: string
+          description: 'Optional trailer logos list. Each value must be a non-empty string. Values are
+            trimmed, deduplicated, and stored in lowercase format. Matching against the logos catalog.
+
+            '
+        alert_name:
+          type: string
+          nullable: true
+          description: Optional display name; omitted or whitespace-only is stored as null.
+    MismatchObservationPairRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - mc
+      - usdot
+      properties:
+        mc:
+          type: string
+          minLength: 1
+          description: MC number for the combined alert row.
+        usdot:
+          type: string
+          minLength: 1
+          description: USDOT number for the combined alert row.
+    MismatchObservationsListResponse:
+      type: object
+      required:
+      - mismatch_observations
+      - page
+      - page_size
+      - total
+      properties:
+        mismatch_observations:
+          type: array
+          items:
+            $ref: '#/components/schemas/MismatchObservationItem'
+        page:
+          type: integer
+          minimum: 1
+          description: Current page number.
+        page_size:
+          type: integer
+          minimum: 1
+          maximum: 500
+          description: Page size used for this response.
+        total:
+          type: integer
+          minimum: 0
+          description: Total number of observations for this customer (all pages).
+    MismatchObservationItem:
+      type: object
+      required:
+      - id
+      - usdot
+      - mc
+      - is_disabled
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Alert row identifier.
+        alert_name:
+          type: string
+          nullable: true
+          description: Optional display name; may be null if not set.
+        usdot:
+          type: string
+          nullable: true
+          description: USDOT value from stored criteria.
+        mc:
+          type: string
+          nullable: true
+          description: MC value from stored criteria.
+        logos:
+          type: array
+          items:
+            type: string
+          description: Trailer logos from `logos`, returned in normalized lowercase format. Empty when
+            not configured.
+          default: []
+        is_disabled:
+          type: boolean
+          description: Whether this mismatch observation alert is disabled.
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+          description: Creation timestamp when available.
+        last_run_at:
+          type: string
+          format: date-time
+          nullable: true
+          description: Last run timestamp in ISO-8601 format; null when not run yet.
+    MismatchObservationPatchRequest:
+      type: object
+      additionalProperties: false
+      description: 'At least one property must be present (after applying ignore rules). Omitted fields
+        are left unchanged. Empty string or whitespace-only `usdot` / `mc` values are ignored (they do
+        not clear the field). JSON `null` for `usdot` / `mc` still clears that side of the criteria when
+        present. USDOT/MC validation matches create rules (numeric after normalization).
+
+        '
+      properties:
+        usdot:
+          type: string
+          nullable: true
+          description: New USDOT value; null clears when paired with MC update rules.
+        mc:
+          type: string
+          nullable: true
+          description: New MC value; null clears when paired with USDOT update rules.
+        logos:
+          type: array
+          nullable: true
+          items:
+            type: string
+          description: 'Trailer logos list. Values are trimmed, deduplicated, and stored/returned in lowercase
+            format. Matching against the logos catalog.
+
+            '
+        alert_name:
+          type: string
+          nullable: true
+          description: Display name; blank or whitespace-only is stored as null.
+        is_disabled:
+          type: boolean
+          description: Whether the observation is disabled.
+    UpdateAlertSchema:
+      properties:
+        alert_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Alert Name
+        location_state:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Location State
+        location_city:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Location City
+        license_plate:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: License Plate
+        license_plate_state:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: License Plate State
+        usdot_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Usdot Number
+        chassis_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Chassis Number
+        exact_match_chassis_number:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Exact Match Chassis Number
+          default: false
+        container_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Container Number
+        equipment_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Equipment Type
+        exact_match_container_number:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Exact Match Container Number
+          default: false
+        mc_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Mc Number
+        vin:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Vin
+        cab_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cab Number
+        trailer_logo:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Trailer Logo
+        trailer_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Trailer Number
+        disabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Disabled
+        cc_emails:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Cc Emails
+        alert_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Alert Type
+        exact_match_trailer_number:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Exact Match Trailer Number
+        start_date:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          description: ISO 8601 date-time. Values with `Z` or timezone offsets are normalized to UTC and
+            stored/returned without timezone information.
+          title: Start Date
+        end_date:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          description: ISO 8601 date-time. Values with `Z` or timezone offsets are normalized to UTC and
+            stored/returned without timezone information.
+          title: End Date
+        deep_search:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Deep Search
+        notification_channels:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Notification Channels
+      additionalProperties: false
+      type: object
+      title: UpdateAlertSchema
+      description: Schema for partial updates of alerts (PATCH operations). All fields are optional -
+        only provided fields will be updated.
+    AlertResponseSchema:
+      properties:
+        alert_name:
+          type: string
+          title: Alert Name
+        location_state:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Location State
+        location_city:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Location City
+        license_plate:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: License Plate
+        license_plate_state:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: License Plate State
+        usdot_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Usdot Number
+        chassis_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Chassis Number
+        exact_match_chassis_number:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Exact Match Chassis Number
+          default: false
+        container_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Container Number
+        equipment_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Equipment Type
+        exact_match_container_number:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Exact Match Container Number
+          default: false
+        mc_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Mc Number
+        vin:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Vin
+        cab_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cab Number
+        trailer_logo:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Trailer Logo
+        trailer_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Trailer Number
+        disabled:
+          type: boolean
+          title: Disabled
+          default: false
+        cc_emails:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Cc Emails
+        alert_type:
+          type: string
+          title: Alert Type
+          default: normal
+        exact_match_trailer_number:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Exact Match Trailer Number
+          default: false
+        start_date:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          description: Returned as a timezone-free UTC date-time string after normalization.
+          title: Start Date
+        end_date:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          description: Returned as a timezone-free UTC date-time string after normalization.
+          title: End Date
+        deep_search:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Deep Search
+        id:
+          type: integer
+          title: Id
+        email:
+          type: string
+          title: Email
+        last_updated_timestamp:
+          type: string
+          format: date-time
+          title: Last Updated Timestamp
+        insert_timestamp:
+          type: string
+          format: date-time
+          title: Insert Timestamp
+        notification_channels:
+          items:
+            type: string
+          type: array
+          title: Notification Channels
+          default: []
+      additionalProperties: false
+      type: object
+      required:
+      - alert_name
+      - id
+      - email
+      - last_updated_timestamp
+      - insert_timestamp
+      title: AlertResponseSchema
+      description: Public API response schema for alerts - extends base with response-specific fields
+    WebhookSettingsCreateSchema:
+      properties:
+        webhook_url:
+          anyOf:
+          - type: string
+            maxLength: 2083
+            minLength: 1
+            format: uri
+          - type: 'null'
+          title: Webhook Url
+        secret:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Secret
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+      additionalProperties: false
+      type: object
+      title: WebhookSettingsCreateSchema
+      description: Schema for creating webhook settings
+    WebhookSettingsUpdateSchema:
+      properties:
+        webhook_url:
+          anyOf:
+          - type: string
+            maxLength: 2083
+            minLength: 1
+            format: uri
+          - type: 'null'
+          title: Webhook Url
+        secret:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Secret
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Enabled
+      additionalProperties: false
+      type: object
+      title: WebhookSettingsUpdateSchema
+      description: Schema for updating webhook settings
+    DeletedWebhookResponse:
+      type: object
+      description: Deleted webhook data returned on successful DELETE (secret and enabled excluded)
+      properties:
+        id:
+          type: string
+          format: uuid
+        webhook_url:
+          type: string
+          format: uri
+        description:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        deleted:
+          type: boolean
+          description: Always true for delete response
+      required:
+      - id
+      - webhook_url
+      - created_at
+      - deleted
+    WebhookTestSchema:
+      properties:
+        webhook_url:
+          type: string
+          maxLength: 2083
+          minLength: 1
+          format: uri
+          title: Webhook Url
+        secret:
+          type: string
+          title: Secret
+      additionalProperties: false
+      type: object
+      required:
+      - webhook_url
+      - secret
+      title: WebhookTestSchema
+      description: Schema for testing webhook endpoints
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: API key provided by GenLogs. Required on every request.
+    AccessToken:
+      type: apiKey
+      in: header
+      name: Access-Token
+      description: Short-lived access token obtained from POST /auth/token (or refreshed via /auth/token/refresh).

@@ -1,0 +1,94 @@
+generated: '2026-07-19'
+method: derived
+status: candidate
+source: openapi/genlogs-openapi.yml
+note: Candidate MCP tool surface derived one-tool-per-operation from the GenLogs OpenAPI. No official
+  hosted GenLogs MCP server was found.
+server:
+  name: genlogs
+  transport: http
+tools:
+- name: createAccessToken
+  description: Create access and refresh tokens
+  source_operation: openapi/genlogs-openapi.yml#createAccessToken
+- name: getCarrierRecommendations
+  description: Get carrier recommendations based on location
+  source_operation: openapi/genlogs-openapi.yml#getCarrierRecommendations
+- name: searchCarrierContacts
+  description: Get contacts for carriers
+  source_operation: openapi/genlogs-openapi.yml#searchCarrierContacts
+- name: createOnboardedCarrierContact
+  description: Create an onboarded carrier contact
+  source_operation: openapi/genlogs-openapi.yml#createOnboardedCarrierContact
+- name: listOnboardedCarrierContacts
+  description: Retrieve onboarded carrier contacts
+  source_operation: openapi/genlogs-openapi.yml#listOnboardedCarrierContacts
+- name: updateOnboardedCarrierContact
+  description: Update an onboarded carrier contact
+  source_operation: openapi/genlogs-openapi.yml#updateOnboardedCarrierContact
+- name: deleteOnboardedCarrierContact
+  description: Delete an onboarded carrier contact
+  source_operation: openapi/genlogs-openapi.yml#deleteOnboardedCarrierContact
+- name: createOnboardedCarrierContactsBulk
+  description: Bulk create onboarded carrier contacts
+  source_operation: openapi/genlogs-openapi.yml#createOnboardedCarrierContactsBulk
+- name: deleteOnboardedCarrierContactsBulk
+  description: Bulk delete onboarded carrier contacts
+  source_operation: openapi/genlogs-openapi.yml#deleteOnboardedCarrierContactsBulk
+- name: listComplianceRules
+  description: Get carrier compliance rules by USDOT (single or batch)
+  source_operation: openapi/genlogs-openapi.yml#listComplianceRules
+- name: updateCustomerComplianceRule
+  description: Update customer compliance rule
+  source_operation: openapi/genlogs-openapi.yml#updateCustomerComplianceRule
+- name: listCustomerComplianceRules
+  description: Retrieve customer compliance rules
+  source_operation: openapi/genlogs-openapi.yml#listCustomerComplianceRules
+- name: getShipperLanes
+  description: Get shipper lanes based on coordinates and radius
+  source_operation: openapi/genlogs-openapi.yml#getShipperLanes
+- name: getShipperFacilities
+  description: Search facilities by name, address, zip code, city/state, website domain, or coordinates
+  source_operation: openapi/genlogs-openapi.yml#getShipperFacilities
+- name: getFacilityNetworkMap
+  description: Retrieve the GeoJSON network map for a facility
+  source_operation: openapi/genlogs-openapi.yml#getFacilityNetworkMap
+- name: createMismatchObservation
+  description: Create mismatch observation alerts
+  source_operation: openapi/genlogs-openapi.yml#createMismatchObservation
+- name: listMismatchObservations
+  description: List mismatch observations
+  source_operation: openapi/genlogs-openapi.yml#listMismatchObservations
+- name: updateMismatchObservation
+  description: Update a mismatch observation
+  source_operation: openapi/genlogs-openapi.yml#updateMismatchObservation
+- name: deleteMismatchObservation
+  description: Delete a mismatch observation
+  source_operation: openapi/genlogs-openapi.yml#deleteMismatchObservation
+- name: external_patch_alert_alerts__alert_id__patch
+  description: External Patch Alert
+  source_operation: openapi/genlogs-openapi.yml#external_patch_alert_alerts__alert_id__patch
+- name: create_webhook_alerts_webhook_post
+  description: Create Webhook
+  source_operation: openapi/genlogs-openapi.yml#create_webhook_alerts_webhook_post
+- name: list_webhooks_alerts_webhook_get
+  description: List Webhooks
+  source_operation: openapi/genlogs-openapi.yml#list_webhooks_alerts_webhook_get
+- name: update_webhook_alerts_webhook__webhook_id__patch
+  description: Update Webhook
+  source_operation: openapi/genlogs-openapi.yml#update_webhook_alerts_webhook__webhook_id__patch
+- name: deleteAlertWebhook
+  description: Delete alert webhook
+  source_operation: openapi/genlogs-openapi.yml#deleteAlertWebhook
+- name: validate_webhook_endpoint_alerts_webhook_test_post
+  description: Validate Webhook Endpoint
+  source_operation: openapi/genlogs-openapi.yml#validate_webhook_endpoint_alerts_webhook_test_post
+- name: getCarrierProfileDetail
+  description: Get carrier profile details
+  source_operation: openapi/genlogs-openapi.yml#getCarrierProfileDetail
+- name: refresh_token_get
+  description: Get the AccessToken And Refresh Token
+  source_operation: openapi/genlogs-openapi.yml#refresh_token_get
+- name: verifyCarrierSighting
+  description: Verify carrier sighting near lane
+  source_operation: openapi/genlogs-openapi.yml#verifyCarrierSighting

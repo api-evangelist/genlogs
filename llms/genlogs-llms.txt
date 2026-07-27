@@ -1,0 +1,44 @@
+# Genlogs API Docs
+
+## Genlogs API Docs
+
+- [Genlogs API Docs](https://docs.genlogs.io/genlogs-api-docs.md)
+- [Getting started](https://docs.genlogs.io/getting-started.md)
+- [Verify](https://docs.genlogs.io/getting-started/verify.md)
+- [Pagination](https://docs.genlogs.io/getting-started/pagination.md)
+- [Create token](https://docs.genlogs.io/auth/create-token.md)
+- [Refresh token](https://docs.genlogs.io/auth/refresh-token.md)
+- [Carrier Recommendations](https://docs.genlogs.io/carrier/recommendations.md)
+- [Real time Capabilities](https://docs.genlogs.io/carrier/recommendations/real-time-capabilities.md): Real time Capabilities of the Carrier Recommendations Endpoint
+- [Carrier Profile](https://docs.genlogs.io/carrier/carrier-profile.md)
+- [Carrier Contacts](https://docs.genlogs.io/carrier/contacts.md)
+- [Onboarded Carriers](https://docs.genlogs.io/carrier/onboarded-carriers.md): This section describes the endpoints available to create and maintain Onboarded Carrier contacts via API.
+- [Create Onboarded Carriers](https://docs.genlogs.io/carrier/onboarded-carriers/create-onboarded-carriers.md): Create an onboarded carrier contact associated with a specific USDOT. This endpoint allows customers to add their own validated contact information.
+- [Get Onboarded Carriers](https://docs.genlogs.io/carrier/onboarded-carriers/get-onboarded-carriers.md): This endpoint allows external systems to retrieve onboarded carrier contacts configured for the authenticated customer.
+- [Update Onboarded Carrier](https://docs.genlogs.io/carrier/onboarded-carriers/update-onboarded-carrier.md): Update an onboarded carrier contact associated with the specific contact\_id. This endpoint allows customers to update their own validated contact information.
+- [Delete Onboarded Carrier](https://docs.genlogs.io/carrier/onboarded-carriers/delete-onboarded-carrier.md): Delete an onboarded carrier contact associated with the specific contact\_id. This endpoint allows customers to remove their own validated contact information.
+- [Create Onboarded Carriers Bulk](https://docs.genlogs.io/carrier/onboarded-carriers/create-onboarded-carriers-bulk.md)
+- [Delete Onboarded Carrier Bulk](https://docs.genlogs.io/carrier/onboarded-carriers/delete-onboarded-carrier-bulk.md)
+- [Carrier FMCSA Profile](https://docs.genlogs.io/carrier/carrier-fmcsa-profile.md)
+- [Carrier Vetting Assessment](https://docs.genlogs.io/carrier-vetting/carrier-vetting-assessment.md): Search by a USDOT number and receive a vetting assessment (pass, needs review, fail) along with assessment details per rule.
+- [Update Customer Vetting Rule](https://docs.genlogs.io/carrier-vetting/update-customer-vetting-rule.md)
+- [Carrier Vetting Rules](https://docs.genlogs.io/carrier-vetting/carrier-vetting-rules.md): Get list of active vetting rules and their configurations
+- [Shipper Lanes](https://docs.genlogs.io/shipper/shipper-lanes.md)
+- [Shipper Facilities](https://docs.genlogs.io/shipper/shipper-facilities.md)
+- [Facility Network Map](https://docs.genlogs.io/shipper/facility-network-map.md): Returns the GeoJSON network map associated with the provided facility\_id, the map provided has the same information used to render Shipper Network map in Truck Intelligence Portal (example below)
+- [Alert Run Summary](https://docs.genlogs.io/alerts/alert-run-summary.md)
+- [Mismatch Alerts](https://docs.genlogs.io/alerts/mismatch-alerts.md)
+- [Create Mismatch Alerts](https://docs.genlogs.io/alerts/mismatch-alerts/create-mismatch-alerts.md)
+- [Get Mismatch Alerts](https://docs.genlogs.io/alerts/mismatch-alerts/get-mismatch-alerts.md)
+- [Update Mismatch Alerts](https://docs.genlogs.io/alerts/mismatch-alerts/update-mismatch-alerts.md)
+- [Delete Mismatch Alert](https://docs.genlogs.io/alerts/mismatch-alerts/delete-mismatch-alert.md)
+- [Create alert](https://docs.genlogs.io/alerts/create-alert.md)
+- [Edit Alert](https://docs.genlogs.io/alerts/edit-alert.md)
+- [List Alerts](https://docs.genlogs.io/alerts/list-alerts.md)
+- [List logos](https://docs.genlogs.io/alerts/list-logos.md)
+- [Webhook Specifications](https://docs.genlogs.io/alert-webhook/webhook-specifications.md)
+- [Create Alert Webhook](https://docs.genlogs.io/alert-webhook/create-alert-webhook.md)
+- [Update Alert Webhook](https://docs.genlogs.io/alert-webhook/update-alert-webhook.md)
+- [Delete Alert Webhook](https://docs.genlogs.io/alert-webhook/delete-alert-webhook.md): Delete an existent Alert Webhook configured for the requester user customer ID
+- [Test Webhook](https://docs.genlogs.io/alert-webhook/test-webhook.md)
+- [List Alert Webhooks](https://docs.genlogs.io/alert-webhook/list-alert-webhooks.md)

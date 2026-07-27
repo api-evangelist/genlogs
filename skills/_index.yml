@@ -1,0 +1,12 @@
+generated: '2026-07-19'
+method: generated
+source: openapi/genlogs-openapi.yml
+skills:
+- file: genlogs-source-carriers-by-lane.md
+  name: Source and verify carriers on a lane
+  api: openapi/genlogs-openapi.yml
+  operations: [createAccessToken, getCarrierRecommendations, verifyCarrierSighting, getCarrierProfileDetail]
+- file: genlogs-alert-webhooks.md
+  name: Configure and test alert webhooks
+  api: openapi/genlogs-openapi.yml
+  operations: [createAccessToken, create_webhook_alerts_webhook_post, validate_webhook_endpoint_alerts_webhook_test_post, list_webhooks_alerts_webhook_get, deleteAlertWebhook]

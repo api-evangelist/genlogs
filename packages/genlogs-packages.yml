@@ -1,0 +1,20 @@
+generated: '2026-07-19'
+method: searched
+source: https://github.com/genlogs
+note: >-
+  GenLogs does not publish a general-purpose API client SDK on npm/PyPI (probed: none).
+  These are the first-party repositories in the github.com/genlogs organization. The
+  webhook-validator is a purpose-built helper for the alert webhook integration.
+packages:
+- language: python
+  registry: github
+  name: genlogs-webhook-validator
+  url: https://github.com/genlogs/genlogs-webhook-validator
+  description: Lightweight FastAPI tool for testing and validating GenLogs webhook integrations with HMAC-SHA512 signature verification.
+  official: true
+- language: python
+  registry: github
+  name: mockylla
+  url: https://github.com/genlogs/mockylla
+  description: Library to mock out tests based on ScyllaDB (general-purpose OSS utility, not an API client).
+  official: true

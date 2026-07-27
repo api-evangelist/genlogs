@@ -1,0 +1,48 @@
+asyncapi: 3.0.0
+info:
+  title: GenLogs Alert Webhooks
+  version: 1.0.0
+  description: 'GenLogs delivers alert.matches_found webhook notifications when detection alerts (license
+    plate, VIN, USDOT, etc.) match roadside sensor observations. Payloads are signed with an HMAC-SHA512
+    signature using a per-webhook secret and delivered over HTTPS only. Manage webhook endpoints via the
+    REST API (POST/GET/PATCH/DELETE /alerts/webhook). Source: https://docs.genlogs.io/alert-webhook/webhook-specifications'
+  x-provenance:
+    method: searched
+    source: https://docs.genlogs.io/alert-webhook/webhook-specifications
+    date: '2026-07-19'
+defaultContentType: application/json
+channels:
+  alertMatches:
+    address: '{subscriberWebhookUrl}'
+    title: Alert matches found
+    description: Consumer-hosted HTTPS endpoint registered via POST /alerts/webhook. Receives one consolidated
+      payload per processing cycle with all matches across the customer's alerts.
+    parameters:
+      subscriberWebhookUrl:
+        description: The HTTPS webhook_url registered by the customer.
+    messages:
+      alertMatchesFound:
+        $ref: '#/components/messages/alertMatchesFound'
+operations:
+  receiveAlertMatches:
+    action: receive
+    channel:
+      $ref: '#/channels/alertMatches'
+    summary: Receive alert.matches_found notifications from GenLogs.
+    messages:
+    - $ref: '#/channels/alertMatches/messages/alertMatchesFound'
+components:
+  messages:
+    alertMatchesFound:
+      name: alertMatchesFound
+      title: alert.matches_found
+      contentType: application/json
+      summary: Sent when one or more alerts find new detection matches.
+      headers:
+        type: object
+        properties:
+          X-GenLogs-Signature:
+            type: string
+            description: HMAC-SHA512 signature of the raw body using the per-webhook secret.
+      payload:
+        $ref: json-schema/genlogs-alert-matches-found.schema.json

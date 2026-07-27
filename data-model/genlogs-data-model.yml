@@ -1,0 +1,80 @@
+generated: '2026-07-19'
+method: derived
+source: openapi/genlogs-openapi.yml
+entities:
+- name: Carrier
+  id: usdot / dot_number
+  schema: CarrierRecommendation, CarrierResponse, FmcsaDetail
+  description: A motor carrier keyed by USDOT number; core entity for recommendations, profiles, verification
+    and vetting.
+- name: Shipper
+  id: id
+  schema: Shipper, ShipperLaneResponse
+  description: A shipper with lanes and facilities.
+- name: Facility
+  id: id (facility_id)
+  schema: Facility, FacilityNetworkMap
+  description: A shipper facility with inbound/outbound lanes and a GeoJSON network map.
+- name: OnboardedCarrierContact
+  id: contact_id
+  schema: (carrier contacts)
+  description: Customer-owned validated contact tied to a carrier USDOT.
+- name: Alert
+  id: alert_id
+  schema: AlertResponseSchema, UpdateAlertSchema
+  description: A detection alert (license plate/VIN/USDOT/etc) that triggers email + webhook notifications.
+- name: Webhook
+  id: webhook_id
+  schema: WebhookSettingsCreateSchema, WebhookSettingsUpdateSchema
+  description: A customer webhook endpoint receiving alert.matches_found payloads.
+- name: MismatchObservation
+  id: observation_id
+  schema: MismatchObservationItem
+  description: An observed mismatch between expected and detected carrier identifiers.
+- name: ComplianceRule
+  id: customer_rule_id
+  schema: CarrierRuleItem
+  description: A carrier-vetting compliance rule and its per-customer configuration.
+- name: Sighting
+  id: '-'
+  schema: Sighting, CarrierRealTimeLocs
+  description: A roadside sensor sighting of a carrier (date, location, source).
+relationships:
+- from: OnboardedCarrierContact
+  type: belongs_to
+  to: Carrier
+  via: usdot
+- from: Sighting
+  type: belongs_to
+  to: Carrier
+  via: usdot
+- from: Facility
+  type: belongs_to
+  to: Shipper
+  via: id
+- from: Facility
+  type: has_many
+  to: FacilityLane
+  via: inbound_lanes / outbound_lanes
+- from: Webhook
+  type: has_many
+  to: Alert
+  via: company/customer_id
+- from: Alert
+  type: has_many
+  to: MismatchObservation
+  via: alert_id
+- from: MismatchObservation
+  type: belongs_to
+  to: Carrier
+  via: usdot
+- from: ComplianceRule
+  type: belongs_to
+  to: Carrier
+  via: usdot (vetting)
+id_conventions:
+  usdot: FMCSA USDOT number (string)
+  facility_id: opaque string
+  contact_id: uuid
+  webhook_id: uuid
+  customer_id: integer

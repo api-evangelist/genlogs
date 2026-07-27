@@ -1,0 +1,86 @@
+generated: '2026-07-19'
+method: derived
+source: openapi/genlogs-openapi.yml
+note: 'GenLogs is not a payments provider; this is the API-level error registry. Errors are not RFC 9457
+  problem+json. Two envelopes are used: a simple {message, code} / {message, subcode} object (ErrorResponse/AuthError)
+  and a FastAPI-style {detail: [...]} object (HTTPError, HTTPValidationError) for 422 validation.'
+format: custom-json
+envelopes:
+- name: ErrorResponse
+  fields:
+  - message
+  - code
+  media_type: application/json
+- name: AuthError
+  fields:
+  - message
+  - subcode
+  media_type: application/json
+- name: HTTPError
+  fields:
+  - detail
+  media_type: application/json
+- name: HTTPValidationError
+  fields:
+  - detail[] (loc,msg,type)
+  media_type: application/json
+problems:
+- status: 400
+  title: Bad Request
+  occurrences: 15
+  remediation: Check required query/body parameters and value formats; note cursor+smart_search=true is
+    unsupported and returns 400.
+  example_operations:
+  - createOnboardedCarrierContact
+  - listOnboardedCarrierContacts
+  - updateOnboardedCarrierContact
+  - deleteOnboardedCarrierContact
+- status: 401
+  title: Unauthorized
+  occurrences: 19
+  remediation: Obtain a fresh Access-Token from POST /auth/token and send it with x-api-key on every request;
+    tokens expire.
+  example_operations:
+  - createAccessToken
+  - searchCarrierContacts
+  - createOnboardedCarrierContact
+  - listOnboardedCarrierContacts
+- status: 403
+  title: Forbidden
+  occurrences: 18
+  remediation: Your API key lacks the named permission for this endpoint (e.g. verifier-carrier, external-api-carrier-recommendation).
+    Contact GenLogs to enable it.
+  example_operations:
+  - searchCarrierContacts
+  - createOnboardedCarrierContact
+  - listOnboardedCarrierContacts
+  - updateOnboardedCarrierContact
+- status: 404
+  title: Not Found
+  occurrences: 8
+  remediation: The referenced resource (contact_id, webhook_id, facility_id, alert_id) does not exist
+    for your customer.
+  example_operations:
+  - updateOnboardedCarrierContact
+  - deleteOnboardedCarrierContact
+  - deleteOnboardedCarrierContactsBulk
+  - listComplianceRules
+- status: 422
+  title: Validation Error
+  occurrences: 5
+  remediation: Request failed schema validation; inspect the detail[] array (loc/msg/type) for the offending
+    field.
+  example_operations:
+  - createAccessToken
+  - create_webhook_alerts_webhook_post
+  - update_webhook_alerts_webhook__webhook_id__patch
+  - validate_webhook_endpoint_alerts_webhook_test_post
+- status: 500
+  title: Internal Server Error
+  occurrences: 15
+  remediation: Transient server error; retry with backoff and contact contact@genlogs.io if it persists.
+  example_operations:
+  - searchCarrierContacts
+  - createOnboardedCarrierContact
+  - listOnboardedCarrierContacts
+  - updateOnboardedCarrierContact
