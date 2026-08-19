@@ -32,7 +32,7 @@ accessModel:
   - authentication
   generated: '2026-07-22'
   method: derived
-specificationVersion: '0.20'
+specificationVersion: '0.23'
 created: '2026-07-17'
 modified: '2026-07-19'
 image: https://static1.squarespace.com/static/6389ebe42811fa07a7c17692/t/67362a2579a24b6b8c42992c/1731602981116/GenLogs+logo+black.png?format=1500w
