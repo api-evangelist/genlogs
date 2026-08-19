@@ -1,0 +1,174 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "GenLogs Alerts Facilities API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "x-api-key",
+      "value": "{{x-api-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Facilities",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Search facilities by name, address, zip code, city/state, website domain, or coordinates",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.genlogs.io/facilities",
+            "headers": [
+              {
+                "name": "accept",
+                "value": ""
+              },
+              {
+                "name": "Access-Token",
+                "value": ""
+              },
+              {
+                "name": "x-api-key",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "name",
+                "value": "",
+                "type": "query",
+                "description": "Facility or collection name (optional if `address`, both `city` and `state`, or `website_domain` are provided).\nSee **FacilitiesQueryCriteria** for validation rules.\n"
+              },
+              {
+                "name": "address",
+                "value": "",
+                "type": "query",
+                "description": "Substring match on formatted address (optional if `name`, both `city` and `state`, or `website_domain` are provided).\n"
+              },
+              {
+                "name": "city",
+                "value": "",
+                "type": "query",
+                "description": "City; use with `state` for geocoded radius search unless `name`, `address`, or `website_domain` alone is sufficient."
+              },
+              {
+                "name": "state",
+                "value": "",
+                "type": "query",
+                "description": "State; use with `city` unless `name`, `address`, or `website_domain` supplies the search mode."
+              },
+              {
+                "name": "website_domain",
+                "value": "",
+                "type": "query",
+                "description": "Substring match against the shipper's `contact_url`. Must include the TLD\n(e.g. `acme.com`). Optional path tails (`acme.com/about`) are accepted by\nthe validator but the path is stripped before matching — only the host\nis searched.\n\n**Mutually exclusive with `name` and `address`.** If `name` or `address`\nis also supplied, `website_domain` is silently ignored (see\n**FacilitiesQueryCriteria** → *Filter precedence*). Also ignored when\n`smart_search=true` is used together with `name`.\n"
+              },
+              {
+                "name": "location",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated `latitude,longitude`; radius applies around this point when provided instead of city/state."
+              },
+              {
+                "name": "radius",
+                "value": "",
+                "type": "query",
+                "description": "Search radius in miles around the geocoded city/state point or `location`"
+              },
+              {
+                "name": "lot_size_category",
+                "value": "",
+                "type": "query",
+                "description": "Lot size category filter"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of facilities to return"
+              },
+              {
+                "name": "facility_type",
+                "value": "",
+                "type": "query",
+                "description": "Optional place category filter (pipe-separated values accepted by the service)"
+              },
+              {
+                "name": "intermodal_drayage",
+                "value": "",
+                "type": "query",
+                "description": "Optional intermodal drayage filter flag"
+              },
+              {
+                "name": "include_lanes",
+                "value": "",
+                "type": "query",
+                "description": "Include inbound and outbound lane data for each facility. Lanes are ranked by weight."
+              },
+              {
+                "name": "top_n",
+                "value": "",
+                "type": "query",
+                "description": "Number of top lanes to return per direction (inbound/outbound) per facility."
+              },
+              {
+                "name": "min_distance",
+                "value": "",
+                "type": "query",
+                "description": "Minimum distance in miles from the facility to a lane destination. Lanes closer than this distance are excluded. Applied before top_n."
+              },
+              {
+                "name": "direction",
+                "value": "",
+                "type": "query",
+                "description": "Filter lanes by compass direction from the facility. Applied before top_n."
+              },
+              {
+                "name": "zip_code",
+                "value": "",
+                "type": "query",
+                "description": "US zip code; searches facilities near the zip centroid."
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Opaque pagination cursor from the Link header of a previous response.\nWhen results exceed 100 facilities, the server returns a Link header\ncontaining a next-page URL with this cursor embedded. Follow that URL\nto retrieve subsequent pages. Do not construct or parse this value —\nit is server-controlled and opaque.\n"
+              }
+            ]
+          },
+          "docs": "Unified facility search. Provide at least one of: non-empty **`name`**, non-empty **`address`**, **`zip_code`**, non-empty **`website_domain`**, or both **`city`** and **`state`** (then use **`radius`** around the geocoded point). You may also pass **`location`** as `latitude,longitude` for radius search instead of city/state.\nOptionally include lane data per facility with **`include_lanes=true`**. Lanes can be filtered by **`min_distance`** (miles from facility) and **`direction`** (compass dir"
+        },
+        {
+          "info": {
+            "name": "Retrieve the GeoJSON network map for a facility",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.genlogs.io/facility/:facility_id/network-map",
+            "params": [
+              {
+                "name": "facility_id",
+                "value": "",
+                "type": "path",
+                "description": "Trimble identifier for the facility."
+              }
+            ]
+          },
+          "docs": "Returns the GeoJSON network map associated with the specified facility."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

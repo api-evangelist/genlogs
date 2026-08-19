@@ -1,0 +1,95 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "GenLogs Alerts Shipper API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "x-api-key",
+      "value": "{{x-api-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Shipper",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get shipper lanes based on coordinates and radius",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.genlogs.io/shipper/lanes",
+            "headers": [
+              {
+                "name": "accept",
+                "value": ""
+              },
+              {
+                "name": "Access-Token",
+                "value": ""
+              },
+              {
+                "name": "x-api-key",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "testing_new_param",
+                "value": "",
+                "type": "query",
+                "description": "Testing new param"
+              },
+              {
+                "name": "origin_lat",
+                "value": "",
+                "type": "query",
+                "description": "Latitude of the origin location"
+              },
+              {
+                "name": "origin_lon",
+                "value": "",
+                "type": "query",
+                "description": "Longitude of the origin location"
+              },
+              {
+                "name": "destination_lat",
+                "value": "",
+                "type": "query",
+                "description": "Latitude of the destination location"
+              },
+              {
+                "name": "destination_lon",
+                "value": "",
+                "type": "query",
+                "description": "Longitude of the destination location"
+              },
+              {
+                "name": "origin_radius",
+                "value": "",
+                "type": "query",
+                "description": "Radius to search around the origin"
+              },
+              {
+                "name": "destination_radius",
+                "value": "",
+                "type": "query",
+                "description": "Radius to search around the destination"
+              }
+            ]
+          },
+          "docs": "Get shipper lanes based on coordinates and radius"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

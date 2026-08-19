@@ -1,0 +1,75 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "GenLogs Alerts carrier-vetting API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "x-api-key",
+      "value": "{{x-api-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "carrier-vetting",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Verify carrier sighting near lane",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.genlogs.io/visual_sightings/verify",
+            "headers": [
+              {
+                "name": "Access-Token",
+                "value": ""
+              },
+              {
+                "name": "x-api-key",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "usdot",
+                "value": "",
+                "type": "query",
+                "description": "USDOT of the detected carrier."
+              },
+              {
+                "name": "origin_city",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "origin_state",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "destination_city",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "destination_state",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Verify if a carrier has been observed within 150 miles of an origin, destination, or along the lane within the last 90 days. Requires the verifier-carrier permission."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

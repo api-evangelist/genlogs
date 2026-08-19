@@ -1,0 +1,85 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "GenLogs Alerts Compliance Rules API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "x-api-key",
+      "value": "{{x-api-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Compliance Rules",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get carrier compliance rules by USDOT (single or batch)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.genlogs.io/compliance-rules",
+            "params": [
+              {
+                "name": "usdot_number",
+                "value": "",
+                "type": "query",
+                "description": "Single USDOT number to evaluate. Ignored when `usdot_numbers` is also provided.\n"
+              },
+              {
+                "name": "usdot_numbers",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated list of USDOT numbers for batch evaluation. When provided, this parameter takes precedence over `usdot_number`.\n"
+              }
+            ]
+          },
+          "docs": "Returns carrier compliance rules for one or more USDOT numbers.\n- Single mode: provide `usdot_number`. The response shape is a single\n  object with `rules` and `rule_status` and is fully backward compatible\n  with the existing API.\n- Batch mode: provide `usdot_numbers` as a comma-separated list. The\n  response shape is an object with a `results` array where each item\n  represents one USDOT and includes a `found` flag.\n\nWhen both `usdot_number` and `usdot_numbers` are provided, `usdot_numbers` ta"
+        },
+        {
+          "info": {
+            "name": "Update customer compliance rule",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.genlogs.io/customer-compliance-rules/:customer_rule_id",
+            "params": [
+              {
+                "name": "customer_rule_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier of the customer compliance rule."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates the status and/or parameter values of an existing customer compliance rule. At least one of `status` or `param_values` must be provided. The authenticated company must have vetting access permissions.\n"
+        },
+        {
+          "info": {
+            "name": "Retrieve customer compliance rules",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.genlogs.io/customer-compliance-rules"
+          },
+          "docs": "Returns all compliance rules configured for the authenticated customer. Only rules belonging to the customer associated with the Access-Token are returned. Requires the external-api-compliance-rules permission.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,77 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "GenLogs Alerts API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "x-api-key",
+      "value": "{{x-api-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Alerts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Delete alert webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.genlogs.io/alerts/webhook/:webhook_id",
+            "headers": [
+              {
+                "name": "Access-Token",
+                "value": ""
+              },
+              {
+                "name": "X-API-Key",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "webhook_id",
+                "value": "",
+                "type": "path",
+                "description": "UUID of the webhook to delete"
+              }
+            ]
+          },
+          "docs": "Delete an alert webhook by ID. Requires ownership for the authenticated customer. Returns the deleted webhook data (id, webhook_url, description, created_at). Requires admin or external-api-delete-alert-webhook-endpoint.\n"
+        },
+        {
+          "info": {
+            "name": "External Patch Alert",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.genlogs.io/alerts/:alert_id",
+            "params": [
+              {
+                "name": "alert_id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Partially update an existing alert by alert_id. `start_date` and `end_date` accept ISO 8601 date-time strings with `Z`, timezone offsets, or no timezone. Timezone-aware values are normalized to UTC and returned without timezone information."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

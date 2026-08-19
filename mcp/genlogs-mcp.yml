@@ -92,3 +92,9 @@ tools:
 - name: verifyCarrierSighting
   description: Verify carrier sighting near lane
   source_operation: openapi/genlogs-openapi.yml#verifyCarrierSighting
+deployment:
+  mode: none
+  verified: derived
+  tools: 28
+  checked: '2026-08-12'
+  source: catalog MCP census

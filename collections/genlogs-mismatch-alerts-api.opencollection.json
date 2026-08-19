@@ -1,0 +1,107 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "GenLogs Alerts Mismatch alerts API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "x-api-key",
+      "value": "{{x-api-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Mismatch alerts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List mismatch observations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.genlogs.io/mismatch-observations",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page number (1-based)."
+              },
+              {
+                "name": "page_size",
+                "value": "",
+                "type": "query",
+                "description": "Number of items per page (max 500)."
+              }
+            ]
+          },
+          "docs": "Returns mismatch observations for the authenticated customer only, ordered from newest to oldest. Paginated; default page size is 50. Returns 200 with an empty `mismatch_observations` array when none exist.\n"
+        },
+        {
+          "info": {
+            "name": "Create mismatch observation alerts",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.genlogs.io/mismatch-observations",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates one alert row per standalone USDOT or MC value, and one combined row per item in `pairs`. At least one of `usdots`, `mcs`, or `pairs` must be non-empty. `alert_name` is optional; when omitted or blank, stored as null. `logos` is optional and, when present, is normalized to lowercase, stored in `logos`, and used by mismatch detection. Logo matching remains case-insensitive. Unknown JSON properties are rejected.\n"
+        },
+        {
+          "info": {
+            "name": "Update a mismatch observation",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.genlogs.io/mismatch-observations/:observation_id",
+            "params": [
+              {
+                "name": "observation_id",
+                "value": "",
+                "type": "path",
+                "description": "Mismatch observation (alert) identifier."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Partial update of USDOT (`usdot`), MC (`mc`), `logos`, display name (`alert_name`), and/or `is_disabled`. Send at least one field. Requires permission `external-api-mismatch-observations` or admin. Only alerts belonging to the JWT `customer_id` can be updated; otherwise 403. `logos` values are normalized to lowercase before persistence and response. Logo matching remains case-insensitive. Returns the full updated observation (same shape as list items).\n"
+        },
+        {
+          "info": {
+            "name": "Delete a mismatch observation",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.genlogs.io/mismatch-observations/:observation_id",
+            "params": [
+              {
+                "name": "observation_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Permanently removes the row (timestamp hard delete). This is separate from `is_disabled`, which only pauses processing. After delete, the observation no longer appears in GET list and cannot be PATCHed. Same permission as create/list/update. Returns 404 if the id is unknown, belongs to another customer, or is already deleted. Returns 404 if the id is unknown, belongs to another customer, or is already deleted.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

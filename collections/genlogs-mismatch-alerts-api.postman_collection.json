@@ -1,0 +1,1103 @@
+{
+  "item": [
+    {
+      "id": "7282424b-6830-49d6-b982-2dd6268d7352",
+      "name": "Mismatch alerts",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "1014ac06-ba24-42e5-8c41-61de513b64e5",
+          "name": "Create mismatch observation alerts",
+          "request": {
+            "name": "Create mismatch observation alerts",
+            "description": {
+              "content": "Creates one alert row per standalone USDOT or MC value, and one combined row per item in `pairs`. At least one of `usdots`, `mcs`, or `pairs` must be non-empty. `alert_name` is optional; when omitted or blank, stored as null. `logos` is optional and, when present, is normalized to lowercase, stored in `logos`, and used by mismatch detection. Logo matching remains case-insensitive. Unknown JSON properties are rejected.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "mismatch-observations"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"logos\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"alert_name\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "3d217724-7555-463c-a42c-52fd48082b26",
+              "name": "Mismatch alerts created successfully.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "mismatch-observations"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"logos\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"alert_name\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"data\": {\n    \"created\": 5905\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f1160bd4-1f68-48fb-a2a6-be766e3e9fbd",
+              "name": "Bad request – validation error or empty usdots/mcs/pairs.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "mismatch-observations"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"logos\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"alert_name\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "9b29ffc6-426e-4070-bd66-832e5f6c8693",
+              "name": "Unauthorized – Invalid or missing Access-Token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "mismatch-observations"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"logos\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"alert_name\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "8feb8640-cbf7-4a44-9290-f7c5f5ee6aee",
+              "name": "Forbidden – missing permission.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "mismatch-observations"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"logos\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"alert_name\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "a883e18a-7b3b-4879-a85b-1f57016db601",
+              "name": "Internal Server Error.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "mismatch-observations"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"logos\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"alert_name\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "1195f71b-56c6-4bb1-8f70-a5acd6ab69d6",
+          "name": "List mismatch observations",
+          "request": {
+            "name": "List mismatch observations",
+            "description": {
+              "content": "Returns mismatch observations for the authenticated customer only, ordered from newest to oldest. Paginated; default page size is 50. Returns 200 with an empty `mismatch_observations` array when none exist.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "mismatch-observations"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number (1-based)."
+                },
+                {
+                  "disabled": false,
+                  "key": "page_size",
+                  "value": "50",
+                  "description": "Number of items per page (max 500)."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "26b7aec8-b9fa-429a-8c3c-7b5d8a189a55",
+              "name": "Paginated list of mismatch observations for the customer.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "mismatch-observations"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "50"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"mismatch_observations\": [\n    {\n      \"id\": \"2826f687-4f32-a8d1-2121-f49b3091e922\",\n      \"usdot\": \"string\",\n      \"mc\": \"string\",\n      \"is_disabled\": false,\n      \"alert_name\": \"string\",\n      \"created_at\": \"1965-08-29T07:01:15.098Z\",\n      \"last_run_at\": \"2025-04-11T18:53:19.291Z\"\n    },\n    {\n      \"id\": \"b9c2c525-1b88-7711-63eb-e87cac2b88a9\",\n      \"usdot\": \"string\",\n      \"mc\": \"string\",\n      \"is_disabled\": true,\n      \"alert_name\": \"string\",\n      \"created_at\": \"1961-02-27T15:57:04.499Z\",\n      \"last_run_at\": \"1966-02-09T23:23:37.526Z\"\n    }\n  ],\n  \"page\": 2632,\n  \"page_size\": 429,\n  \"total\": 7159\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "96fef037-c722-4911-a79f-b8daa9893e5c",
+              "name": "Unauthorized – Invalid or missing Access-Token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "mismatch-observations"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "50"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "968ae5fb-2760-4514-838a-214a914a4f25",
+              "name": "Forbidden – missing permission.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "mismatch-observations"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "page_size",
+                      "value": "50"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "ff0374bb-a6e8-4dcb-99a5-3a45b2b96256",
+          "name": "Update a mismatch observation",
+          "request": {
+            "name": "Update a mismatch observation",
+            "description": {
+              "content": "Partial update of USDOT (`usdot`), MC (`mc`), `logos`, display name (`alert_name`), and/or `is_disabled`. Send at least one field. Requires permission `external-api-mismatch-observations` or admin. Only alerts belonging to the JWT `customer_id` can be updated; otherwise 403. `logos` values are normalized to lowercase before persistence and response. Logo matching remains case-insensitive. Returns the full updated observation (same shape as list items).\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "mismatch-observations",
+                ":observation_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "observation_id",
+                  "description": "(Required) Mismatch observation (alert) identifier."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usdot\": \"<string>\",\n  \"mc\": \"<string>\",\n  \"logos\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"alert_name\": \"<string>\",\n  \"is_disabled\": \"<boolean>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "385864c1-877f-4c67-80a2-807799fc80fe",
+              "name": "Full updated mismatch observation.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "mismatch-observations",
+                    ":observation_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "observation_id",
+                      "description": "(Required) Mismatch observation (alert) identifier."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"usdot\": \"<string>\",\n  \"mc\": \"<string>\",\n  \"logos\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"alert_name\": \"<string>\",\n  \"is_disabled\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"cd9d7175-a37c-ffe3-f78c-db80186bdae3\",\n  \"usdot\": \"string\",\n  \"mc\": \"string\",\n  \"is_disabled\": true,\n  \"alert_name\": \"string\",\n  \"created_at\": \"1979-06-15T17:27:27.477Z\",\n  \"last_run_at\": \"1973-07-14T15:09:45.857Z\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b4fd9c9a-a74d-4904-bba0-fe9649d2057f",
+              "name": "Bad request – empty body, no updatable fields, invalid USDOT/MC, or validation error.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "mismatch-observations",
+                    ":observation_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "observation_id",
+                      "description": "(Required) Mismatch observation (alert) identifier."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"usdot\": \"<string>\",\n  \"mc\": \"<string>\",\n  \"logos\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"alert_name\": \"<string>\",\n  \"is_disabled\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "ce66a387-9435-4f1a-a6f9-956399d20fe4",
+              "name": "Unauthorized – Invalid or missing Access-Token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "mismatch-observations",
+                    ":observation_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "observation_id",
+                      "description": "(Required) Mismatch observation (alert) identifier."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"usdot\": \"<string>\",\n  \"mc\": \"<string>\",\n  \"logos\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"alert_name\": \"<string>\",\n  \"is_disabled\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "b0097d19-ba55-4a43-a62a-39c92e2ffd5e",
+              "name": "Forbidden – missing permission, or observation belongs to another customer.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "mismatch-observations",
+                    ":observation_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "observation_id",
+                      "description": "(Required) Mismatch observation (alert) identifier."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"usdot\": \"<string>\",\n  \"mc\": \"<string>\",\n  \"logos\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"alert_name\": \"<string>\",\n  \"is_disabled\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "b7cb517d-06fd-4f48-b7e8-3bdc65e5adf6",
+              "name": "Mismatch observation not found or deleted.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "mismatch-observations",
+                    ":observation_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "observation_id",
+                      "description": "(Required) Mismatch observation (alert) identifier."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"usdot\": \"<string>\",\n  \"mc\": \"<string>\",\n  \"logos\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"alert_name\": \"<string>\",\n  \"is_disabled\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "719ace2e-6919-4d74-bd2c-fbb805d64a55",
+          "name": "Delete a mismatch observation",
+          "request": {
+            "name": "Delete a mismatch observation",
+            "description": {
+              "content": "Permanently removes the row (timestamp hard delete). This is separate from `is_disabled`, which only pauses processing. After delete, the observation no longer appears in GET list and cannot be PATCHed. Same permission as create/list/update. Returns 404 if the id is unknown, belongs to another customer, or is already deleted. Returns 404 if the id is unknown, belongs to another customer, or is already deleted.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "mismatch-observations",
+                ":observation_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "observation_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "8276a412-4eed-4253-a910-f435078ad412",
+              "name": "Observation deleted successfully (no response body).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "mismatch-observations",
+                    ":observation_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "observation_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "a87a6b43-bf74-4e10-9f50-0dca4d0f2f0b",
+              "name": "Unauthorized – Invalid or missing Access-Token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "mismatch-observations",
+                    ":observation_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "observation_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "237b8af4-3d11-4696-8c8a-e7a856e3654e",
+              "name": "Forbidden – missing permission.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "mismatch-observations",
+                    ":observation_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "observation_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "44ffa94c-3974-4638-81df-e810785b7359",
+              "name": "Not found, wrong customer, or already deleted.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "mismatch-observations",
+                    ":observation_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "observation_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.genlogs.io",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "x-api-key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "1363221f-4f92-482f-a356-a7fc0bf20552",
+    "name": "GenLogs Alerts Mismatch alerts API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "GenLogs Truck Intelligence API. Ground-truth motor-carrier and shipper data from a nationwide roadside sensor network: carrier recommendations by lane, carrier and FMCSA profiles, carrier vetting, shipper lanes and facilities, onboarded-carrier contact management, mismatch observations, and alert webhooks. Base URL https://api.genlogs.io. Authentication uses an x-api-key header plus a short-lived Access-Token obtained from /auth/token; endpoint access is gated by named permissions.\n\nContact Support:\n Name: GenLogs\n Email: contact@genlogs.io",
+      "type": "text/plain"
+    }
+  }
+}

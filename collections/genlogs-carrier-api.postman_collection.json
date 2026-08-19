@@ -1,0 +1,923 @@
+{
+  "item": [
+    {
+      "id": "ac2203e0-b499-47ec-866a-fd702da21327",
+      "name": "Carrier",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "c65caf32-25ca-42df-bb22-8557e8270fe7",
+          "name": "Get carrier recommendations based on location",
+          "request": {
+            "name": "Get carrier recommendations based on location",
+            "description": {},
+            "url": {
+              "path": [
+                "carrier",
+                "recommendations"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "origin_city",
+                  "value": "Nashville",
+                  "description": "(Required) Origin city for the recommendation"
+                },
+                {
+                  "disabled": false,
+                  "key": "origin_state",
+                  "value": "TN",
+                  "description": "(Required) Origin state for the recommendation"
+                },
+                {
+                  "disabled": false,
+                  "key": "destination_city",
+                  "value": "Dallas",
+                  "description": "(Required) Destination city for the recommendation"
+                },
+                {
+                  "disabled": false,
+                  "key": "destination_state",
+                  "value": "TX",
+                  "description": "(Required) Destination state for the recommendation"
+                },
+                {
+                  "disabled": false,
+                  "key": "origin_radius",
+                  "value": "50",
+                  "description": "Search radius around the origin location in miles"
+                },
+                {
+                  "disabled": false,
+                  "key": "destination_radius",
+                  "value": "50",
+                  "description": "Search radius around the destination location in miles"
+                },
+                {
+                  "disabled": false,
+                  "key": "carrier_score_min",
+                  "value": "0",
+                  "description": "Minimum carrier score"
+                },
+                {
+                  "disabled": false,
+                  "key": "carrier_score_max",
+                  "value": "1",
+                  "description": "Maximum carrier score"
+                },
+                {
+                  "disabled": false,
+                  "key": "fleet_size_min",
+                  "value": "<number>",
+                  "description": "Minimum fleet size"
+                },
+                {
+                  "disabled": false,
+                  "key": "fleet_size_max",
+                  "value": "<number>",
+                  "description": "Maximum fleet size"
+                },
+                {
+                  "disabled": false,
+                  "key": "carried_cargo",
+                  "value": "general goods",
+                  "description": "Type of cargo carried"
+                },
+                {
+                  "disabled": false,
+                  "key": "equipment_types",
+                  "value": "flatbed",
+                  "description": "Type of equipment used by carriers"
+                },
+                {
+                  "disabled": false,
+                  "key": "preferred_carriers",
+                  "value": "false",
+                  "description": "Filter for preferred carriers"
+                },
+                {
+                  "disabled": false,
+                  "key": "real_time",
+                  "value": "false",
+                  "description": "Request real-time data if available"
+                },
+                {
+                  "disabled": false,
+                  "key": "auth_months_min",
+                  "value": "1",
+                  "description": "Minimum number of months a carrier has an active common or contract authority with FMCSA"
+                },
+                {
+                  "disabled": false,
+                  "key": "power_only",
+                  "value": "false"
+                },
+                {
+                  "disabled": false,
+                  "key": "broker_authority",
+                  "value": "false"
+                },
+                {
+                  "disabled": false,
+                  "key": "is_possible_backhaul",
+                  "value": "false"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "(Required) Access Token for authentication",
+                "key": "Access-Token",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "(Required) API key for authentication",
+                "key": "x-api-key",
+                "value": "<string>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "21d2746c-9751-41d3-80f4-237b339641ae",
+              "name": "The JSON response containing recommendations and lane volume",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "carrier",
+                    "recommendations"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "origin_city",
+                      "value": "Nashville"
+                    },
+                    {
+                      "key": "origin_state",
+                      "value": "TN"
+                    },
+                    {
+                      "key": "destination_city",
+                      "value": "Dallas"
+                    },
+                    {
+                      "key": "destination_state",
+                      "value": "TX"
+                    },
+                    {
+                      "key": "origin_radius",
+                      "value": "50"
+                    },
+                    {
+                      "key": "destination_radius",
+                      "value": "50"
+                    },
+                    {
+                      "key": "carrier_score_min",
+                      "value": "0"
+                    },
+                    {
+                      "key": "carrier_score_max",
+                      "value": "1"
+                    },
+                    {
+                      "key": "fleet_size_min",
+                      "value": "<number>"
+                    },
+                    {
+                      "key": "fleet_size_max",
+                      "value": "<number>"
+                    },
+                    {
+                      "key": "carried_cargo",
+                      "value": "general goods"
+                    },
+                    {
+                      "key": "equipment_types",
+                      "value": "flatbed"
+                    },
+                    {
+                      "key": "preferred_carriers",
+                      "value": "false"
+                    },
+                    {
+                      "key": "real_time",
+                      "value": "false"
+                    },
+                    {
+                      "key": "auth_months_min",
+                      "value": "1"
+                    },
+                    {
+                      "key": "power_only",
+                      "value": "false"
+                    },
+                    {
+                      "key": "broker_authority",
+                      "value": "false"
+                    },
+                    {
+                      "key": "is_possible_backhaul",
+                      "value": "false"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) Specifies the format of the response.",
+                    "key": "accept",
+                    "value": "application/json"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) Access Token for authentication",
+                    "key": "Access-Token",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) API key for authentication",
+                    "key": "x-api-key",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"real_time_locs\": [\n    {\n      \"dot_number\": \"string\",\n      \"is_inbound\": false,\n      \"current_lat\": 8928.7274585844,\n      \"current_lon\": 1856.1208165066\n    },\n    {\n      \"dot_number\": \"string\",\n      \"is_inbound\": false,\n      \"current_lat\": 2214.3058163582064,\n      \"current_lon\": 2680.185993789027\n    }\n  ],\n  \"recommendations\": [\n    {\n      \"add_date\": \"string\",\n      \"bipd_insurance_on_file\": 822.3731842894156,\n      \"cargo_insurance_on_file\": 9951.254488316712,\n      \"carried_cargo\": \"string\",\n      \"carrier_driver_oos_rate\": 334.62649041728355,\n      \"carrier_driver_oos_rate_national_avg\": 2358.7179415942383,\n      \"carrier_score_scaled\": 6197.795830894533,\n      \"carrier_total_power_units\": 233.37663458368297,\n      \"carrier_vehicle_oos_rate\": 3425.7787633091916,\n      \"carrier_vehicle_oos_rate_national_avg\": 8162.748347285925,\n      \"confirmed_email\": {\n        \"<email@domain.com>\": {\n          \"add_date\": \"string\"\n        }\n      },\n      \"confirmed_phone\": {\n        \"<phone_number>\": {\n          \"add_date\": \"string\"\n        }\n      },\n      \"dot_number\": \"string\",\n      \"email_address\": \"string\",\n      \"is_inbound\": false,\n      \"is_real_time\": true,\n      \"is_visually_sighted\": false,\n      \"legal_name\": \"string\",\n      \"mc_number\": 5368.781271106487,\n      \"phy_city\": \"string\",\n      \"phy_state\": \"string\",\n      \"phy_street\": \"string\",\n      \"phy_zip\": \"string\",\n      \"telephone\": \"string\",\n      \"dba_name\": \"string\",\n      \"is_possible_backhaul\": false,\n      \"lat\": 2455.6642805801466,\n      \"lon\": 1690.2734546046117,\n      \"power_only\": false,\n      \"broker_authority_status\": \"string\"\n    },\n    {\n      \"add_date\": \"string\",\n      \"bipd_insurance_on_file\": 8043.370763158093,\n      \"cargo_insurance_on_file\": 9743.239139458603,\n      \"carried_cargo\": \"string\",\n      \"carrier_driver_oos_rate\": 5401.256990463572,\n      \"carrier_driver_oos_rate_national_avg\": 2694.2756685278014,\n      \"carrier_score_scaled\": 6435.15537970338,\n      \"carrier_total_power_units\": 9243.456098006778,\n      \"carrier_vehicle_oos_rate\": 7824.5135651004975,\n      \"carrier_vehicle_oos_rate_national_avg\": 2098.682709537264,\n      \"confirmed_email\": {\n        \"<email@domain.com>\": {\n          \"add_date\": \"string\"\n        }\n      },\n      \"confirmed_phone\": {\n        \"<phone_number>\": {\n          \"add_date\": \"string\"\n        }\n      },\n      \"dot_number\": \"string\",\n      \"email_address\": \"string\",\n      \"is_inbound\": true,\n      \"is_real_time\": false,\n      \"is_visually_sighted\": true,\n      \"legal_name\": \"string\",\n      \"mc_number\": 6863.942469740257,\n      \"phy_city\": \"string\",\n      \"phy_state\": \"string\",\n      \"phy_street\": \"string\",\n      \"phy_zip\": \"string\",\n      \"telephone\": \"string\",\n      \"dba_name\": \"string\",\n      \"is_possible_backhaul\": true,\n      \"lat\": 2505.279481745332,\n      \"lon\": 1734.7234413439805,\n      \"power_only\": false,\n      \"broker_authority_status\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "39ad45d7-62b3-4550-b294-a5535c3b9d34",
+          "name": "Get contacts for carriers",
+          "request": {
+            "name": "Get contacts for carriers",
+            "description": {
+              "content": "Returns the contacts related to a carrier (onboarded, dispatch and FMCSA).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "carrier",
+                "contacts"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "d7abb4c4-b7be-493d-87f3-3dd36f85301b",
+              "name": "Contacts found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "carrier",
+                    "contacts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"key_0\": {\n      \"has_dispatch\": \"string\",\n      \"onboarded_contacts\": [\n        {\n          \"name\": \"string\",\n          \"phone\": \"string\",\n          \"email\": \"string\"\n        },\n        {\n          \"name\": \"string\",\n          \"phone\": \"string\",\n          \"email\": \"string\"\n        }\n      ],\n      \"dispatch_contact\": [\n        {\n          \"phone\": \"string\",\n          \"email\": \"string\"\n        },\n        {\n          \"phone\": \"string\",\n          \"email\": \"string\"\n        }\n      ],\n      \"fmcsa_contact\": {\n        \"name\": \"string\",\n        \"phone\": \"string\",\n        \"email\": \"string\"\n      }\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "07e17569-268f-4018-8055-813b4fa1b259",
+              "name": "Unauthorized – missing token",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "carrier",
+                    "contacts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"code\": 1667\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ced96f27-c013-4ea9-9adc-793c0bef5cae",
+              "name": "Forbidden – invalid token or insufficient permissions",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "carrier",
+                    "contacts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"code\": 1667\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "808665c5-234a-414c-b721-b58c5fb4dd47",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "carrier",
+                    "contacts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"code\": 1667\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "35fb6a00-2c6e-41df-96eb-2fcd2c1c5dc7",
+          "name": "Get carrier profile details",
+          "request": {
+            "name": "Get carrier profile details",
+            "description": {
+              "content": "Retrieve a comprehensive carrier profile details including FMCSA details, equipment pairings, and sightings data for specified USDOT numbers.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "carrier",
+                "profile"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "usdot_number",
+                  "value": "<string>,<string>",
+                  "description": "(Required) USDOT numbers to filter data for specific carriers"
+                },
+                {
+                  "disabled": false,
+                  "key": "start_date",
+                  "value": "<date>",
+                  "description": "Start date for sightings in YYYY-MM-DD format"
+                },
+                {
+                  "disabled": false,
+                  "key": "end_date",
+                  "value": "<date>",
+                  "description": "End date for sightings in YYYY-MM-DD format"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "(Required) Bearer token for authentication",
+                "key": "Access-Token",
+                "value": "<string>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "ce9bdb11-dc1b-4506-baf4-534671c0d220",
+              "name": "Successful response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "carrier",
+                    "profile"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "usdot_number",
+                      "value": "<string>,<string>"
+                    },
+                    {
+                      "key": "start_date",
+                      "value": "<date>"
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "<date>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) Bearer token for authentication",
+                    "key": "Access-Token",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"key_0\": {\n    \"fmcsa_detail\": {\n      \"usdot_number\": \"string\",\n      \"legal_name\": \"string\",\n      \"dba_name\": \"string\",\n      \"entity_type\": \"string\",\n      \"carrier_operation\": \"string\",\n      \"cargo_carried\": \"string\",\n      \"hazmat_authorized\": \"string\",\n      \"carrier_status\": \"string\",\n      \"out_of_service_date\": \"string\",\n      \"legal_address\": \"string\",\n      \"physical_address\": \"string\",\n      \"mailing_address\": \"string\",\n      \"telephone\": \"string\",\n      \"fax\": \"string\",\n      \"email\": \"string\",\n      \"mcs_150_form_date\": \"1994-05-21\",\n      \"mcs_150_mileage_year\": \"string\",\n      \"dot_number\": \"string\",\n      \"docket_number\": \"string\",\n      \"mc_mx_ff_number\": \"string\",\n      \"power_units\": \"string\",\n      \"drivers\": \"string\",\n      \"mcs_150_mileage\": \"string\"\n    },\n    \"equipment_pairings\": {},\n    \"sightings\": [\n      {\n        \"sighting_date\": \"1968-09-21\",\n        \"state_seen\": \"string\",\n        \"location_zip\": \"string\",\n        \"sightings\": 4179,\n        \"source\": \"string\"\n      },\n      {\n        \"sighting_date\": \"1948-02-12\",\n        \"state_seen\": \"string\",\n        \"location_zip\": \"string\",\n        \"sightings\": 4483,\n        \"source\": \"string\"\n      }\n    ]\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b4db0dd7-891a-44ed-9a11-df6ffea12a92",
+              "name": "Bad Request - invalid parameters",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "carrier",
+                    "profile"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "usdot_number",
+                      "value": "<string>,<string>"
+                    },
+                    {
+                      "key": "start_date",
+                      "value": "<date>"
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "<date>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) Bearer token for authentication",
+                    "key": "Access-Token",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"code\": 1667\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b14268eb-23fd-47df-8ed0-8bd32a662652",
+              "name": "Unauthorized – missing token",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "carrier",
+                    "profile"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "usdot_number",
+                      "value": "<string>,<string>"
+                    },
+                    {
+                      "key": "start_date",
+                      "value": "<date>"
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "<date>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) Bearer token for authentication",
+                    "key": "Access-Token",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"code\": 1667\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "daeb458a-b735-4f24-ac11-29a2edb3dfe2",
+              "name": "Forbidden – invalid token or insufficient permissions",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "carrier",
+                    "profile"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "usdot_number",
+                      "value": "<string>,<string>"
+                    },
+                    {
+                      "key": "start_date",
+                      "value": "<date>"
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "<date>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) Bearer token for authentication",
+                    "key": "Access-Token",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"code\": 1667\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0fd1e177-8f62-4be7-a937-65a042a5d55b",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "carrier",
+                    "profile"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "usdot_number",
+                      "value": "<string>,<string>"
+                    },
+                    {
+                      "key": "start_date",
+                      "value": "<date>"
+                    },
+                    {
+                      "key": "end_date",
+                      "value": "<date>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) Bearer token for authentication",
+                    "key": "Access-Token",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"code\": 1667\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.genlogs.io",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "x-api-key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "521e6910-46fa-4a6c-a224-405ed24f161f",
+    "name": "GenLogs Alerts Carrier API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "GenLogs Truck Intelligence API. Ground-truth motor-carrier and shipper data from a nationwide roadside sensor network: carrier recommendations by lane, carrier and FMCSA profiles, carrier vetting, shipper lanes and facilities, onboarded-carrier contact management, mismatch observations, and alert webhooks. Base URL https://api.genlogs.io. Authentication uses an x-api-key header plus a short-lived Access-Token obtained from /auth/token; endpoint access is gated by named permissions.\n\nContact Support:\n Name: GenLogs\n Email: contact@genlogs.io",
+      "type": "text/plain"
+    }
+  }
+}

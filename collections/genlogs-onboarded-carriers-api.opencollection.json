@@ -1,0 +1,144 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "GenLogs Alerts Onboarded Carriers API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "x-api-key",
+      "value": "{{x-api-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Onboarded Carriers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve onboarded carrier contacts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.genlogs.io/onboarded-carrier/contacts",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page number of results to return."
+              },
+              {
+                "name": "page_size",
+                "value": "",
+                "type": "query",
+                "description": "Number of results per page (max 200)."
+              },
+              {
+                "name": "usdot_number",
+                "value": "",
+                "type": "query",
+                "description": "USDOT number(s) to filter by. Supports a single value or a comma-separated list.\n"
+              }
+            ]
+          },
+          "docs": "Returns a paginated list of onboarded carrier contacts for the authenticated customer. Only contacts belonging to the customer identified in the JWT are returned. Requires the external-api-get-onboarded-carrier-contact permission.\n"
+        },
+        {
+          "info": {
+            "name": "Create an onboarded carrier contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.genlogs.io/onboarded-carrier/contacts",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new onboarded carrier contact for the authenticated customer. Requires a valid JWT token and the appropriate permission. The `usdot` value must contain digits only, be greater than zero, and be at most 9 digits after normalization.\n"
+        },
+        {
+          "info": {
+            "name": "Update an onboarded carrier contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.genlogs.io/onboarded-carrier/contacts/:contact_id",
+            "params": [
+              {
+                "name": "contact_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier of the contact to update."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates an existing onboarded carrier contact for the authenticated customer. Requires a valid JWT token and the appropriate permission. Only the fields provided in the request body will be updated. USDOT updates are not supported by this endpoint; including `usdot` in the PATCH body returns Bad Request before any persistence operation.\n"
+        },
+        {
+          "info": {
+            "name": "Delete an onboarded carrier contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.genlogs.io/onboarded-carrier/contacts/:contact_id",
+            "params": [
+              {
+                "name": "contact_id",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier of the contact to delete."
+              }
+            ]
+          },
+          "docs": "Deletes an existing onboarded carrier contact for the authenticated customer. Requires a valid JWT token and the appropriate permission. The contact must belong to the authenticated customer.\n"
+        },
+        {
+          "info": {
+            "name": "Bulk create onboarded carrier contacts",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.genlogs.io/onboarded-carrier/bulk/contacts",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates multiple onboarded carrier contacts for the authenticated customer in a single request. Each contact entry is validated using the same rules as the single-contact create flow. At least one contact must be valid for the operation to succeed. The operation follows the same authorization, repository, caching, and creation logic as the single-contact create flow. Each `usdot` value must contain digits only, be greater than zero, and be at most 9 digits after normalization.\n"
+        },
+        {
+          "info": {
+            "name": "Bulk delete onboarded carrier contacts",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.genlogs.io/onboarded-carrier/bulk/contacts",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Deletes multiple onboarded carrier contacts for the authenticated customer in a single request. All provided contact IDs must exist and belong to the authenticated customer. The operation follows the same authorization, repository, caching, and deletion logic as the single-contact delete flow.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

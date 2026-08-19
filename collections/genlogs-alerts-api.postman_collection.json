@@ -1,0 +1,673 @@
+{
+  "item": [
+    {
+      "id": "5882ca09-63cb-4502-945e-b16a7f6703a5",
+      "name": "Alerts",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "7524b50c-7427-4ad0-b49c-f9b9fb889287",
+          "name": "Delete alert webhook",
+          "request": {
+            "name": "Delete alert webhook",
+            "description": {
+              "content": "Delete an alert webhook by ID. Requires ownership for the authenticated customer. Returns the deleted webhook data (id, webhook_url, description, created_at). Requires admin or external-api-delete-alert-webhook-endpoint.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "alerts",
+                "webhook",
+                ":webhook_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "webhook_id",
+                  "description": "(Required) UUID of the webhook to delete"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "(Required) JWT access token for authentication",
+                "key": "Access-Token",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "(Required) API key for authentication",
+                "key": "X-API-Key",
+                "value": "<string>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "0eba1abd-1955-4db3-904b-762e53a641a0",
+              "name": "Webhook deleted successfully; returns deleted webhook data",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "alerts",
+                    "webhook",
+                    ":webhook_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "webhook_id",
+                      "description": "(Required) UUID of the webhook to delete"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) JWT access token for authentication",
+                    "key": "Access-Token",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) API key for authentication",
+                    "key": "X-API-Key",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"61cb772b-b75e-b82a-ca15-4bff6412fe5b\",\n  \"webhook_url\": \"https://PFPERNrF.rjaBE\",\n  \"created_at\": \"1989-03-12T15:53:25.109Z\",\n  \"deleted\": true,\n  \"description\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "92c48402-b61c-4e84-854f-c8f71831ecbe",
+              "name": "Bad Request – invalid webhook ID format",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "alerts",
+                    "webhook",
+                    ":webhook_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "webhook_id",
+                      "description": "(Required) UUID of the webhook to delete"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) JWT access token for authentication",
+                    "key": "Access-Token",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) API key for authentication",
+                    "key": "X-API-Key",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"code\": 5001\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6e7ddbd3-68e6-46ba-92eb-fa68fc760532",
+              "name": "Unauthorized – missing or invalid token",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "alerts",
+                    "webhook",
+                    ":webhook_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "webhook_id",
+                      "description": "(Required) UUID of the webhook to delete"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) JWT access token for authentication",
+                    "key": "Access-Token",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) API key for authentication",
+                    "key": "X-API-Key",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"code\": 5001\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2daf8942-21cf-40fa-aa23-da17bac7ca4c",
+              "name": "Forbidden – insufficient permissions",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "alerts",
+                    "webhook",
+                    ":webhook_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "webhook_id",
+                      "description": "(Required) UUID of the webhook to delete"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) JWT access token for authentication",
+                    "key": "Access-Token",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) API key for authentication",
+                    "key": "X-API-Key",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"code\": 5001\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6bf71107-c216-45e5-9269-4a45f8db7888",
+              "name": "Not Found – webhook does not exist or does not belong to customer",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "alerts",
+                    "webhook",
+                    ":webhook_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "webhook_id",
+                      "description": "(Required) UUID of the webhook to delete"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) JWT access token for authentication",
+                    "key": "Access-Token",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) API key for authentication",
+                    "key": "X-API-Key",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"code\": 5001\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c8a8d89a-5588-4e3b-be6d-3114f65ab4d3",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "alerts",
+                    "webhook",
+                    ":webhook_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "webhook_id",
+                      "description": "(Required) UUID of the webhook to delete"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) JWT access token for authentication",
+                    "key": "Access-Token",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) API key for authentication",
+                    "key": "X-API-Key",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"code\": 5001\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "1fbb2667-4297-442c-a30d-91ccba9cacb3",
+          "name": "External Patch Alert",
+          "request": {
+            "name": "External Patch Alert",
+            "description": {
+              "content": "Partially update an existing alert by alert_id. `start_date` and `end_date` accept ISO 8601 date-time strings with `Z`, timezone offsets, or no timezone. Timezone-aware values are normalized to UTC and returned without timezone information.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "alerts",
+                ":alert_id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "alert_id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"alert_name\": \"<string>\",\n  \"location_state\": \"<string>\",\n  \"location_city\": \"<string>\",\n  \"license_plate\": \"<string>\",\n  \"license_plate_state\": \"<string>\",\n  \"usdot_number\": \"<string>\",\n  \"chassis_number\": \"<string>\",\n  \"exact_match_chassis_number\": \"<boolean>\",\n  \"container_number\": \"<string>\",\n  \"equipment_type\": \"<string>\",\n  \"exact_match_container_number\": \"<boolean>\",\n  \"mc_number\": \"<string>\",\n  \"vin\": \"<string>\",\n  \"cab_number\": \"<string>\",\n  \"trailer_logo\": \"<string>\",\n  \"trailer_number\": \"<string>\",\n  \"disabled\": \"<boolean>\",\n  \"cc_emails\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"alert_type\": \"<string>\",\n  \"exact_match_trailer_number\": \"<boolean>\",\n  \"start_date\": \"<dateTime>\",\n  \"end_date\": \"<dateTime>\",\n  \"deep_search\": \"<string>\",\n  \"notification_channels\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "a710f7ad-e9d3-4ad9-b69e-83a1a1f60681",
+              "name": "Successful Response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "alerts",
+                    ":alert_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "alert_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"alert_name\": \"<string>\",\n  \"location_state\": \"<string>\",\n  \"location_city\": \"<string>\",\n  \"license_plate\": \"<string>\",\n  \"license_plate_state\": \"<string>\",\n  \"usdot_number\": \"<string>\",\n  \"chassis_number\": \"<string>\",\n  \"exact_match_chassis_number\": \"<boolean>\",\n  \"container_number\": \"<string>\",\n  \"equipment_type\": \"<string>\",\n  \"exact_match_container_number\": \"<boolean>\",\n  \"mc_number\": \"<string>\",\n  \"vin\": \"<string>\",\n  \"cab_number\": \"<string>\",\n  \"trailer_logo\": \"<string>\",\n  \"trailer_number\": \"<string>\",\n  \"disabled\": \"<boolean>\",\n  \"cc_emails\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"alert_type\": \"<string>\",\n  \"exact_match_trailer_number\": \"<boolean>\",\n  \"start_date\": \"<dateTime>\",\n  \"end_date\": \"<dateTime>\",\n  \"deep_search\": \"<string>\",\n  \"notification_channels\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"alert_name\": \"string\",\n  \"id\": 3002,\n  \"email\": \"string\",\n  \"last_updated_timestamp\": \"1985-03-08T02:42:39.596Z\",\n  \"insert_timestamp\": \"1997-04-18T00:37:31.240Z\",\n  \"location_state\": \"string\",\n  \"location_city\": \"string\",\n  \"license_plate\": \"string\",\n  \"license_plate_state\": \"string\",\n  \"usdot_number\": \"string\",\n  \"chassis_number\": \"string\",\n  \"exact_match_chassis_number\": false,\n  \"container_number\": \"string\",\n  \"equipment_type\": \"string\",\n  \"exact_match_container_number\": false,\n  \"mc_number\": \"string\",\n  \"vin\": \"string\",\n  \"cab_number\": \"string\",\n  \"trailer_logo\": \"string\",\n  \"trailer_number\": \"string\",\n  \"disabled\": false,\n  \"cc_emails\": [\n    \"string\",\n    \"string\"\n  ],\n  \"alert_type\": \"normal\",\n  \"exact_match_trailer_number\": true,\n  \"start_date\": \"1947-09-14T12:32:14.973Z\",\n  \"end_date\": \"1991-06-09T16:51:31.864Z\",\n  \"deep_search\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d23c5068-36ba-407e-b3a2-ea6761416e6d",
+              "name": "Validation Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "alerts",
+                    ":alert_id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "alert_id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PATCH",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"alert_name\": \"<string>\",\n  \"location_state\": \"<string>\",\n  \"location_city\": \"<string>\",\n  \"license_plate\": \"<string>\",\n  \"license_plate_state\": \"<string>\",\n  \"usdot_number\": \"<string>\",\n  \"chassis_number\": \"<string>\",\n  \"exact_match_chassis_number\": \"<boolean>\",\n  \"container_number\": \"<string>\",\n  \"equipment_type\": \"<string>\",\n  \"exact_match_container_number\": \"<boolean>\",\n  \"mc_number\": \"<string>\",\n  \"vin\": \"<string>\",\n  \"cab_number\": \"<string>\",\n  \"trailer_logo\": \"<string>\",\n  \"trailer_number\": \"<string>\",\n  \"disabled\": \"<boolean>\",\n  \"cc_emails\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"alert_type\": \"<string>\",\n  \"exact_match_trailer_number\": \"<boolean>\",\n  \"start_date\": \"<dateTime>\",\n  \"end_date\": \"<dateTime>\",\n  \"deep_search\": \"<string>\",\n  \"notification_channels\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": [\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    },\n    {\n      \"loc\": [\n        \"string\",\n        \"string\"\n      ],\n      \"msg\": \"string\",\n      \"type\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.genlogs.io",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "x-api-key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "fbca2785-f2fb-45c6-a56b-5386c6856575",
+    "name": "GenLogs Alerts API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "GenLogs Truck Intelligence API. Ground-truth motor-carrier and shipper data from a nationwide roadside sensor network: carrier recommendations by lane, carrier and FMCSA profiles, carrier vetting, shipper lanes and facilities, onboarded-carrier contact management, mismatch observations, and alert webhooks. Base URL https://api.genlogs.io. Authentication uses an x-api-key header plus a short-lived Access-Token obtained from /auth/token; endpoint access is gated by named permissions.\n\nContact Support:\n Name: GenLogs\n Email: contact@genlogs.io",
+      "type": "text/plain"
+    }
+  }
+}

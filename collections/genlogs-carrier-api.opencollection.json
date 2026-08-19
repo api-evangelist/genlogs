@@ -1,0 +1,206 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "GenLogs Alerts Carrier API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "x-api-key",
+      "value": "{{x-api-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Carrier",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get carrier recommendations based on location",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.genlogs.io/carrier/recommendations",
+            "headers": [
+              {
+                "name": "accept",
+                "value": ""
+              },
+              {
+                "name": "Access-Token",
+                "value": ""
+              },
+              {
+                "name": "x-api-key",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "origin_city",
+                "value": "",
+                "type": "query",
+                "description": "Origin city for the recommendation"
+              },
+              {
+                "name": "origin_state",
+                "value": "",
+                "type": "query",
+                "description": "Origin state for the recommendation"
+              },
+              {
+                "name": "destination_city",
+                "value": "",
+                "type": "query",
+                "description": "Destination city for the recommendation"
+              },
+              {
+                "name": "destination_state",
+                "value": "",
+                "type": "query",
+                "description": "Destination state for the recommendation"
+              },
+              {
+                "name": "origin_radius",
+                "value": "",
+                "type": "query",
+                "description": "Search radius around the origin location in miles"
+              },
+              {
+                "name": "destination_radius",
+                "value": "",
+                "type": "query",
+                "description": "Search radius around the destination location in miles"
+              },
+              {
+                "name": "carrier_score_min",
+                "value": "",
+                "type": "query",
+                "description": "Minimum carrier score"
+              },
+              {
+                "name": "carrier_score_max",
+                "value": "",
+                "type": "query",
+                "description": "Maximum carrier score"
+              },
+              {
+                "name": "fleet_size_min",
+                "value": "",
+                "type": "query",
+                "description": "Minimum fleet size"
+              },
+              {
+                "name": "fleet_size_max",
+                "value": "",
+                "type": "query",
+                "description": "Maximum fleet size"
+              },
+              {
+                "name": "carried_cargo",
+                "value": "",
+                "type": "query",
+                "description": "Type of cargo carried"
+              },
+              {
+                "name": "equipment_types",
+                "value": "",
+                "type": "query",
+                "description": "Type of equipment used by carriers"
+              },
+              {
+                "name": "preferred_carriers",
+                "value": "",
+                "type": "query",
+                "description": "Filter for preferred carriers"
+              },
+              {
+                "name": "real_time",
+                "value": "",
+                "type": "query",
+                "description": "Request real-time data if available"
+              },
+              {
+                "name": "auth_months_min",
+                "value": "",
+                "type": "query",
+                "description": "Minimum number of months a carrier has an active common or contract authority with FMCSA"
+              },
+              {
+                "name": "power_only",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "broker_authority",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "is_possible_backhaul",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Get carrier recommendations based on location"
+        },
+        {
+          "info": {
+            "name": "Get contacts for carriers",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.genlogs.io/carrier/contacts"
+          },
+          "docs": "Returns the contacts related to a carrier (onboarded, dispatch and FMCSA)."
+        },
+        {
+          "info": {
+            "name": "Get carrier profile details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.genlogs.io/carrier/profile",
+            "headers": [
+              {
+                "name": "Access-Token",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "usdot_number",
+                "value": "",
+                "type": "query",
+                "description": "USDOT numbers to filter data for specific carriers"
+              },
+              {
+                "name": "start_date",
+                "value": "",
+                "type": "query",
+                "description": "Start date for sightings in YYYY-MM-DD format"
+              },
+              {
+                "name": "end_date",
+                "value": "",
+                "type": "query",
+                "description": "End date for sightings in YYYY-MM-DD format"
+              }
+            ]
+          },
+          "docs": "Retrieve a comprehensive carrier profile details including FMCSA details, equipment pairings, and sightings data for specified USDOT numbers.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

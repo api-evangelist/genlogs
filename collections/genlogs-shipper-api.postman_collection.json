@@ -1,0 +1,228 @@
+{
+  "item": [
+    {
+      "id": "96ca4d94-1a42-49f8-8761-d06444666653",
+      "name": "Shipper",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "c6a21fe4-34ff-4015-908b-c82d26ea5a15",
+          "name": "Get shipper lanes based on coordinates and radius",
+          "request": {
+            "name": "Get shipper lanes based on coordinates and radius",
+            "description": {},
+            "url": {
+              "path": [
+                "shipper",
+                "lanes"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "testing_new_param",
+                  "value": "<number>",
+                  "description": "(Required) Testing new param"
+                },
+                {
+                  "disabled": false,
+                  "key": "origin_lat",
+                  "value": "<number>",
+                  "description": "(Required) Latitude of the origin location"
+                },
+                {
+                  "disabled": false,
+                  "key": "origin_lon",
+                  "value": "<number>",
+                  "description": "(Required) Longitude of the origin location"
+                },
+                {
+                  "disabled": false,
+                  "key": "destination_lat",
+                  "value": "<number>",
+                  "description": "(Required) Latitude of the destination location"
+                },
+                {
+                  "disabled": false,
+                  "key": "destination_lon",
+                  "value": "<number>",
+                  "description": "(Required) Longitude of the destination location"
+                },
+                {
+                  "disabled": false,
+                  "key": "origin_radius",
+                  "value": "<number>",
+                  "description": "(Required) Radius to search around the origin"
+                },
+                {
+                  "disabled": false,
+                  "key": "destination_radius",
+                  "value": "<number>",
+                  "description": "(Required) Radius to search around the destination"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "(Required) Access Token for authentication",
+                "key": "Access-Token",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "(Required) X api key for authentication",
+                "key": "x-api-key",
+                "value": "<string>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "4e6c1eba-baa1-46b0-92e7-9268d2c5280b",
+              "name": "List of shipper lanes",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "shipper",
+                    "lanes"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "testing_new_param",
+                      "value": "<number>"
+                    },
+                    {
+                      "key": "origin_lat",
+                      "value": "<number>"
+                    },
+                    {
+                      "key": "origin_lon",
+                      "value": "<number>"
+                    },
+                    {
+                      "key": "destination_lat",
+                      "value": "<number>"
+                    },
+                    {
+                      "key": "destination_lon",
+                      "value": "<number>"
+                    },
+                    {
+                      "key": "origin_radius",
+                      "value": "<number>"
+                    },
+                    {
+                      "key": "destination_radius",
+                      "value": "<number>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) application/json",
+                    "key": "accept",
+                    "value": "string"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) Access Token for authentication",
+                    "key": "Access-Token",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) X api key for authentication",
+                    "key": "x-api-key",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"shippers_in_destination\": [\n    {\n      \"facility_name\": \"string\",\n      \"formatted_address\": \"string\",\n      \"id\": \"string\",\n      \"lat\": 6190.440049412276,\n      \"lon\": 3764.516129303196,\n      \"place_category\": \"string\",\n      \"contact_phone\": \"string\",\n      \"contact_url\": \"string\",\n      \"operating_hours\": \"string\",\n      \"equipment_pairings\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    {\n      \"facility_name\": \"string\",\n      \"formatted_address\": \"string\",\n      \"id\": \"string\",\n      \"lat\": 1440.8762583269497,\n      \"lon\": 4830.142573154162,\n      \"place_category\": \"string\",\n      \"contact_phone\": \"string\",\n      \"contact_url\": \"string\",\n      \"operating_hours\": \"string\",\n      \"equipment_pairings\": [\n        \"string\",\n        \"string\"\n      ]\n    }\n  ],\n  \"shippers_in_origin\": [\n    {\n      \"facility_name\": \"string\",\n      \"formatted_address\": \"string\",\n      \"id\": \"string\",\n      \"lat\": 1309.5253449592615,\n      \"lon\": 4862.272161203899,\n      \"place_category\": \"string\",\n      \"contact_phone\": \"string\",\n      \"contact_url\": \"string\",\n      \"operating_hours\": \"string\",\n      \"equipment_pairings\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    {\n      \"facility_name\": \"string\",\n      \"formatted_address\": \"string\",\n      \"id\": \"string\",\n      \"lat\": 8437.22174879492,\n      \"lon\": 5041.009615864157,\n      \"place_category\": \"string\",\n      \"contact_phone\": \"string\",\n      \"contact_url\": \"string\",\n      \"operating_hours\": \"string\",\n      \"equipment_pairings\": [\n        \"string\",\n        \"string\"\n      ]\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.genlogs.io",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "x-api-key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "45f7ab16-da1e-45d2-998b-7bb9cfeb5286",
+    "name": "GenLogs Alerts Shipper API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "GenLogs Truck Intelligence API. Ground-truth motor-carrier and shipper data from a nationwide roadside sensor network: carrier recommendations by lane, carrier and FMCSA profiles, carrier vetting, shipper lanes and facilities, onboarded-carrier contact management, mismatch observations, and alert webhooks. Base URL https://api.genlogs.io. Authentication uses an x-api-key header plus a short-lived Access-Token obtained from /auth/token; endpoint access is gated by named permissions.\n\nContact Support:\n Name: GenLogs\n Email: contact@genlogs.io",
+      "type": "text/plain"
+    }
+  }
+}

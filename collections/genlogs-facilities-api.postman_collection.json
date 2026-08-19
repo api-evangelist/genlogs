@@ -1,0 +1,724 @@
+{
+  "item": [
+    {
+      "id": "54d8eb90-7c6c-4e4d-9511-fba51a2d8175",
+      "name": "Facilities",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "18cf3074-7776-4d46-954a-6e9a4a750991",
+          "name": "Search facilities by name, address, zip code, city/state, website domain, or coordinates",
+          "request": {
+            "name": "Search facilities by name, address, zip code, city/state, website domain, or coordinates",
+            "description": {
+              "content": "Unified facility search. Provide at least one of: non-empty **`name`**, non-empty **`address`**, **`zip_code`**, non-empty **`website_domain`**, or both **`city`** and **`state`** (then use **`radius`** around the geocoded point). You may also pass **`location`** as `latitude,longitude` for radius search instead of city/state.\nOptionally include lane data per facility with **`include_lanes=true`**. Lanes can be filtered by **`min_distance`** (miles from facility) and **`direction`** (compass direction). Filters are applied before the **`top_n`** limit.\n\n## Pagination\n\nWhen results exceed 100 facilities, the response is paginated using opaque cursor-based pagination. The `Link` response header contains a next-page URL with a `cursor` parameter. Follow that URL to retrieve subsequent pages. The `X-Total-Count` header shows the total matching facilities across all pages. Pagination is not supported with `smart_search=true`.\nSee component schema **FacilitiesQueryCriteria** for the full parameter model and validation shape.\nHistorical path `/find_facilities` exposes the same search behavior and is documented here as **`/facilities`** for a single contract.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "facilities"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "name",
+                  "value": "<string>",
+                  "description": "Facility or collection name (optional if `address`, both `city` and `state`, or `website_domain` are provided).\nSee **FacilitiesQueryCriteria** for validation rules.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "address",
+                  "value": "<string>",
+                  "description": "Substring match on formatted address (optional if `name`, both `city` and `state`, or `website_domain` are provided).\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "city",
+                  "value": "<string>",
+                  "description": "City; use with `state` for geocoded radius search unless `name`, `address`, or `website_domain` alone is sufficient."
+                },
+                {
+                  "disabled": false,
+                  "key": "state",
+                  "value": "<string>",
+                  "description": "State; use with `city` unless `name`, `address`, or `website_domain` supplies the search mode."
+                },
+                {
+                  "disabled": false,
+                  "key": "website_domain",
+                  "value": "<string>",
+                  "description": "Substring match against the shipper's `contact_url`. Must include the TLD\n(e.g. `acme.com`). Optional path tails (`acme.com/about`) are accepted by\nthe validator but the path is stripped before matching — only the host\nis searched.\n\n**Mutually exclusive with `name` and `address`.** If `name` or `address`\nis also supplied, `website_domain` is silently ignored (see\n**FacilitiesQueryCriteria** → *Filter precedence*). Also ignored when\n`smart_search=true` is used together with `name`.\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "location",
+                  "value": "<string>",
+                  "description": "Comma-separated `latitude,longitude`; radius applies around this point when provided instead of city/state."
+                },
+                {
+                  "disabled": false,
+                  "key": "radius",
+                  "value": "<number>",
+                  "description": "Search radius in miles around the geocoded city/state point or `location`"
+                },
+                {
+                  "disabled": false,
+                  "key": "lot_size_category",
+                  "value": "<string>",
+                  "description": "Lot size category filter"
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "<integer>",
+                  "description": "Maximum number of facilities to return"
+                },
+                {
+                  "disabled": false,
+                  "key": "facility_type",
+                  "value": "<string>",
+                  "description": "Optional place category filter (pipe-separated values accepted by the service)"
+                },
+                {
+                  "disabled": false,
+                  "key": "intermodal_drayage",
+                  "value": "<string>",
+                  "description": "Optional intermodal drayage filter flag"
+                },
+                {
+                  "disabled": false,
+                  "key": "include_lanes",
+                  "value": "<boolean>",
+                  "description": "Include inbound and outbound lane data for each facility. Lanes are ranked by weight."
+                },
+                {
+                  "disabled": false,
+                  "key": "top_n",
+                  "value": "10",
+                  "description": "Number of top lanes to return per direction (inbound/outbound) per facility."
+                },
+                {
+                  "disabled": false,
+                  "key": "min_distance",
+                  "value": "<number>",
+                  "description": "Minimum distance in miles from the facility to a lane destination. Lanes closer than this distance are excluded. Applied before top_n."
+                },
+                {
+                  "disabled": false,
+                  "key": "direction",
+                  "value": "<string>",
+                  "description": "Filter lanes by compass direction from the facility. Applied before top_n."
+                },
+                {
+                  "disabled": false,
+                  "key": "zip_code",
+                  "value": "<string>",
+                  "description": "US zip code; searches facilities near the zip centroid."
+                },
+                {
+                  "disabled": false,
+                  "key": "cursor",
+                  "value": "<string>",
+                  "description": "Opaque pagination cursor from the Link header of a previous response.\nWhen results exceed 100 facilities, the server returns a Link header\ncontaining a next-page URL with this cursor embedded. Follow that URL\nto retrieve subsequent pages. Do not construct or parse this value —\nit is server-controlled and opaque.\n"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "(Required) Access Token for authentication",
+                "key": "Access-Token",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "(Required) X api key for authentication",
+                "key": "x-api-key",
+                "value": "<string>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "8cf3004d-d474-4777-aa83-b6c7b22dba85",
+              "name": "List of facilities",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "facilities"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "name",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "address",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "city",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "state",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "website_domain",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "location",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "radius",
+                      "value": "<number>"
+                    },
+                    {
+                      "key": "lot_size_category",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "facility_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "intermodal_drayage",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "include_lanes",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "top_n",
+                      "value": "10"
+                    },
+                    {
+                      "key": "min_distance",
+                      "value": "<number>"
+                    },
+                    {
+                      "key": "direction",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "zip_code",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) application/json",
+                    "key": "accept",
+                    "value": "string"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) Access Token for authentication",
+                    "key": "Access-Token",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) X api key for authentication",
+                    "key": "x-api-key",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Total number of matching facilities across all pages.",
+                  "key": "X-Total-Count",
+                  "value": "4447"
+                },
+                {
+                  "disabled": false,
+                  "description": "RFC 8288 Link header with rel=\"next\" pointing to the next page URL.\nAbsent on the final page. Example:\n`<https://api.genlogs.io/find_facilities?zip_code=91761&include_lanes=true&cursor=eyJ...>; rel=\"next\"`\n",
+                  "key": "Link",
+                  "value": "string"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"facility_name\": \"string\",\n    \"formatted_address\": \"string\",\n    \"id\": \"string\",\n    \"lat\": 3184.7122992074874,\n    \"lon\": 8247.779734101992,\n    \"place_category\": \"string\",\n    \"contact_phone\": \"string\",\n    \"contact_url\": \"string\",\n    \"operating_hours\": \"string\",\n    \"equipment_pairings\": [\n      \"string\",\n      \"string\"\n    ],\n    \"inbound_lanes\": [\n      {\n        \"city\": \"string\",\n        \"state\": \"string\",\n        \"weight\": 6898.602326399661,\n        \"visit_share\": \"string\",\n        \"hexagon_id\": \"string\",\n        \"distance_miles\": 3640.445797523448,\n        \"direction\": \"string\"\n      },\n      {\n        \"city\": \"string\",\n        \"state\": \"string\",\n        \"weight\": 444.18448929811285,\n        \"visit_share\": \"string\",\n        \"hexagon_id\": \"string\",\n        \"distance_miles\": 1596.709368010073,\n        \"direction\": \"string\"\n      }\n    ],\n    \"outbound_lanes\": [\n      {\n        \"city\": \"string\",\n        \"state\": \"string\",\n        \"weight\": 6087.418554330537,\n        \"visit_share\": \"string\",\n        \"hexagon_id\": \"string\",\n        \"distance_miles\": 4662.652508106096,\n        \"direction\": \"string\"\n      },\n      {\n        \"city\": \"string\",\n        \"state\": \"string\",\n        \"weight\": 9908.647875387185,\n        \"visit_share\": \"string\",\n        \"hexagon_id\": \"string\",\n        \"distance_miles\": 6263.479084762038,\n        \"direction\": \"string\"\n      }\n    ]\n  },\n  {\n    \"facility_name\": \"string\",\n    \"formatted_address\": \"string\",\n    \"id\": \"string\",\n    \"lat\": 9107.001362651212,\n    \"lon\": 7.083232972375786,\n    \"place_category\": \"string\",\n    \"contact_phone\": \"string\",\n    \"contact_url\": \"string\",\n    \"operating_hours\": \"string\",\n    \"equipment_pairings\": [\n      \"string\",\n      \"string\"\n    ],\n    \"inbound_lanes\": [\n      {\n        \"city\": \"string\",\n        \"state\": \"string\",\n        \"weight\": 929.1893341235036,\n        \"visit_share\": \"string\",\n        \"hexagon_id\": \"string\",\n        \"distance_miles\": 6773.170639024345,\n        \"direction\": \"string\"\n      },\n      {\n        \"city\": \"string\",\n        \"state\": \"string\",\n        \"weight\": 6956.990257777555,\n        \"visit_share\": \"string\",\n        \"hexagon_id\": \"string\",\n        \"distance_miles\": 8435.180600114192,\n        \"direction\": \"string\"\n      }\n    ],\n    \"outbound_lanes\": [\n      {\n        \"city\": \"string\",\n        \"state\": \"string\",\n        \"weight\": 8267.833161236518,\n        \"visit_share\": \"string\",\n        \"hexagon_id\": \"string\",\n        \"distance_miles\": 7972.670722220837,\n        \"direction\": \"string\"\n      },\n      {\n        \"city\": \"string\",\n        \"state\": \"string\",\n        \"weight\": 853.3093829660654,\n        \"visit_share\": \"string\",\n        \"hexagon_id\": \"string\",\n        \"distance_miles\": 197.6281066737673,\n        \"direction\": \"string\"\n      }\n    ]\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e346b055-f0ff-435b-8b89-d9c5fe7d65ec",
+              "name": "Validation error (missing search criteria, invalid parameters, or invalid cursor)",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "facilities"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "name",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "address",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "city",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "state",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "website_domain",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "location",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "radius",
+                      "value": "<number>"
+                    },
+                    {
+                      "key": "lot_size_category",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "facility_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "intermodal_drayage",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "include_lanes",
+                      "value": "<boolean>"
+                    },
+                    {
+                      "key": "top_n",
+                      "value": "10"
+                    },
+                    {
+                      "key": "min_distance",
+                      "value": "<number>"
+                    },
+                    {
+                      "key": "direction",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "zip_code",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "cursor",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) application/json",
+                    "key": "accept",
+                    "value": "string"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) Access Token for authentication",
+                    "key": "Access-Token",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "(Required) X api key for authentication",
+                    "key": "x-api-key",
+                    "value": "<string>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "672f56a8-d323-445d-9fb1-435d55acd3f7",
+          "name": "Retrieve the GeoJSON network map for a facility",
+          "request": {
+            "name": "Retrieve the GeoJSON network map for a facility",
+            "description": {
+              "content": "Returns the GeoJSON network map associated with the specified facility.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "facility",
+                ":facility_id",
+                "network-map"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "facility_id",
+                  "description": "(Required) Trimble identifier for the facility."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "d4669441-7511-47ff-9a70-08425b9dab58",
+              "name": "Facility GeoJSON network map (FeatureCollection)",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "facility",
+                    ":facility_id",
+                    "network-map"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "facility_id",
+                      "description": "(Required) Trimble identifier for the facility."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"string\",\n  \"features\": [\n    {\n      \"type\": \"string\",\n      \"geometry\": {\n        \"type\": \"LineString\"\n      },\n      \"properties\": {\n        \"key_0\": 7956.619074718706,\n        \"key_1\": \"string\",\n        \"key_2\": false\n      }\n    },\n    {\n      \"type\": \"string\",\n      \"geometry\": {\n        \"type\": \"LineString\"\n      },\n      \"properties\": {\n        \"key_0\": false,\n        \"key_1\": 711\n      }\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "63208c25-4dc0-434f-a385-d64ddcf4ae3d",
+              "name": "Missing or invalid token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "facility",
+                    ":facility_id",
+                    "network-map"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "facility_id",
+                      "description": "(Required) Trimble identifier for the facility."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"subcode\": 4331\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "938d6405-17d5-4492-86a4-899ab348cb5e",
+              "name": "Token expired or user lacks the required role.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "facility",
+                    ":facility_id",
+                    "network-map"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "facility_id",
+                      "description": "(Required) Trimble identifier for the facility."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"string\",\n  \"subcode\": 4331\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "76a92bff-635a-4ef1-bd61-8c16e7f5aa4e",
+              "name": "Unexpected error while fetching or parsing GeoJSON.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "facility",
+                    ":facility_id",
+                    "network-map"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "facility_id",
+                      "description": "(Required) Trimble identifier for the facility."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.genlogs.io",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "x-api-key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "8822ed6f-e360-44c3-bf09-4eddd17ca43a",
+    "name": "GenLogs Alerts Facilities API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "GenLogs Truck Intelligence API. Ground-truth motor-carrier and shipper data from a nationwide roadside sensor network: carrier recommendations by lane, carrier and FMCSA profiles, carrier vetting, shipper lanes and facilities, onboarded-carrier contact management, mismatch observations, and alert webhooks. Base URL https://api.genlogs.io. Authentication uses an x-api-key header plus a short-lived Access-Token obtained from /auth/token; endpoint access is gated by named permissions.\n\nContact Support:\n Name: GenLogs\n Email: contact@genlogs.io",
+      "type": "text/plain"
+    }
+  }
+}
