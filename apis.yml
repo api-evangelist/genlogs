@@ -47,6 +47,19 @@ tags:
 - Transportation
 - Insurance
 - Fraud Detection
+- Webhook
+- Geospatial
+tags_raw:
+- Company
+- Logistics
+- Freight
+- Trucking
+- Supply Chain
+- Carrier Intelligence
+- Fleet
+- Transportation
+- Insurance
+- Fraud Detection
 - Webhooks
 - Geospatial
 apis:
@@ -86,6 +99,8 @@ apis:
   humanURL: https://docs.genlogs.io
   baseURL: https://api.genlogs.io
   tags:
+  - Authentication
+  tags_raw:
   - auth
   properties:
   - type: OpenAPI
