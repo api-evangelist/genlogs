@@ -383,6 +383,9 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: CapabilityMap
+  url: capabilities/genlogs-capability-edges.yml
+  name: GenLogs Business Capability Map
 - type: MCPServer
   url: mcp/genlogs-mcp.yml
 - type: Overlay

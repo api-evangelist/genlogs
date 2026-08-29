@@ -1,0 +1,26 @@
+slug: genlogs
+provider: GenLogs
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Transportation & Logistics
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 1
+edges:
+- tag: Webhook Alerts
+  spec_file: genlogs-webhook-alerts-api-openapi.yml
+  capability_id: BC-4270.80
+  capability_id_l1: BC-4270
+  capability_name: Webhook & Event Subscription Management
+  confidence: 0.7
+  evidence: POST /alerts/webhook Create Webhook; PATCH /alerts/webhook/{webhook_id} Update Webhook; POST
+    /alerts/webhook/test Validate Webhook Endpoint
+  reason: Lifecycle management and delivery validation of outbound webhook subscriptions exposed to API
+    consumers — squarely the webhook & event subscription management capability of a developer platform,
+    not a transportation capability.
