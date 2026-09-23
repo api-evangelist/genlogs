@@ -1,32 +1,52 @@
 {
   "provider": "genlogs",
   "sources": [
-    "genlogs-alerts-api-openapi.yml",
-    "genlogs-auth-api-openapi.yml",
-    "genlogs-carrier-api-openapi.yml",
-    "genlogs-carrier-vetting-api-openapi.yml",
-    "genlogs-compliance-rules-api-openapi.yml",
-    "genlogs-facilities-api-openapi.yml",
-    "genlogs-mismatch-alerts-api-openapi.yml",
-    "genlogs-onboarded-carriers-api-openapi.yml",
-    "genlogs-shipper-api-openapi.yml",
-    "genlogs-webhook-alerts-api-openapi.yml"
+    "_original/genlogs-openapi.yml"
   ],
   "outputs": [
     "genlogs-alerts-api-openapi.yml",
-    "genlogs-auth-api-openapi.yml",
     "genlogs-carrier-api-openapi.yml",
-    "genlogs-carrier-vetting-api-openapi.yml",
     "genlogs-compliance-rules-api-openapi.yml",
     "genlogs-facilities-api-openapi.yml",
     "genlogs-mismatch-alerts-api-openapi.yml",
     "genlogs-onboarded-carriers-api-openapi.yml",
     "genlogs-shipper-api-openapi.yml",
-    "genlogs-webhook-alerts-api-openapi.yml"
+    "genlogs-webhook-alerts-api-openapi.yml",
+    "genlogs-auth-api-openapi.yml",
+    "genlogs-carrier-vetting-api-openapi.yml"
   ],
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "genlogs-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "genlogs-openapi.yml: tagged paths GET /carrier/recommendations -> Carrier",
+    "genlogs-openapi.yml: tagged paths POST /carrier/contacts -> Carrier",
+    "genlogs-openapi.yml: tagged paths GET /shipper/lanes -> Shipper",
+    "genlogs-openapi.yml: tagged paths GET /facilities -> Facilities",
+    "genlogs-openapi.yml: tagged paths DELETE /alerts/webhook/{webhook_id} -> Alerts",
+    "genlogs-openapi.yml: tagged paths GET /carrier/profile -> Carrier",
+    "genlogs-openapi.yml: declared missing tag: Alerts",
+    "genlogs-openapi.yml: declared missing tag: Carrier",
+    "genlogs-openapi.yml: declared missing tag: Compliance Rules",
+    "genlogs-openapi.yml: declared missing tag: Facilities",
+    "genlogs-openapi.yml: declared missing tag: Mismatch alerts",
+    "genlogs-openapi.yml: declared missing tag: Onboarded Carriers",
+    "genlogs-openapi.yml: declared missing tag: Shipper",
+    "genlogs-openapi.yml: declared missing tag: Webhook Alerts",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "genlogs-alerts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "genlogs-auth-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "genlogs-carrier-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "genlogs-carrier-vetting-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "genlogs-compliance-rules-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "genlogs-facilities-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "genlogs-mismatch-alerts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "genlogs-onboarded-carriers-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "genlogs-shipper-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "genlogs-webhook-alerts-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

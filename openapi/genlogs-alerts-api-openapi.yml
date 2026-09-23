@@ -1,4 +1,4 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   title: GenLogs Alerts API
   version: 1.0.0
@@ -24,9 +24,7 @@ paths:
   /alerts/webhook/{webhook_id}:
     delete:
       summary: Delete alert webhook
-      description: 'Delete an alert webhook by ID. Requires ownership for the authenticated customer. Returns the deleted webhook data (id, webhook_url, description, created_at). Requires admin or external-api-delete-alert-webhook-endpoint.
-
-        '
+      description: Delete an alert webhook by ID. Requires ownership for the authenticated customer. Returns the deleted webhook data (id, webhook_url, description, created_at). Requires admin or external-api-delete-alert-webhook-endpoint.
       operationId: deleteAlertWebhook
       parameters:
       - in: header
@@ -122,6 +120,177 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+          format: int32
+      required:
+      - message
+      - code
+    DeletedWebhookResponse:
+      type: object
+      description: Deleted webhook data returned on successful DELETE (secret and enabled excluded)
+      properties:
+        id:
+          type: string
+          format: uuid
+        webhook_url:
+          type: string
+          format: uri
+        description:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        deleted:
+          type: boolean
+          description: Always true for delete response
+      required:
+      - id
+      - webhook_url
+      - created_at
+      - deleted
+    UpdateAlertSchema:
+      properties:
+        alert_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Alert Name
+        location_state:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Location State
+        location_city:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Location City
+        license_plate:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: License Plate
+        license_plate_state:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: License Plate State
+        usdot_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Usdot Number
+        chassis_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Chassis Number
+        exact_match_chassis_number:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Exact Match Chassis Number
+          default: false
+        container_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Container Number
+        equipment_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Equipment Type
+        exact_match_container_number:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Exact Match Container Number
+          default: false
+        mc_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Mc Number
+        vin:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Vin
+        cab_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cab Number
+        trailer_logo:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Trailer Logo
+        trailer_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Trailer Number
+        disabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Disabled
+        cc_emails:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Cc Emails
+        alert_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Alert Type
+        exact_match_trailer_number:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Exact Match Trailer Number
+        start_date:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          description: ISO 8601 date-time. Values with `Z` or timezone offsets are normalized to UTC and stored/returned without timezone information.
+          title: Start Date
+        end_date:
+          anyOf:
+          - type: string
+            format: date-time
+          - type: 'null'
+          description: ISO 8601 date-time. Values with `Z` or timezone offsets are normalized to UTC and stored/returned without timezone information.
+          title: End Date
+        deep_search:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Deep Search
+        notification_channels:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Notification Channels
+      additionalProperties: false
+      type: object
+      title: UpdateAlertSchema
+      description: Schema for partial updates of alerts (PATCH operations). All fields are optional - only provided fields will be updated.
     AlertResponseSchema:
       properties:
         alert_name:
@@ -291,142 +460,6 @@ components:
           type: string
         type:
           type: string
-    UpdateAlertSchema:
-      properties:
-        alert_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Alert Name
-        location_state:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Location State
-        location_city:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Location City
-        license_plate:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: License Plate
-        license_plate_state:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: License Plate State
-        usdot_number:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Usdot Number
-        chassis_number:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Chassis Number
-        exact_match_chassis_number:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Exact Match Chassis Number
-          default: false
-        container_number:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Container Number
-        equipment_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Equipment Type
-        exact_match_container_number:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Exact Match Container Number
-          default: false
-        mc_number:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Mc Number
-        vin:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Vin
-        cab_number:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Cab Number
-        trailer_logo:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Trailer Logo
-        trailer_number:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Trailer Number
-        disabled:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Disabled
-        cc_emails:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Cc Emails
-        alert_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Alert Type
-        exact_match_trailer_number:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Exact Match Trailer Number
-        start_date:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          description: ISO 8601 date-time. Values with `Z` or timezone offsets are normalized to UTC and stored/returned without timezone information.
-          title: Start Date
-        end_date:
-          anyOf:
-          - type: string
-            format: date-time
-          - type: 'null'
-          description: ISO 8601 date-time. Values with `Z` or timezone offsets are normalized to UTC and stored/returned without timezone information.
-          title: End Date
-        deep_search:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Deep Search
-        notification_channels:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Notification Channels
-      additionalProperties: false
-      type: object
-      title: UpdateAlertSchema
-      description: Schema for partial updates of alerts (PATCH operations). All fields are optional - only provided fields will be updated.
     HTTPValidationError:
       type: object
       properties:
@@ -434,41 +467,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ValidationError'
-    ErrorResponse:
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: integer
-          format: int32
-      required:
-      - message
-      - code
-    DeletedWebhookResponse:
-      type: object
-      description: Deleted webhook data returned on successful DELETE (secret and enabled excluded)
-      properties:
-        id:
-          type: string
-          format: uuid
-        webhook_url:
-          type: string
-          format: uri
-        description:
-          type: string
-          nullable: true
-        created_at:
-          type: string
-          format: date-time
-        deleted:
-          type: boolean
-          description: Always true for delete response
-      required:
-      - id
-      - webhook_url
-      - created_at
-      - deleted
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

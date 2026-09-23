@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: GenLogs Alerts carrier-vetting API
+  title: GenLogs Carrier Vetting API
   version: 1.0.0
   description: 'GenLogs Truck Intelligence API. Ground-truth motor-carrier and shipper data from a nationwide roadside sensor network: carrier recommendations by lane, carrier and FMCSA profiles, carrier vetting, shipper lanes and facilities, onboarded-carrier contact management, mismatch observations, and alert webhooks. Base URL https://api.genlogs.io. Authentication uses an x-api-key header plus a short-lived Access-Token obtained from /auth/token; endpoint access is gated by named permissions.'
   contact:
