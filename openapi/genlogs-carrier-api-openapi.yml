@@ -318,32 +318,6 @@ paths:
       - Carrier
 components:
   schemas:
-    Sighting:
-      type: object
-      description: A single sighting record for a carrier location/date.
-      properties:
-        sighting_date:
-          type: string
-          format: date
-        state_seen:
-          type: string
-        location_zip:
-          type: string
-        sightings:
-          type: integer
-          description: Count of sightings for this location/date.
-        source:
-          type: string
-          description: Data source of the sighting (e.g. visual, api).
-    EquipmentPairings:
-      type: object
-      properties:
-        genlogs:
-          type: array
-          items: {}
-        fmcsa:
-          type: array
-          items: {}
     CarrierResponse:
       properties:
         real_time_locs:
@@ -358,17 +332,6 @@ components:
       - real_time_locs
       - recommendations
       type: object
-    ErrorResponse:
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: integer
-          format: int32
-      required:
-      - message
-      - code
     FmcsaDetail:
       type: object
       properties:
@@ -419,6 +382,43 @@ components:
           type: string
         mcs_150_mileage:
           type: string
+    Sighting:
+      type: object
+      description: A single sighting record for a carrier location/date.
+      properties:
+        sighting_date:
+          type: string
+          format: date
+        state_seen:
+          type: string
+        location_zip:
+          type: string
+        sightings:
+          type: integer
+          description: Count of sightings for this location/date.
+        source:
+          type: string
+          description: Data source of the sighting (e.g. visual, api).
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+          format: int32
+      required:
+      - message
+      - code
+    EquipmentPairings:
+      type: object
+      properties:
+        genlogs:
+          type: array
+          items: {}
+        fmcsa:
+          type: array
+          items: {}
     CarrierRecommendation:
       properties:
         add_date:

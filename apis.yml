@@ -59,7 +59,7 @@ tags:
 - Fleet
 - Transportation
 - Insurance
-- Fraud Detection
+- Fraud Prevention
 - Webhook
 - Geospatial
 tags_raw:
@@ -107,7 +107,7 @@ apis:
   - type: JSONSchema
     url: json-schema/genlogs-alert-matches-found.schema.json
 - aid: genlogs:genlogs-auth-api
-  name: GenLogs auth API
+  name: GenLogs Auth API
   description: Access-token creation and refresh
   humanURL: https://docs.genlogs.io
   baseURL: https://api.genlogs.io
@@ -169,7 +169,7 @@ apis:
   - type: JSONSchema
     url: json-schema/genlogs-alert-matches-found.schema.json
 - aid: genlogs:genlogs-carrier-vetting-api
-  name: GenLogs carrier-vetting API
+  name: GenLogs Carrier Vetting API
   description: Carrier verification and vetting rules
   humanURL: https://docs.genlogs.io
   baseURL: https://api.genlogs.io

@@ -334,14 +334,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/FacilityNetworkFeature'
-    AuthError:
-      type: object
-      properties:
-        message:
-          type: string
-        subcode:
-          type: integer
-          description: Optional subcode with additional error context.
     Facility:
       properties:
         contact_phone:
@@ -391,6 +383,14 @@ components:
       - lon
       - place_category
       type: object
+    AuthError:
+      type: object
+      properties:
+        message:
+          type: string
+        subcode:
+          type: integer
+          description: Optional subcode with additional error context.
     FacilityLane:
       type: object
       properties:

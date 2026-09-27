@@ -106,56 +106,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    AuthSchema:
-      type: object
-      required:
-      - access_token_data
-      - refresh_token_data
-      - user_id
-      properties:
-        access_token_data:
-          $ref: '#/components/schemas/TokenSchema'
-        refresh_token_data:
-          $ref: '#/components/schemas/TokenSchema'
-        user_id:
-          type: integer
-        company_id:
-          type: integer
-          nullable: true
-        customer_name:
-          type: string
-          nullable: true
-    RefreshTokenSchema:
-      properties:
-        token:
-          type: string
-          title: Token
-        expires:
-          type: string
-          title: expires
-      type: object
-      required:
-      - token
-      - expires
-      title: AccessTokenSchema
-    HTTPValidationError:
-      type: object
-      properties:
-        detail:
-          type: array
-          items:
-            $ref: '#/components/schemas/ValidationError'
-    TokenSchema:
-      type: object
-      required:
-      - token
-      - expires
-      properties:
-        token:
-          type: string
-        expires:
-          type: string
-          format: date-time
     AuthenticationResponse:
       properties:
         access_token_data:
@@ -181,11 +131,30 @@ components:
       - user_id
       - company_id
       title: AuthenticationResponse
-    HTTPError:
-      type: object
+    RefreshTokenSchema:
       properties:
-        detail:
+        token:
           type: string
+          title: Token
+        expires:
+          type: string
+          title: expires
+      type: object
+      required:
+      - token
+      - expires
+      title: AccessTokenSchema
+    TokenSchema:
+      type: object
+      required:
+      - token
+      - expires
+      properties:
+        token:
+          type: string
+        expires:
+          type: string
+          format: date-time
     ValidationError:
       type: object
       required:
@@ -202,6 +171,37 @@ components:
         msg:
           type: string
         type:
+          type: string
+    HTTPValidationError:
+      type: object
+      properties:
+        detail:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+    AuthSchema:
+      type: object
+      required:
+      - access_token_data
+      - refresh_token_data
+      - user_id
+      properties:
+        access_token_data:
+          $ref: '#/components/schemas/TokenSchema'
+        refresh_token_data:
+          $ref: '#/components/schemas/TokenSchema'
+        user_id:
+          type: integer
+        company_id:
+          type: integer
+          nullable: true
+        customer_name:
+          type: string
+          nullable: true
+    HTTPError:
+      type: object
+      properties:
+        detail:
           type: string
     AccessTokenSchema:
       properties:

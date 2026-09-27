@@ -97,20 +97,6 @@ paths:
       - Shipper
 components:
   schemas:
-    ShipperLaneResponse:
-      properties:
-        shippers_in_destination:
-          items:
-            $ref: '#/components/schemas/Shipper'
-          type: array
-        shippers_in_origin:
-          items:
-            $ref: '#/components/schemas/Shipper'
-          type: array
-      required:
-      - shippers_in_destination
-      - shippers_in_origin
-      type: object
     Shipper:
       properties:
         contact_phone:
@@ -149,6 +135,20 @@ components:
       - lat
       - lon
       - place_category
+      type: object
+    ShipperLaneResponse:
+      properties:
+        shippers_in_destination:
+          items:
+            $ref: '#/components/schemas/Shipper'
+          type: array
+        shippers_in_origin:
+          items:
+            $ref: '#/components/schemas/Shipper'
+          type: array
+      required:
+      - shippers_in_destination
+      - shippers_in_origin
       type: object
   securitySchemes:
     ApiKeyAuth:
