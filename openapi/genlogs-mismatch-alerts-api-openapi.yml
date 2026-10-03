@@ -173,6 +173,49 @@ components:
           type: string
           minLength: 1
           description: USDOT number for the combined alert row.
+    MismatchObservationItem:
+      type: object
+      required:
+      - id
+      - usdot
+      - mc
+      - is_disabled
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Alert row identifier.
+        alert_name:
+          type: string
+          nullable: true
+          description: Optional display name; may be null if not set.
+        usdot:
+          type: string
+          nullable: true
+          description: USDOT value from stored criteria.
+        mc:
+          type: string
+          nullable: true
+          description: MC value from stored criteria.
+        logos:
+          type: array
+          items:
+            type: string
+          description: Trailer logos from `logos`, returned in normalized lowercase format. Empty when not configured.
+          default: []
+        is_disabled:
+          type: boolean
+          description: Whether this mismatch observation alert is disabled.
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+          description: Creation timestamp when available.
+        last_run_at:
+          type: string
+          format: date-time
+          nullable: true
+          description: Last run timestamp in ISO-8601 format; null when not run yet.
     MismatchObservationPatchRequest:
       type: object
       additionalProperties: false
@@ -264,49 +307,6 @@ components:
           type: string
           nullable: true
           description: Optional display name; omitted or whitespace-only is stored as null.
-    MismatchObservationItem:
-      type: object
-      required:
-      - id
-      - usdot
-      - mc
-      - is_disabled
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Alert row identifier.
-        alert_name:
-          type: string
-          nullable: true
-          description: Optional display name; may be null if not set.
-        usdot:
-          type: string
-          nullable: true
-          description: USDOT value from stored criteria.
-        mc:
-          type: string
-          nullable: true
-          description: MC value from stored criteria.
-        logos:
-          type: array
-          items:
-            type: string
-          description: Trailer logos from `logos`, returned in normalized lowercase format. Empty when not configured.
-          default: []
-        is_disabled:
-          type: boolean
-          description: Whether this mismatch observation alert is disabled.
-        created_at:
-          type: string
-          format: date-time
-          nullable: true
-          description: Creation timestamp when available.
-        last_run_at:
-          type: string
-          format: date-time
-          nullable: true
-          description: Last run timestamp in ISO-8601 format; null when not run yet.
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

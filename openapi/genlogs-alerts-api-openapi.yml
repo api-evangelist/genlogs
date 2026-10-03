@@ -120,17 +120,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ErrorResponse:
-      type: object
-      properties:
-        message:
-          type: string
-        code:
-          type: integer
-          format: int32
-      required:
-      - message
-      - code
     DeletedWebhookResponse:
       type: object
       description: Deleted webhook data returned on successful DELETE (secret and enabled excluded)
@@ -155,30 +144,17 @@ components:
       - webhook_url
       - created_at
       - deleted
-    HTTPValidationError:
+    ErrorResponse:
       type: object
       properties:
-        detail:
-          type: array
-          items:
-            $ref: '#/components/schemas/ValidationError'
-    ValidationError:
-      type: object
+        message:
+          type: string
+        code:
+          type: integer
+          format: int32
       required:
-      - loc
-      - msg
-      - type
-      properties:
-        loc:
-          type: array
-          items:
-            oneOf:
-            - type: string
-            - type: integer
-        msg:
-          type: string
-        type:
-          type: string
+      - message
+      - code
     UpdateAlertSchema:
       properties:
         alert_name:
@@ -467,6 +443,30 @@ components:
       - insert_timestamp
       title: AlertResponseSchema
       description: Public API response schema for alerts - extends base with response-specific fields
+    ValidationError:
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      properties:
+        loc:
+          type: array
+          items:
+            oneOf:
+            - type: string
+            - type: integer
+        msg:
+          type: string
+        type:
+          type: string
+    HTTPValidationError:
+      type: object
+      properties:
+        detail:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

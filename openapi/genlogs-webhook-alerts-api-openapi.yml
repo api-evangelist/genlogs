@@ -122,23 +122,24 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ValidationError:
+    WebhookTestSchema:
+      properties:
+        webhook_url:
+          type: string
+          maxLength: 2083
+          minLength: 1
+          format: uri
+          title: Webhook Url
+        secret:
+          type: string
+          title: Secret
+      additionalProperties: false
       type: object
       required:
-      - loc
-      - msg
-      - type
-      properties:
-        loc:
-          type: array
-          items:
-            oneOf:
-            - type: string
-            - type: integer
-        msg:
-          type: string
-        type:
-          type: string
+      - webhook_url
+      - secret
+      title: WebhookTestSchema
+      description: Schema for testing webhook endpoints
     WebhookSettingsCreateSchema:
       properties:
         webhook_url:
@@ -170,24 +171,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ValidationError'
-    WebhookTestSchema:
-      properties:
-        webhook_url:
-          type: string
-          maxLength: 2083
-          minLength: 1
-          format: uri
-          title: Webhook Url
-        secret:
-          type: string
-          title: Secret
-      additionalProperties: false
-      type: object
-      required:
-      - webhook_url
-      - secret
-      title: WebhookTestSchema
-      description: Schema for testing webhook endpoints
     WebhookSettingsUpdateSchema:
       properties:
         webhook_url:
@@ -217,6 +200,23 @@ components:
       type: object
       title: WebhookSettingsUpdateSchema
       description: Schema for updating webhook settings
+    ValidationError:
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      properties:
+        loc:
+          type: array
+          items:
+            oneOf:
+            - type: string
+            - type: integer
+        msg:
+          type: string
+        type:
+          type: string
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

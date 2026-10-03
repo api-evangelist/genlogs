@@ -305,6 +305,36 @@ paths:
       operationId: listCustomerComplianceRules
 components:
   schemas:
+    CarrierRuleItem:
+      type: object
+      required:
+      - rule_result_description
+      - status
+      - category
+      additionalProperties: false
+      properties:
+        rule_result_description:
+          type: string
+        status:
+          type: string
+          description: PASS / FAIL / REVIEW
+        category:
+          type: string
+        rule_order:
+          type: string
+    CarrierRulesSingleResponse:
+      type: object
+      required:
+      - rules
+      - rule_status
+      additionalProperties: false
+      properties:
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/CarrierRuleItem'
+        rule_status:
+          $ref: '#/components/schemas/CarrierRuleStatusCounts'
     CarrierRuleStatusCounts:
       type: object
       required:
@@ -334,16 +364,6 @@ components:
           properties:
             total:
               type: integer
-    CarrierRulesBatchResponse:
-      type: object
-      required:
-      - results
-      additionalProperties: false
-      properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/CarrierRulesBatchResultItem'
     CarrierRulesBatchResultItem:
       type: object
       required:
@@ -366,36 +386,16 @@ components:
         contains usdot_number and found.
 
         '
-    CarrierRulesSingleResponse:
+    CarrierRulesBatchResponse:
       type: object
       required:
-      - rules
-      - rule_status
+      - results
       additionalProperties: false
       properties:
-        rules:
+        results:
           type: array
           items:
-            $ref: '#/components/schemas/CarrierRuleItem'
-        rule_status:
-          $ref: '#/components/schemas/CarrierRuleStatusCounts'
-    CarrierRuleItem:
-      type: object
-      required:
-      - rule_result_description
-      - status
-      - category
-      additionalProperties: false
-      properties:
-        rule_result_description:
-          type: string
-        status:
-          type: string
-          description: PASS / FAIL / REVIEW
-        category:
-          type: string
-        rule_order:
-          type: string
+            $ref: '#/components/schemas/CarrierRulesBatchResultItem'
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
