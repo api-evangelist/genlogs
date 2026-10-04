@@ -158,21 +158,31 @@ paths:
       operationId: deleteMismatchObservation
 components:
   schemas:
-    MismatchObservationPairRequest:
+    MismatchObservationsListResponse:
       type: object
-      additionalProperties: false
       required:
-      - mc
-      - usdot
+      - mismatch_observations
+      - page
+      - page_size
+      - total
       properties:
-        mc:
-          type: string
-          minLength: 1
-          description: MC number for the combined alert row.
-        usdot:
-          type: string
-          minLength: 1
-          description: USDOT number for the combined alert row.
+        mismatch_observations:
+          type: array
+          items:
+            $ref: '#/components/schemas/MismatchObservationItem'
+        page:
+          type: integer
+          minimum: 1
+          description: Current page number.
+        page_size:
+          type: integer
+          minimum: 1
+          maximum: 500
+          description: Page size used for this response.
+        total:
+          type: integer
+          minimum: 0
+          description: Total number of observations for this customer (all pages).
     MismatchObservationItem:
       type: object
       required:
@@ -216,61 +226,21 @@ components:
           format: date-time
           nullable: true
           description: Last run timestamp in ISO-8601 format; null when not run yet.
-    MismatchObservationPatchRequest:
+    MismatchObservationPairRequest:
       type: object
       additionalProperties: false
-      description: 'At least one property must be present (after applying ignore rules). Omitted fields are left unchanged. Empty string or whitespace-only `usdot` / `mc` values are ignored (they do not clear the field). JSON `null` for `usdot` / `mc` still clears that side of the criteria when present. USDOT/MC validation matches create rules (numeric after normalization).
-
-        '
+      required:
+      - mc
+      - usdot
       properties:
-        usdot:
-          type: string
-          nullable: true
-          description: New USDOT value; null clears when paired with MC update rules.
         mc:
           type: string
-          nullable: true
-          description: New MC value; null clears when paired with USDOT update rules.
-        logos:
-          type: array
-          nullable: true
-          items:
-            type: string
-          description: 'Trailer logos list. Values are trimmed, deduplicated, and stored/returned in lowercase format. Matching against the logos catalog.
-
-            '
-        alert_name:
+          minLength: 1
+          description: MC number for the combined alert row.
+        usdot:
           type: string
-          nullable: true
-          description: Display name; blank or whitespace-only is stored as null.
-        is_disabled:
-          type: boolean
-          description: Whether the observation is disabled.
-    MismatchObservationsListResponse:
-      type: object
-      required:
-      - mismatch_observations
-      - page
-      - page_size
-      - total
-      properties:
-        mismatch_observations:
-          type: array
-          items:
-            $ref: '#/components/schemas/MismatchObservationItem'
-        page:
-          type: integer
-          minimum: 1
-          description: Current page number.
-        page_size:
-          type: integer
-          minimum: 1
-          maximum: 500
-          description: Page size used for this response.
-        total:
-          type: integer
-          minimum: 0
-          description: Total number of observations for this customer (all pages).
+          minLength: 1
+          description: USDOT number for the combined alert row.
     ExternalMismatchObservationsRequest:
       type: object
       additionalProperties: false
@@ -307,6 +277,36 @@ components:
           type: string
           nullable: true
           description: Optional display name; omitted or whitespace-only is stored as null.
+    MismatchObservationPatchRequest:
+      type: object
+      additionalProperties: false
+      description: 'At least one property must be present (after applying ignore rules). Omitted fields are left unchanged. Empty string or whitespace-only `usdot` / `mc` values are ignored (they do not clear the field). JSON `null` for `usdot` / `mc` still clears that side of the criteria when present. USDOT/MC validation matches create rules (numeric after normalization).
+
+        '
+      properties:
+        usdot:
+          type: string
+          nullable: true
+          description: New USDOT value; null clears when paired with MC update rules.
+        mc:
+          type: string
+          nullable: true
+          description: New MC value; null clears when paired with USDOT update rules.
+        logos:
+          type: array
+          nullable: true
+          items:
+            type: string
+          description: 'Trailer logos list. Values are trimmed, deduplicated, and stored/returned in lowercase format. Matching against the logos catalog.
+
+            '
+        alert_name:
+          type: string
+          nullable: true
+          description: Display name; blank or whitespace-only is stored as null.
+        is_disabled:
+          type: boolean
+          description: Whether the observation is disabled.
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

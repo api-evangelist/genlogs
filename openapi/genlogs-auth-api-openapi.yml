@@ -106,19 +106,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    AccessTokenSchema:
-      properties:
-        token:
-          type: string
-          title: Token
-        expires:
-          type: string
-          title: expires
-      type: object
-      required:
-      - token
-      - expires
-      title: AccessTokenSchema
     AuthenticationResponse:
       properties:
         access_token_data:
@@ -151,19 +138,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ValidationError'
-    RefreshTokenSchema:
-      properties:
-        token:
-          type: string
-          title: Token
-        expires:
-          type: string
-          title: expires
-      type: object
-      required:
-      - token
-      - expires
-      title: AccessTokenSchema
     TokenSchema:
       type: object
       required:
@@ -175,11 +149,6 @@ components:
         expires:
           type: string
           format: date-time
-    HTTPError:
-      type: object
-      properties:
-        detail:
-          type: string
     ValidationError:
       type: object
       required:
@@ -197,6 +166,37 @@ components:
           type: string
         type:
           type: string
+    RefreshTokenSchema:
+      properties:
+        token:
+          type: string
+          title: Token
+        expires:
+          type: string
+          title: expires
+      type: object
+      required:
+      - token
+      - expires
+      title: AccessTokenSchema
+    HTTPError:
+      type: object
+      properties:
+        detail:
+          type: string
+    AccessTokenSchema:
+      properties:
+        token:
+          type: string
+          title: Token
+        expires:
+          type: string
+          title: expires
+      type: object
+      required:
+      - token
+      - expires
+      title: AccessTokenSchema
     AuthSchema:
       type: object
       required:

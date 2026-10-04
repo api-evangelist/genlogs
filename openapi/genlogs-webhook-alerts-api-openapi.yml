@@ -122,24 +122,13 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    WebhookTestSchema:
-      properties:
-        webhook_url:
-          type: string
-          maxLength: 2083
-          minLength: 1
-          format: uri
-          title: Webhook Url
-        secret:
-          type: string
-          title: Secret
-      additionalProperties: false
+    HTTPValidationError:
       type: object
-      required:
-      - webhook_url
-      - secret
-      title: WebhookTestSchema
-      description: Schema for testing webhook endpoints
+      properties:
+        detail:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
     WebhookSettingsCreateSchema:
       properties:
         webhook_url:
@@ -164,13 +153,41 @@ components:
       type: object
       title: WebhookSettingsCreateSchema
       description: Schema for creating webhook settings
-    HTTPValidationError:
-      type: object
+    WebhookTestSchema:
       properties:
-        detail:
+        webhook_url:
+          type: string
+          maxLength: 2083
+          minLength: 1
+          format: uri
+          title: Webhook Url
+        secret:
+          type: string
+          title: Secret
+      additionalProperties: false
+      type: object
+      required:
+      - webhook_url
+      - secret
+      title: WebhookTestSchema
+      description: Schema for testing webhook endpoints
+    ValidationError:
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      properties:
+        loc:
           type: array
           items:
-            $ref: '#/components/schemas/ValidationError'
+            oneOf:
+            - type: string
+            - type: integer
+        msg:
+          type: string
+        type:
+          type: string
     WebhookSettingsUpdateSchema:
       properties:
         webhook_url:
@@ -200,23 +217,6 @@ components:
       type: object
       title: WebhookSettingsUpdateSchema
       description: Schema for updating webhook settings
-    ValidationError:
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      properties:
-        loc:
-          type: array
-          items:
-            oneOf:
-            - type: string
-            - type: integer
-        msg:
-          type: string
-        type:
-          type: string
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

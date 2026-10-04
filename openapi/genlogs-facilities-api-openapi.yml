@@ -288,33 +288,6 @@ paths:
                 - error
 components:
   schemas:
-    AuthError:
-      type: object
-      properties:
-        message:
-          type: string
-        subcode:
-          type: integer
-          description: Optional subcode with additional error context.
-    GeoJSONGeometry:
-      type: object
-      required:
-      - type
-      - coordinates
-      properties:
-        type:
-          type: string
-          enum:
-          - Point
-          - LineString
-          - Polygon
-          - MultiPoint
-          - MultiLineString
-          - MultiPolygon
-        coordinates:
-          type: array
-          items: {}
-          description: GeoJSON coordinate array whose structure depends on geometry type.
     FacilityLane:
       type: object
       properties:
@@ -347,21 +320,6 @@ components:
       - weight
       - visit_share
       - hexagon_id
-    FacilityNetworkFeature:
-      type: object
-      required:
-      - type
-      - geometry
-      - properties
-      properties:
-        type:
-          type: string
-        geometry:
-          $ref: '#/components/schemas/GeoJSONGeometry'
-        properties:
-          type: object
-          additionalProperties: true
-          description: Arbitrary metadata associated with the feature.
     Facility:
       properties:
         contact_phone:
@@ -411,6 +369,48 @@ components:
       - lon
       - place_category
       type: object
+    FacilityNetworkFeature:
+      type: object
+      required:
+      - type
+      - geometry
+      - properties
+      properties:
+        type:
+          type: string
+        geometry:
+          $ref: '#/components/schemas/GeoJSONGeometry'
+        properties:
+          type: object
+          additionalProperties: true
+          description: Arbitrary metadata associated with the feature.
+    AuthError:
+      type: object
+      properties:
+        message:
+          type: string
+        subcode:
+          type: integer
+          description: Optional subcode with additional error context.
+    GeoJSONGeometry:
+      type: object
+      required:
+      - type
+      - coordinates
+      properties:
+        type:
+          type: string
+          enum:
+          - Point
+          - LineString
+          - Polygon
+          - MultiPoint
+          - MultiLineString
+          - MultiPolygon
+        coordinates:
+          type: array
+          items: {}
+          description: GeoJSON coordinate array whose structure depends on geometry type.
     FacilityNetworkMap:
       type: object
       required:
