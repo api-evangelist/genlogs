@@ -106,6 +106,56 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    ValidationError:
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      properties:
+        loc:
+          type: array
+          items:
+            oneOf:
+            - type: string
+            - type: integer
+        msg:
+          type: string
+        type:
+          type: string
+    AccessTokenSchema:
+      properties:
+        token:
+          type: string
+          title: Token
+        expires:
+          type: string
+          title: expires
+      type: object
+      required:
+      - token
+      - expires
+      title: AccessTokenSchema
+    RefreshTokenSchema:
+      properties:
+        token:
+          type: string
+          title: Token
+        expires:
+          type: string
+          title: expires
+      type: object
+      required:
+      - token
+      - expires
+      title: AccessTokenSchema
+    HTTPValidationError:
+      type: object
+      properties:
+        detail:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
     AuthenticationResponse:
       properties:
         access_token_data:
@@ -131,72 +181,6 @@ components:
       - user_id
       - company_id
       title: AuthenticationResponse
-    HTTPValidationError:
-      type: object
-      properties:
-        detail:
-          type: array
-          items:
-            $ref: '#/components/schemas/ValidationError'
-    TokenSchema:
-      type: object
-      required:
-      - token
-      - expires
-      properties:
-        token:
-          type: string
-        expires:
-          type: string
-          format: date-time
-    ValidationError:
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      properties:
-        loc:
-          type: array
-          items:
-            oneOf:
-            - type: string
-            - type: integer
-        msg:
-          type: string
-        type:
-          type: string
-    RefreshTokenSchema:
-      properties:
-        token:
-          type: string
-          title: Token
-        expires:
-          type: string
-          title: expires
-      type: object
-      required:
-      - token
-      - expires
-      title: AccessTokenSchema
-    HTTPError:
-      type: object
-      properties:
-        detail:
-          type: string
-    AccessTokenSchema:
-      properties:
-        token:
-          type: string
-          title: Token
-        expires:
-          type: string
-          title: expires
-      type: object
-      required:
-      - token
-      - expires
-      title: AccessTokenSchema
     AuthSchema:
       type: object
       required:
@@ -216,6 +200,22 @@ components:
         customer_name:
           type: string
           nullable: true
+    TokenSchema:
+      type: object
+      required:
+      - token
+      - expires
+      properties:
+        token:
+          type: string
+        expires:
+          type: string
+          format: date-time
+    HTTPError:
+      type: object
+      properties:
+        detail:
+          type: string
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

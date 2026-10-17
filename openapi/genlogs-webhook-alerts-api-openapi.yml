@@ -122,55 +122,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
-      type: object
-      properties:
-        detail:
-          type: array
-          items:
-            $ref: '#/components/schemas/ValidationError'
-    WebhookSettingsCreateSchema:
-      properties:
-        webhook_url:
-          anyOf:
-          - type: string
-            maxLength: 2083
-            minLength: 1
-            format: uri
-          - type: 'null'
-          title: Webhook Url
-        secret:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Secret
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-      additionalProperties: false
-      type: object
-      title: WebhookSettingsCreateSchema
-      description: Schema for creating webhook settings
-    WebhookTestSchema:
-      properties:
-        webhook_url:
-          type: string
-          maxLength: 2083
-          minLength: 1
-          format: uri
-          title: Webhook Url
-        secret:
-          type: string
-          title: Secret
-      additionalProperties: false
-      type: object
-      required:
-      - webhook_url
-      - secret
-      title: WebhookTestSchema
-      description: Schema for testing webhook endpoints
     ValidationError:
       type: object
       required:
@@ -217,6 +168,55 @@ components:
       type: object
       title: WebhookSettingsUpdateSchema
       description: Schema for updating webhook settings
+    HTTPValidationError:
+      type: object
+      properties:
+        detail:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+    WebhookTestSchema:
+      properties:
+        webhook_url:
+          type: string
+          maxLength: 2083
+          minLength: 1
+          format: uri
+          title: Webhook Url
+        secret:
+          type: string
+          title: Secret
+      additionalProperties: false
+      type: object
+      required:
+      - webhook_url
+      - secret
+      title: WebhookTestSchema
+      description: Schema for testing webhook endpoints
+    WebhookSettingsCreateSchema:
+      properties:
+        webhook_url:
+          anyOf:
+          - type: string
+            maxLength: 2083
+            minLength: 1
+            format: uri
+          - type: 'null'
+          title: Webhook Url
+        secret:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Secret
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+      additionalProperties: false
+      type: object
+      title: WebhookSettingsCreateSchema
+      description: Schema for creating webhook settings
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

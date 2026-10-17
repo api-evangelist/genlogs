@@ -288,38 +288,6 @@ paths:
                 - error
 components:
   schemas:
-    FacilityLane:
-      type: object
-      properties:
-        city:
-          type: string
-          description: Largest city in the H3 hexagon.
-        state:
-          type: string
-          description: US state of the lane destination.
-        weight:
-          type: number
-          description: Ranking signal from the network GeoJSON (higher = stronger lane).
-        visit_share:
-          type: string
-          description: Bucketed visit share percentage (e.g. "15-20%").
-        hexagon_id:
-          type: string
-          description: H3 hexagon index for the lane destination.
-        distance_miles:
-          type: number
-          nullable: true
-          description: Distance in miles from the facility to the lane destination (present when min_distance or direction is provided).
-        direction:
-          type: string
-          nullable: true
-          description: Compass direction of the lane from the facility (e.g. "NE", "SW"). Present when min_distance or direction filter is provided.
-      required:
-      - city
-      - state
-      - weight
-      - visit_share
-      - hexagon_id
     Facility:
       properties:
         contact_phone:
@@ -369,21 +337,38 @@ components:
       - lon
       - place_category
       type: object
-    FacilityNetworkFeature:
+    FacilityLane:
       type: object
-      required:
-      - type
-      - geometry
-      - properties
       properties:
-        type:
+        city:
           type: string
-        geometry:
-          $ref: '#/components/schemas/GeoJSONGeometry'
-        properties:
-          type: object
-          additionalProperties: true
-          description: Arbitrary metadata associated with the feature.
+          description: Largest city in the H3 hexagon.
+        state:
+          type: string
+          description: US state of the lane destination.
+        weight:
+          type: number
+          description: Ranking signal from the network GeoJSON (higher = stronger lane).
+        visit_share:
+          type: string
+          description: Bucketed visit share percentage (e.g. "15-20%").
+        hexagon_id:
+          type: string
+          description: H3 hexagon index for the lane destination.
+        distance_miles:
+          type: number
+          nullable: true
+          description: Distance in miles from the facility to the lane destination (present when min_distance or direction is provided).
+        direction:
+          type: string
+          nullable: true
+          description: Compass direction of the lane from the facility (e.g. "NE", "SW"). Present when min_distance or direction filter is provided.
+      required:
+      - city
+      - state
+      - weight
+      - visit_share
+      - hexagon_id
     AuthError:
       type: object
       properties:
@@ -411,6 +396,21 @@ components:
           type: array
           items: {}
           description: GeoJSON coordinate array whose structure depends on geometry type.
+    FacilityNetworkFeature:
+      type: object
+      required:
+      - type
+      - geometry
+      - properties
+      properties:
+        type:
+          type: string
+        geometry:
+          $ref: '#/components/schemas/GeoJSONGeometry'
+        properties:
+          type: object
+          additionalProperties: true
+          description: Arbitrary metadata associated with the feature.
     FacilityNetworkMap:
       type: object
       required:
