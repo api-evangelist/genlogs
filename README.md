@@ -64,6 +64,155 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-GenLogs is a company surfaced as a portfolio company of battery-ventures, ivp and added to the API Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+GenLogs is a truck intelligence platform that provides ground-truth data on every motor carrier in America from a nationwide network of proprietary roadside sensors, satellites, and millions of data sources - 4.2 billion commercial-vehicle images with 16 million added daily, covering 97% of active motor carriers. The GenLogs API (https://api.genlogs.io) turns that sensor network into freight intelligence: source and score carriers by lane, verify a carrier was recently sighted along an origin/destination, pull carrier and FMCSA profiles, run carrier-vetting rules, discover shippers by lane and shipper facilities with GeoJSON network maps, manage onboarded-carrier contacts, track mismatch observations, and receive HMAC-SHA512-signed alert webhooks. It serves brokers and shippers, insurance underwriting and claims, law enforcement asset recovery, and carriers. Auth uses an x-api-key plus a short-lived Access-Token, with named per-endpoint permissions.
 
-Backed by: battery-ventures, ivp — https://www.genlogs.io
+**Areas:** Company · Logistics · Freight · Trucking · Supply Chain · Carrier Intelligence · Fleet Management · Transportation · Insurance · Fraud Prevention · Webhook · Geospatial
+
+## GenLogs on APIs.io
+
+Everything profiled for GenLogs is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/genlogs/](https://apis.io/providers/genlogs/)** — or go straight to one of the APIs or properties below.
+
+### APIs (10)
+
+- [GenLogs Alerts API](https://apis.io/apis/genlogs/genlogs-alerts-api/) — The Alerts API from GenLogs — 2 operation(s) for alerts.
+- [GenLogs Auth API](https://apis.io/apis/genlogs/genlogs-auth-api/) — Access-token creation and refresh
+- [GenLogs Carrier API](https://apis.io/apis/genlogs/genlogs-carrier-api/) — The Carrier API from GenLogs — 3 operation(s) for carrier.
+- [GenLogs Carrier Vetting API](https://apis.io/apis/genlogs/genlogs-carrier-vetting-api/) — Carrier verification and vetting rules
+- [GenLogs Compliance Rules API](https://apis.io/apis/genlogs/genlogs-compliance-rules-api/) — The Compliance Rules API from GenLogs — 3 operation(s) for compliance rules.
+- [GenLogs Facilities API](https://apis.io/apis/genlogs/genlogs-facilities-api/) — The Facilities API from GenLogs — 2 operation(s) for facilities.
+- [GenLogs Mismatch alerts API](https://apis.io/apis/genlogs/genlogs-mismatch-alerts-api/) — The Mismatch alerts API from GenLogs — 2 operation(s) for mismatch alerts.
+- [GenLogs Onboarded Carriers API](https://apis.io/apis/genlogs/genlogs-onboarded-carriers-api/) — The Onboarded Carriers API from GenLogs — 3 operation(s) for onboarded carriers.
+- [GenLogs Shipper API](https://apis.io/apis/genlogs/genlogs-shipper-api/) — The Shipper API from GenLogs — 1 operation(s) for shipper.
+- [GenLogs Webhook Alerts API](https://apis.io/apis/genlogs/genlogs-webhook-alerts-api/) — The Webhook Alerts API from GenLogs — 3 operation(s) for webhook alerts.
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### AsyncAPI (2)
+
+Event-driven and webhook contracts.
+
+- [GenLogs Alert Webhooks](https://apis.io/asyncapis/genlogs/genlogs-alerts-asyncapi/)
+- [Genlogs Webhooks](https://apis.io/asyncapis/genlogs/genlogs-webhooks/)
+
+#### Event channels (1)
+
+Individual events and webhooks the provider emits.
+
+- [{subscriberWebhookUrl}](https://apis.io/channels/genlogs/subscriberwebhookurl/)
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [genlogs](https://apis.io/servers/genlogs/genlogs/)
+
+#### Agentic access (1)
+
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Genlogs Agentic Access](https://apis.io/agentic-access/genlogs/genlogs-agentic-access/)
+
+#### JSON Schema (1)
+
+The data models the API reads and writes.
+
+- [GenLogs alert.matches_found webhook payload](https://apis.io/schemas/genlogs/genlogs-alert-matches-found.schema/)
+
+#### Collections (10)
+
+Postman and Open Collection request collections.
+
+- [GenLogs Alerts API](https://apis.io/collections/genlogs/open-genlogs-alerts-api/)
+- [GenLogs Alerts auth API](https://apis.io/collections/genlogs/open-genlogs-auth-api/)
+- [GenLogs Alerts Carrier API](https://apis.io/collections/genlogs/open-genlogs-carrier-api/)
+- [GenLogs Alerts carrier-vetting API](https://apis.io/collections/genlogs/open-genlogs-carrier-vetting-api/)
+- [GenLogs Alerts Compliance Rules API](https://apis.io/collections/genlogs/open-genlogs-compliance-rules-api/)
+- [GenLogs Alerts Facilities API](https://apis.io/collections/genlogs/open-genlogs-facilities-api/)
+- [GenLogs Alerts Mismatch alerts API](https://apis.io/collections/genlogs/open-genlogs-mismatch-alerts-api/)
+- [GenLogs Alerts Onboarded Carriers API](https://apis.io/collections/genlogs/open-genlogs-onboarded-carriers-api/)
+- [GenLogs Alerts Shipper API](https://apis.io/collections/genlogs/open-genlogs-shipper-api/)
+- [GenLogs Alerts Webhook Alerts API](https://apis.io/collections/genlogs/open-genlogs-webhook-alerts-api/)
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Genlogs Openapi Overlay](https://apis.io/overlays/genlogs/genlogs-openapi-overlay/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Genlogs Authentication](https://apis.io/security/genlogs/genlogs-authentication/)
+- [Genlogs Domain Security](https://apis.io/security/genlogs/genlogs-domain-security/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.genlogs.io)
+- [Documentation](https://docs.genlogs.io)
+- [Getting started](https://docs.genlogs.io/getting-started)
+- [API reference](https://docs.genlogs.io/genlogs-api-docs)
+- [Support](https://help.genlogs.io/en/)
+- [Blog](https://genlogs.substack.com)
+- [Privacy policy](https://www.genlogs.io/privacy-policy)
+- [GitHub](https://github.com/genlogs)
+- [Status](https://status.genlogs.io)
+
+## API Evangelist rating
+
+**Kin Score 42.5** — developing · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 73.2 |
+| Contract quality | 65.7 |
+| Contract governance | 4.5 |
+| Operational transparency | 26.3 |
+| Developer ergonomics | 58.9 |
+| Access clarity | 17.1 |
+
+**Agent readiness 33.5** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | documented (partial credit) |
+| Error Semantics | verified |
+| OpenAPI Examples | — |
+| Rate Limit Signal | — |
+| Event Surface Described | yes |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | partial |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 18.4** — Insurance
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/genlogs/](https://apis.io/providers/genlogs/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for GenLogs: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/genlogs/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
